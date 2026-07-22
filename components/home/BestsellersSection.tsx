@@ -32,10 +32,10 @@ async function getFeaturedProducts(): Promise<ProductCardData[]> {
       mrp: p.mrp,
       isSale: p.isSale,
       isNewArrival: p.isNewArrival,
-      images: p.images.map((i) => ({ url: i.url, alt: i.alt })),
-      variants: p.variants.map((v) => ({ name: v.name, value: v.value, priceAdj: v.priceAdj })),
+      images: p.images.map((i: { url: string; alt: string | null }) => ({ url: i.url, alt: i.alt })),
+      variants: p.variants.map((v: { name: string; value: string; priceAdj: number }) => ({ name: v.name, value: v.value, priceAdj: v.priceAdj })),
       averageRating: p.reviews.length
-        ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length
+        ? p.reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / p.reviews.length
         : 4.5,
       reviewCount: p.reviews.length || 8,
       category: p.category ?? undefined,
