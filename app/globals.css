@@ -1,0 +1,170 @@
+/* ── Google Fonts — MUST come first before any other rules ──── */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
+
+@import "tailwindcss";
+
+/* ── RangRiwaaz Design Tokens (Tailwind v4 @theme) ────────── */
+@theme {
+  /* Colors */
+  --color-maroon:         #8C6239; /* Primary Devastram Gold-Brown */
+  --color-maroon-light:   #A67C53;
+  --color-maroon-dark:    #6E4722;
+  --color-maroon-50:      #FAF7F2;
+  --color-maroon-100:     #F2EAE0;
+
+  --color-gold:           #C5A059; /* Soft Gold Accent */
+  --color-gold-light:     #D8B97D;
+  --color-gold-dark:      #A07C37;
+  --color-gold-50:        #FCFBF7;
+  --color-gold-100:       #F7F2E6;
+
+  --color-cream:          #FCFBF7; /* Page Background */
+  --color-cream-card:     #FFFDF9;
+  --color-cream-dark:     #F2EFE8;
+
+  --color-festive-green:  #2D6A4F;
+  --color-festive-orange: #E76F51;
+
+  /* Fonts */
+  --font-display: "Cinzel", "Playfair Display", Georgia, serif;
+  --font-body:    "Jost", "Poppins", "Inter", system-ui, sans-serif;
+
+  /* Shadows */
+  --shadow-card:   0 2px 16px 0 rgba(140,98,57,0.08);
+  --shadow-gold:   0 4px 24px 0 rgba(197,160,89,0.18);
+  --shadow-hover:  0 8px 32px 0 rgba(140,98,57,0.16);
+
+  /* Border radius */
+  --radius-card: 1rem;
+  --radius-pill: 9999px;
+
+  /* Animations */
+  --animate-slide-in-right: slide-in-right 0.35s cubic-bezier(0.4,0,0.2,1);
+  --animate-fade-up:        fade-up 0.5s cubic-bezier(0.4,0,0.2,1);
+  --animate-shimmer:        shimmer 1.5s infinite linear;
+  --animate-pulse-soft:     pulse-soft 2s ease-in-out infinite;
+}
+
+/* ── Keyframes ─────────────────────────────────────────────── */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+@keyframes fade-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── Base Styles ───────────────────────────────────────────── */
+:root {
+  color-scheme: light;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FCFBF7;
+  color: #2c2520;
+  font-family: "Jost", "Poppins", "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Cinzel", "Playfair Display", Georgia, serif;
+  font-weight: 500;
+}
+
+/* ── Custom Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #FCFBF7; }
+::-webkit-scrollbar-thumb { background: #8C6239; border-radius: 9999px; }
+
+/* ── Text Selection ────────────────────────────────────────── */
+::selection {
+  background-color: #C5A05930;
+  color: #8C6239;
+}
+
+/* ── Gold shimmer text utility ─────────────────────────────── */
+.text-gold-shimmer {
+  background: linear-gradient(90deg, #C5A059 0%, #E8B928 30%, #C5A059 60%, #A07C37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2.5s linear infinite;
+}
+
+/* ── Mandala / Paisley SVG background ─────────────────────── */
+.bg-mandala {
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C5A059' stroke-width='0.4' opacity='0.25'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18.8' y1='18.8' x2='61.2' y2='61.2'/%3E%3Cline x1='61.2' y1='18.8' x2='18.8' y2='61.2'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 80px 80px;
+}
+
+/* ── Gold foil border ─────────────────────────────────────── */
+.border-gold-foil {
+  border: 1.5px solid;
+  border-image: linear-gradient(135deg, #C5A059, #E8B928, #A07C37) 1;
+}
+
+/* ── Card with gold hover ─────────────────────────────────── */
+.card-festive {
+  background: #FFFDF9;
+  border-radius: 1rem;
+  border: 1px solid #EFEAE0;
+  box-shadow: 0 2px 16px 0 rgba(140,98,57,0.08);
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.card-festive:hover {
+  box-shadow: 0 8px 32px 0 rgba(140,98,57,0.16);
+  border-color: #C5A059;
+  transform: translateY(-4px);
+}
+
+/* ── Announcement marquee ─────────────────────────────────── */
+.marquee-track {
+  display: flex;
+  animation: marquee 20s linear infinite;
+  width: max-content;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ── Gradient Divider ─────────────────────────────────────── */
+.divider-gold {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #C5A059, #D8B97D, #C5A059, transparent);
+  border: none;
+}
+
+/* ── Circular Gold-Ring border ─────────────────────────────── */
+.border-gold-ring {
+  padding: 3px;
+  border: 1.5px solid #c5a059;
+  border-radius: 50%;
+  display: inline-block;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.border-gold-ring:hover {
+  transform: scale(1.05);
+  border-color: #8C6239;
+}
