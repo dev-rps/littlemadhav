@@ -1,31 +1,28 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { Prisma } from "@prisma/client";
 import { ProductCardData } from "@/components/product/ProductCard";
 import BestsellersTabs from "./BestsellersTabs";
 
-type FeaturedProduct = Prisma.ProductGetPayload<{
-  include: {
-    images: { orderBy: { order: "asc" } };
-    variants: true;
-    category: { select: { name: true } };
-    reviews: { select: { rating: true } };
-  };
-}>;
+// Standalone query so TypeScript can infer the full return type (Prisma v7 compatible)
+function queryFeaturedProducts() {
+  return prisma.product.findMany({
+    where: { isFeatured: true },
+    include: {
+      images: { orderBy: { order: "asc" } },
+      variants: true,
+      category: { select: { name: true } },
+      reviews: { select: { rating: true } },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 24,
+  });
+}
+
+type FeaturedProduct = Awaited<ReturnType<typeof queryFeaturedProducts>>[number];
 
 async function getFeaturedProducts(): Promise<ProductCardData[]> {
   try {
-    const products = await prisma.product.findMany({
-      where: { isFeatured: true },
-      include: {
-        images: { orderBy: { order: "asc" } },
-        variants: true,
-        category: { select: { name: true } },
-        reviews: { select: { rating: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 24, // Fetch more products to allow category filtering
-    });
+    const products = await queryFeaturedProducts();
 
     return products.map((p: FeaturedProduct) => ({
       id: p.id,
