@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    const enriched = products.map((p) => ({
+    const enriched = products.map((p: any) => ({
       id: p.id,
       slug: p.slug,
       name: p.name,
@@ -105,10 +105,10 @@ export async function GET(request: NextRequest) {
       material: p.material,
       occasion: p.occasion,
       tags: p.tags,
-      images: p.images.map((i) => ({ url: i.url, alt: i.alt })),
-      variants: p.variants.map((v) => ({ name: v.name, value: v.value, priceAdj: v.priceAdj })),
+      images: p.images.map((i: any) => ({ url: i.url, alt: i.alt })),
+      variants: p.variants.map((v: any) => ({ name: v.name, value: v.value, priceAdj: v.priceAdj })),
       averageRating: p.reviews.length
-        ? p.reviews.reduce((s, r) => s + r.rating, 0) / p.reviews.length
+        ? p.reviews.reduce((s: number, r: any) => s + r.rating, 0) / p.reviews.length
         : 4.5,
       reviewCount: p.reviews.length || 8,
       category: p.category,
