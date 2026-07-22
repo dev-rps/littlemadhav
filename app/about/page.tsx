@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Sparkles, Heart, Users, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "Our Story | RangRiwaaz",
-  description: "Learn about RangRiwaaz, our founder's journey, and how we collaborate with local Indian artisans to create handcrafted festive accessories.",
+  title: "Our Story | Little Madhav",
+  description: "Learn about Little Madhav, our founder's journey, and how we collaborate with local Indian artisans to create handcrafted festive accessories.",
 };
 
 export default function AboutPage() {
@@ -54,7 +54,7 @@ export default function AboutPage() {
               lineHeight: 1.6,
             }}
           >
-            At RangRiwaaz, we weave color, culture, and craftsmanship into beautiful accessories that bring Indian festivals to life.
+            At Little Madhav, we weave color, culture, and craftsmanship into beautiful accessories that bring Indian festivals to life.
           </p>
         </div>
       </section>
@@ -84,7 +84,7 @@ export default function AboutPage() {
                 margin: "0.5rem 0 1.5rem",
               }}
             >
-              The Story of RangRiwaaz
+              The Story of Little Madhav
             </h2>
             <div
               style={{
@@ -98,7 +98,7 @@ export default function AboutPage() {
               }}
             >
               <p>
-                RangRiwaaz was born out of a simple desire: to bring back the warm, slow, and personal feel of Indian festivals. In an era of mass-produced plastic gifts, our founder, Meera Sharma, set out to rediscover the magic of handmade goods.
+                Little Madhav was born out of a simple desire: to bring back the warm, slow, and personal feel of Indian festivals. In an era of mass-produced plastic gifts, our founder, Meera Sharma, set out to rediscover the magic of handmade goods.
               </p>
               <p>
                 Meera traveled through the heartlands of Rajasthan, Gujarat, and West Bengal, meeting home artisans who had kept ancestral crafting techniques alive. What started in 2021 as a small passion project in a family living room has today bloomed into a beloved festive brand trusted by over 10,000 families across India.
@@ -146,7 +146,7 @@ export default function AboutPage() {
                   maxWidth: 380,
                 }}
               >
-                &ldquo;We promise to never sell generic, machine-stamped accessories. Every piece from RangRiwaaz is touched by human hands, checked with care, and packed in eco-friendly gift drawers to reach you safely.&rdquo;
+                &ldquo;We promise to never sell generic, machine-stamped accessories. Every piece from Little Madhav is touched by human hands, checked with care, and packed in eco-friendly gift drawers to reach you safely.&rdquo;
               </p>
               <div
                 style={{
@@ -295,13 +295,13 @@ export default function AboutPage() {
               }}
             >
               <p>
-                At RangRiwaaz, we believe that real beauty lies in empowerment. Over 80% of our craftsmen are actually homemakers in villages who weave these intricate pieces in their free time.
+                At Little Madhav, we believe that real beauty lies in empowerment. Over 80% of our craftsmen are actually homemakers in villages who weave these intricate pieces in their free time.
               </p>
               <p>
-                By working with RangRiwaaz, these talented women earn direct income, giving them financial independence while maintaining their home lives.
+                By working with Little Madhav, these talented women earn direct income, giving them financial independence while maintaining their home lives.
               </p>
               <p>
-                When you buy a RangRiwaaz piece, you aren&apos;t just buying a festive accessory; you are actively funding a dream, supporting a local family, and keeping traditional Indian craftsmanship alive for generations to come.
+                When you buy a Little Madhav piece, you aren&apos;t just buying a festive accessory; you are actively funding a dream, supporting a local family, and keeping traditional Indian craftsmanship alive for generations to come.
               </p>
             </div>
           </div>

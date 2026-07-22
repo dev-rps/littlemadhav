@@ -88,7 +88,7 @@ export default function Header() {
                   textTransform: "uppercase",
                 }}
               >
-                RangRiwaaz
+                Little Madhav
               </span>
             </Link>
 

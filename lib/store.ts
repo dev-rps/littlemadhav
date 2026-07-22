@@ -84,7 +84,7 @@ export const useCartStore = create<CartState>()(
       setSpecialInstructions: (text) => set({ specialInstructions: text }),
     }),
     {
-      name: "rangriwaaz-cart",
+      name: "littlemadhav-cart",
       storage: createJSONStorage(() => localStorage),
     }
   )
@@ -141,7 +141,7 @@ export const useWishlistStore = create<WishlistState>()(
       },
     }),
     {
-      name: "rangriwaaz-wishlist",
+      name: "littlemadhav-wishlist",
       storage: createJSONStorage(() => localStorage),
     }
   )

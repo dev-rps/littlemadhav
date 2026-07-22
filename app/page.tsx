@@ -9,7 +9,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
-  title: "RangRiwaaz — Handcrafted Rakhi, Jhumka & Festive Jewellery",
+  title: "Little Madhav — Handcrafted Rakhi, Jhumka & Festive Jewellery",
   description:
     "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery. Trusted by 10,000+ customers. COD available. Pan-India delivery. Free shipping above ₹499.",
 };
@@ -145,7 +145,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#D4A017", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600 }}>
-              @rangriwaaz
+              @littlemadhav
             </p>
             <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "1.75rem", color: "#8B1E3F", margin: "0.25rem 0 0" }}>
               Follow Our Journey on Instagram 📸
@@ -173,7 +173,7 @@ export default function HomePage() {
           </div>
           <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
             <a
-              href="https://instagram.com/rangriwaaz"
+              href="https://instagram.com/littlemadhav"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -189,7 +189,7 @@ export default function HomePage() {
                 transition: "all 0.2s",
               }}
             >
-              Follow @rangriwaaz →
+              Follow @littlemadhav →
             </a>
           </div>
         </div>

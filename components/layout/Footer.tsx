@@ -86,7 +86,7 @@ export default function Footer() {
                   fontWeight: 700,
                 }}
               >
-                R
+                LM
               </div>
               <span
                 style={{
@@ -98,7 +98,7 @@ export default function Footer() {
                   textTransform: "uppercase",
                 }}
               >
-                RangRiwaaz
+                Little Madhav
               </span>
             </div>
             <p style={{ fontSize: "0.82rem", color: "#ccc", lineHeight: 1.6, fontFamily: "var(--font-body)", marginBottom: "1rem" }}>
@@ -111,15 +111,15 @@ export default function Footer() {
               📞 +91 98765 43210
             </p>
             <p style={{ fontSize: "0.78rem", color: "#aaa", fontFamily: "var(--font-body)" }}>
-              ✉️ hello@rangriwaaz.com
+              ✉️ hello@littlemadhav.com
             </p>
 
             {/* Social Icons */}
             <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
               {[
-                { Icon: Share2, href: "https://instagram.com/rangriwaaz", label: "Instagram" },
-                { Icon: Globe, href: "https://facebook.com/rangriwaaz", label: "Facebook" },
-                { Icon: Play, href: "https://youtube.com/@rangriwaaz", label: "YouTube" },
+                { Icon: Share2, href: "https://instagram.com/littlemadhav", label: "Instagram" },
+                { Icon: Globe, href: "https://facebook.com/littlemadhav", label: "Facebook" },
+                { Icon: Play, href: "https://youtube.com/@littlemadhav", label: "YouTube" },
               ].map(({ Icon, href, label }) => (
                 <a
                   key={label}
@@ -271,7 +271,7 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: "0.78rem", color: "#666", fontFamily: "var(--font-body)" }}>
-            © {new Date().getFullYear()} RangRiwaaz. All rights reserved.
+             © {new Date().getFullYear()} Little Madhav. All rights reserved.
           </p>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {["UPI", "Cards", "Net Banking", "COD", "Wallets"].map((pm) => (

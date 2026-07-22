@@ -18,7 +18,7 @@ const UNSPLASH_GIFT =
   "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=600&q=80";
 
 async function main() {
-  console.log("🌱 Seeding RangRiwaaz database...");
+  console.log("🌱 Seeding Little Madhav database...");
 
   // ── Categories ──────────────────────────────────────────────
   const catRakhi = await prisma.category.upsert({

@@ -1,11 +1,11 @@
-# RangRiwaaz — Build Notes & Execution Log
+# Little Madhav — Build Notes & Execution Log
 
 > **Read this file before every execution session to pick up where you left off.**
 
 ---
 
 ## 🎯 Project Overview
-Full e-commerce website for **RangRiwaaz** — an Indian festive accessories D2C brand (Rakhi, Jhumka, gifting).
+Full e-commerce website for **Little Madhav** — an Indian festive accessories D2C brand (Rakhi, Jhumka, gifting).
 
 ---
 
@@ -40,7 +40,7 @@ fonts: {
 
 ## 📁 Folder Structure (target)
 ```
-rangriwaaz/
+Little Madhav/
 ├── app/                    # Next.js App Router pages
 │   ├── (shop)/             # Shop layout group
 │   │   ├── page.tsx        # Homepage

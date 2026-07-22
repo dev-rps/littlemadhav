@@ -225,7 +225,7 @@ export default function ProductCard({ product }: Props) {
       <div style={{ padding: "0.75rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
         {/* Brand Tag */}
         <span style={{ fontSize: "0.62rem", color: "#888", fontFamily: "var(--font-body, Jost, sans-serif)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em" }}>
-          RANGRIWAAZ
+          LITTLE MADHAV
         </span>
 
         {/* Name */}

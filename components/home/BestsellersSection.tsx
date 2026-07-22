@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { ProductCardData } from "@/components/product/ProductCard";
 import BestsellersTabs from "./BestsellersTabs";
+
+type FeaturedProduct = Prisma.ProductGetPayload<{
+  include: {
+    images: { orderBy: { order: "asc" } };
+    variants: true;
+    category: { select: { name: true } };
+    reviews: { select: { rating: true } };
+  };
+}>;
 
 async function getFeaturedProducts(): Promise<ProductCardData[]> {
   try {
@@ -17,7 +27,7 @@ async function getFeaturedProducts(): Promise<ProductCardData[]> {
       take: 24, // Fetch more products to allow category filtering
     });
 
-    return products.map((p) => ({
+    return products.map((p: FeaturedProduct) => ({
       id: p.id,
       slug: p.slug,
       name: p.name,

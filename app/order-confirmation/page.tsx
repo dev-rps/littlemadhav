@@ -56,8 +56,8 @@ function OrderConfirmationContent() {
 
   const WHATSAPP_NUMBER = "919876543210";
   const whatsappMsg = orderNumber
-    ? encodeURIComponent(`Hi RangRiwaaz! I just placed order #${orderNumber}. Could you please confirm it?`)
-    : encodeURIComponent("Hi RangRiwaaz! I just placed an order. Could you please confirm it?");
+    ? encodeURIComponent(`Hi Little Madhav! I just placed order #${orderNumber}. Could you please confirm it?`)
+    : encodeURIComponent("Hi Little Madhav! I just placed an order. Could you please confirm it?");
 
   return (
     <div style={{ backgroundColor: "#FFF8F0", minHeight: "100vh", padding: "3rem 0" }}>
@@ -183,7 +183,7 @@ function OrderConfirmationContent() {
         </div>
 
         <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#aaa", marginTop: "1.5rem" }}>
-          Questions? Email us at hello@rangriwaaz.com or WhatsApp +91 98765 43210
+          Questions? Email us at hello@littlemadhav.com or WhatsApp +91 98765 43210
         </p>
       </div>
     </div>

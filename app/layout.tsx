@@ -23,10 +23,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rangriwaaz.com"),
+  metadataBase: new URL("https://littlemadhav.com"),
   title: {
-    default: "RangRiwaaz — Handcrafted Rakhi, Jhumka & Festive Jewellery",
-    template: "%s | RangRiwaaz",
+    default: "Little Madhav — Handcrafted Rakhi, Jhumka & Festive Jewellery",
+    template: "%s | Little Madhav",
   },
   description:
     "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery. Trusted by 10,000+ customers. COD available. Pan-India delivery. Free shipping above ₹499.",
@@ -34,14 +34,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://rangriwaaz.com",
-    siteName: "RangRiwaaz",
-    title: "RangRiwaaz — Handcrafted Rakhi, Jhumka & Festive Jewellery",
+    url: "https://littlemadhav.com",
+    siteName: "Little Madhav",
+    title: "Little Madhav — Handcrafted Rakhi, Jhumka & Festive Jewellery",
     description: "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery. Trusted by 10,000+ customers.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RangRiwaaz — Handcrafted Rakhi & Jhumka",
+    title: "Little Madhav — Handcrafted Rakhi & Jhumka",
     description: "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery.",
   },
   robots: { index: true, follow: true },

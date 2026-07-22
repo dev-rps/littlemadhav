@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const WHATSAPP_NUMBER = "919876543210";
 const WHATSAPP_MESSAGE = encodeURIComponent(
-  "Hi! I'm interested in placing an order on RangRiwaaz. Can you help me?"
+  "Hi! I'm interested in placing an order on Little Madhav. Can you help me?"
 );
 
 export default function WhatsAppButton() {
