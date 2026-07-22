@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   experimental: {
     // serverComponentsExternalPackages is now serverExternalPackages in Next 15
   },
-  serverExternalPackages: ["@prisma/adapter-better-sqlite3", "better-sqlite3", "@prisma/client"],
+  serverExternalPackages: ["@prisma/adapter-better-sqlite3", "better-sqlite3"],
 };
 
 export default nextConfig;
