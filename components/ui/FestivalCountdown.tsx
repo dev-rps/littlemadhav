@@ -33,22 +33,22 @@ export default function FestivalCountdown({ targetDate, name }: Props) {
       style={{
         textAlign: "center",
         padding: "1.25rem 1.5rem",
-        backgroundColor: "rgba(255,253,249,0.75)",
+        backgroundColor: "rgba(251,243,233,0.85)",
         borderRadius: "1rem",
-        border: "1px solid rgba(197,160,89,0.4)",
+        border: "1px solid rgba(213,173,54,0.4)",
         backdropFilter: "blur(10px)",
-        boxShadow: "0 4px 20px rgba(140,98,57,0.06)",
+        boxShadow: "0 4px 20px rgba(102,13,25,0.06)",
       }}
     >
       <p
         style={{
-          fontFamily: "var(--font-body, Jost, sans-serif)",
+          fontFamily: "var(--font-body)",
           fontSize: "0.72rem",
-          color: "#8C6239",
+          color: "var(--color-maroon)",
           textTransform: "uppercase",
           letterSpacing: "0.15em",
           marginBottom: "0.75rem",
-          fontWeight: 600,
+          fontWeight: 700,
         }}
       >
         {name} in
@@ -63,18 +63,18 @@ export default function FestivalCountdown({ targetDate, name }: Props) {
           <div key={label} style={{ textAlign: "center" }}>
             <div
               style={{
-                fontFamily: "var(--font-display, Cinzel, serif)",
+                fontFamily: "var(--font-display)",
                 fontSize: "1.75rem",
-                color: "#8C6239",
+                color: "var(--color-maroon)",
                 lineHeight: 1.1,
                 minWidth: 44,
-                backgroundColor: "#FFFDF9",
-                border: "1px solid #EFEAE0",
+                backgroundColor: "var(--color-white)",
+                border: "1px solid rgba(186,172,157,0.3)",
                 borderRadius: "0.375rem",
                 padding: "0.5rem 0.35rem",
                 marginBottom: "0.25rem",
-                boxShadow: "0 2px 6px rgba(140, 98, 57, 0.05)",
-                fontWeight: 600,
+                boxShadow: "0 2px 6px rgba(102, 13, 25, 0.05)",
+                fontWeight: 700,
               }}
             >
               {mounted ? String(value).padStart(2, "0") : "00"}

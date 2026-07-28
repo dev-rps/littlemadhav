@@ -11,9 +11,9 @@ export default function TrustStrip() {
   return (
     <section
       style={{
-        backgroundColor: "#FFFDF9",
-        borderBottom: "1px solid #EFEAE0",
-        borderTop: "1px solid #EFEAE0",
+        backgroundColor: "var(--color-cream-alt)",
+        borderBottom: "1px solid rgba(186,172,157,0.3)",
+        borderTop: "1px solid rgba(186,172,157,0.3)",
         padding: "1.25rem 0",
       }}
     >
@@ -43,10 +43,10 @@ export default function TrustStrip() {
               <div>
                 <p
                   style={{
-                    fontFamily: "var(--font-body, Jost, sans-serif)",
-                    fontWeight: 700,
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 900,
                     fontSize: "0.8rem",
-                    color: "#8C6239",
+                    color: "var(--color-maroon)",
                     margin: 0,
                     lineHeight: 1.2,
                   }}
@@ -55,9 +55,9 @@ export default function TrustStrip() {
                 </p>
                 <p
                   style={{
-                    fontFamily: "var(--font-body, Jost, sans-serif)",
+                    fontFamily: "var(--font-body)",
                     fontSize: "0.7rem",
-                    color: "#777",
+                    color: "var(--color-taupe)",
                     margin: 0,
                     lineHeight: 1.2,
                   }}

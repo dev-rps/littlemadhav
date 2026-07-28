@@ -1,41 +1,105 @@
-/* ── Google Fonts — MUST come first before any other rules ──── */
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Jost:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap");
+/* ── Lato Fonts @font-face ──── */
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/fonts/Lato-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
 
 @import "tailwindcss";
 
-/* ── Little Madhav Design Tokens (Tailwind v4 @theme) ────────── */
+/* ── Mourika Design Tokens (Tailwind v4 @theme) ────────── */
 @theme {
   /* Colors */
-  --color-maroon:         #8C6239; /* Primary Devastram Gold-Brown */
-  --color-maroon-light:   #A67C53;
-  --color-maroon-dark:    #6E4722;
-  --color-maroon-50:      #FAF7F2;
-  --color-maroon-100:     #F2EAE0;
+  --color-maroon:         #660D19;
+  --color-maroon-light:   #8E1F2E;
+  --color-maroon-dark:    #40040A;
+  --color-maroon-50:      #FDF0F4;
+  --color-maroon-100:     #FBD5CD;
 
-  --color-gold:           #C5A059; /* Soft Gold Accent */
-  --color-gold-light:     #D8B97D;
-  --color-gold-dark:      #A07C37;
-  --color-gold-50:        #FCFBF7;
-  --color-gold-100:       #F7F2E6;
+  --color-blush:          #FBD5CD;
+  --color-gold-dark:      #CD9703;
+  --color-gold-light:     #D5AD36;
 
-  --color-cream:          #FCFBF7; /* Page Background */
-  --color-cream-card:     #FFFDF9;
-  --color-cream-dark:     #F2EFE8;
+  --color-cream:          #FBF3E9;
+  --color-cream-alt:      #F4E8DB;
+  --color-cream-card:     #F4E8DB;
+  --color-cream-dark:     #F4E8DB;
 
-  --color-festive-green:  #2D6A4F;
-  --color-festive-orange: #E76F51;
+  --color-black:          #000000;
+  --color-white:          #FFFFFF;
+  --color-taupe:          #BAAC9D;
+  --color-green:          #357C49;
+
+  --color-festive-green:  #357C49;
+  --color-festive-orange: #CD9703;
+  --color-gold:           #CD9703;
 
   /* Fonts */
-  --font-display: "Cinzel", "Playfair Display", Georgia, serif;
-  --font-body:    "Jost", "Poppins", "Inter", system-ui, sans-serif;
+  --font-display: "Lato", sans-serif;
+  --font-body:    "Lato", sans-serif;
 
   /* Shadows */
-  --shadow-card:   0 2px 16px 0 rgba(140,98,57,0.08);
-  --shadow-gold:   0 4px 24px 0 rgba(197,160,89,0.18);
-  --shadow-hover:  0 8px 32px 0 rgba(140,98,57,0.16);
+  --shadow-card:   0 2px 16px 0 rgba(102,13,25,0.06);
+  --shadow-gold:   0 4px 24px 0 rgba(205,151,3,0.12);
+  --shadow-hover:  0 8px 32px 0 rgba(102,13,25,0.12);
 
   /* Border radius */
-  --radius-card: 1rem;
+  --radius-card: 1.125rem;
   --radius-pill: 9999px;
 
   /* Animations */
@@ -81,32 +145,32 @@ html {
 }
 
 body {
-  background-color: #FCFBF7;
-  color: #2c2520;
-  font-family: "Jost", "Poppins", "Inter", system-ui, sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-black);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4 {
-  font-family: "Cinzel", "Playfair Display", Georgia, serif;
-  font-weight: 500;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
 }
 
 /* ── Custom Scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #FCFBF7; }
-::-webkit-scrollbar-thumb { background: #8C6239; border-radius: 9999px; }
+::-webkit-scrollbar-track { background: var(--color-cream); }
+::-webkit-scrollbar-thumb { background: var(--color-maroon); border-radius: 9999px; }
 
 /* ── Text Selection ────────────────────────────────────────── */
 ::selection {
-  background-color: #C5A05930;
-  color: #8C6239;
+  background-color: rgba(251, 213, 205, 0.4);
+  color: var(--color-maroon);
 }
 
 /* ── Gold shimmer text utility ─────────────────────────────── */
 .text-gold-shimmer {
-  background: linear-gradient(90deg, #C5A059 0%, #E8B928 30%, #C5A059 60%, #A07C37 100%);
+  background: linear-gradient(90deg, var(--color-gold-dark) 0%, var(--color-gold-light) 30%, var(--color-gold-dark) 60%, var(--color-maroon) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -116,7 +180,7 @@ h1, h2, h3, h4 {
 
 /* ── Mandala / Paisley SVG background ─────────────────────── */
 .bg-mandala {
-  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23C5A059' stroke-width='0.4' opacity='0.25'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18.8' y1='18.8' x2='61.2' y2='61.2'/%3E%3Cline x1='61.2' y1='18.8' x2='18.8' y2='61.2'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23BAAC9D' stroke-width='0.4' opacity='0.25'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18.8' y1='18.8' x2='61.2' y2='61.2'/%3E%3Cline x1='61.2' y1='18.8' x2='18.8' y2='61.2'/%3E%3C/g%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 80px 80px;
 }
@@ -124,20 +188,20 @@ h1, h2, h3, h4 {
 /* ── Gold foil border ─────────────────────────────────────── */
 .border-gold-foil {
   border: 1.5px solid;
-  border-image: linear-gradient(135deg, #C5A059, #E8B928, #A07C37) 1;
+  border-image: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold-light), var(--color-maroon)) 1;
 }
 
 /* ── Card with gold hover ─────────────────────────────────── */
 .card-festive {
-  background: #FFFDF9;
-  border-radius: 1rem;
-  border: 1px solid #EFEAE0;
-  box-shadow: 0 2px 16px 0 rgba(140,98,57,0.08);
+  background: var(--color-cream-alt);
+  border-radius: var(--radius-card, 1.125rem);
+  border: 1px solid rgba(186, 172, 157, 0.3);
+  box-shadow: 0 2px 16px 0 rgba(102,13,25,0.04);
   transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .card-festive:hover {
-  box-shadow: 0 8px 32px 0 rgba(140,98,57,0.16);
-  border-color: #C5A059;
+  box-shadow: var(--shadow-hover);
+  border-color: var(--color-maroon);
   transform: translateY(-4px);
 }
 

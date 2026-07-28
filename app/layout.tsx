@@ -23,34 +23,34 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://littlemadhav.com"),
+  metadataBase: new URL("https://mourika.com"),
   title: {
-    default: "Little Madhav — Handcrafted Rakhi, Jhumka & Festive Jewellery",
-    template: "%s | Little Madhav",
+    default: "Mourika — Handcrafted Deity Dresses, Festive Decor & Shringar",
+    template: "%s | Mourika",
   },
   description:
-    "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery. Trusted by 10,000+ customers. COD available. Pan-India delivery. Free shipping above ₹499.",
-  keywords: ["Rakhi", "Jhumka", "Indian jewellery", "festive accessories", "handcrafted", "Raksha Bandhan gifts"],
+    "Shop beautiful handcrafted Bal Gopal dresses, festive home decor, and deity shringar accessories. Trusted by thousands. COD available. Free shipping above ₹499.",
+  keywords: ["Laddu Gopal Dresses", "Festive Decor", "Torans", "Deity Shringar", "Pooja Accessories", "Mourika"],
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://littlemadhav.com",
-    siteName: "Little Madhav",
-    title: "Little Madhav — Handcrafted Rakhi, Jhumka & Festive Jewellery",
-    description: "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery. Trusted by 10,000+ customers.",
+    url: "https://mourika.com",
+    siteName: "Mourika",
+    title: "Mourika — Handcrafted Deity Dresses, Festive Decor & Shringar",
+    description: "Shop beautiful handcrafted Bal Gopal dresses, festive home decor, and deity shringar accessories.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Little Madhav — Handcrafted Rakhi & Jhumka",
-    description: "Shop beautiful handcrafted Rakhi, Jhumka earrings, and festive jewellery.",
+    title: "Mourika — Handcrafted Deity Dresses & Shringar",
+    description: "Shop beautiful handcrafted Bal Gopal dresses, festive home decor, and deity shringar accessories.",
   },
   robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${yesevaOne.variable} ${poppins.variable}`}>
-      <body className="min-h-screen flex flex-col" style={{ backgroundColor: "#FFF8F0", fontFamily: "var(--font-body, Poppins, sans-serif)" }}>
+    <html lang="en">
+      <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

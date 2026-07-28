@@ -56,8 +56,8 @@ function OrderConfirmationContent() {
 
   const WHATSAPP_NUMBER = "919876543210";
   const whatsappMsg = orderNumber
-    ? encodeURIComponent(`Hi Little Madhav! I just placed order #${orderNumber}. Could you please confirm it?`)
-    : encodeURIComponent("Hi Little Madhav! I just placed an order. Could you please confirm it?");
+    ? encodeURIComponent(`Hi Mourika! I just placed order #${orderNumber}. Could you please confirm it?`)
+    : encodeURIComponent("Hi Mourika! I just placed an order. Could you please confirm it?");
 
   return (
     <div style={{ backgroundColor: "#FFF8F0", minHeight: "100vh", padding: "3rem 0" }}>

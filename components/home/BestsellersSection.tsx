@@ -49,7 +49,7 @@ export default async function BestsellersSection() {
   const products = await getFeaturedProducts();
 
   return (
-    <section style={{ padding: "4.5rem 0", backgroundColor: "#FCFBF7" }}>
+    <section style={{ padding: "4.5rem 0", backgroundColor: "var(--color-cream)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div
@@ -65,9 +65,9 @@ export default async function BestsellersSection() {
           <div>
             <p
               style={{
-                fontFamily: "var(--font-body, Jost, sans-serif)",
+                fontFamily: "var(--font-body, Lato, sans-serif)",
                 fontSize: "0.8rem",
-                color: "#C5A059",
+                color: "var(--color-gold-dark)",
                 textTransform: "uppercase",
                 letterSpacing: "0.15em",
                 fontWeight: 600,
@@ -78,25 +78,25 @@ export default async function BestsellersSection() {
             </p>
             <h2
               style={{
-                fontFamily: "var(--font-display, Cinzel, serif)",
+                fontFamily: "var(--font-display, Lato, sans-serif)",
                 fontSize: "clamp(1.75rem, 4vw, 2.35rem)",
-                color: "#8C6239",
+                color: "var(--color-maroon)",
                 margin: 0,
-                fontWeight: 500,
+                fontWeight: 700,
               }}
             >
-              Season's Festive Specials
+              Our Bestselling Edits
             </h2>
           </div>
           <Link
             href="/collections/all"
             style={{
-              fontFamily: "var(--font-body, Jost, sans-serif)",
+              fontFamily: "var(--font-body, Lato, sans-serif)",
               fontWeight: 600,
               fontSize: "0.85rem",
-              color: "#8C6239",
+              color: "var(--color-maroon)",
               textDecoration: "none",
-              borderBottom: "1.5px solid #C5A059",
+              borderBottom: "1.5px solid var(--color-gold-light)",
               paddingBottom: "0.1rem",
               whiteSpace: "nowrap",
               textTransform: "uppercase",
@@ -110,7 +110,7 @@ export default async function BestsellersSection() {
         <hr className="divider-gold" style={{ marginBottom: "2.5rem" }} />
 
         {products.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#888", fontFamily: "var(--font-body, Jost, sans-serif)", padding: "3rem 0" }}>
+          <p style={{ textAlign: "center", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)", padding: "3rem 0" }}>
             Products loading...
           </p>
         ) : (
@@ -126,7 +126,7 @@ export default async function BestsellersSection() {
             style={{
               padding: "0.75rem 2.25rem",
               borderRadius: "0.25rem",
-              fontFamily: "var(--font-body, Jost, sans-serif)",
+              fontFamily: "var(--font-body, Lato, sans-serif)",
               fontWeight: 600,
               fontSize: "0.85rem",
               textDecoration: "none",

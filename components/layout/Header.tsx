@@ -7,29 +7,60 @@ import AnnouncementBar from "./AnnouncementBar";
 
 const megaMenu = [
   {
-    label: "Rakhi",
-    slug: "rakhi",
+    label: "Devotees collection",
+    slug: "devotees-collection",
+    children: [],
+  },
+  {
+    label: "Laddu Gopal Dresses",
+    slug: "laddu-gopal-dresses",
     children: [
-      { label: "Kids Rakhi", slug: "kids-rakhi" },
-      { label: "Designer Rakhi", slug: "designer-rakhi" },
-      { label: "Bhaiya-Bhabhi Set", slug: "bhaiya-bhabhi-set" },
-      { label: "Lumba Rakhi", slug: "lumba-rakhi" },
+      { label: "Luxe Dresses", slug: "luxe-dresses" },
+      { label: "Soft Pastel Dresses", slug: "soft-pastel-dresses" },
+      { label: "Summer Collection", slug: "summer-collection" },
+      { label: "Woollen Dresses", slug: "woollen-dresses" },
+      { label: "Summer Bedding Set", slug: "summer-bedding-set" },
+      { label: "Woollen Bedding Set", slug: "woollen-bedding-set" },
     ],
   },
   {
-    label: "Jhumka",
-    slug: "jhumka",
+    label: "Festive Home Decor",
+    slug: "festive-home-decor",
     children: [
-      { label: "Oxidised", slug: "oxidised-jhumka" },
-      { label: "Kundan", slug: "kundan-jhumka" },
-      { label: "Pearl", slug: "pearl-jhumka" },
-      { label: "Terracotta", slug: "terracotta-jhumka" },
+      { label: "Torans / Bandhanwal", slug: "torans-bandhanwal" },
+      { label: "Decorative Rangoli", slug: "decorative-rangoli" },
+      { label: "Shubh Labh", slug: "shubh-labh" },
+      { label: "Pooja Thali cover", slug: "pooja-thali-cover" },
     ],
   },
-  { label: "Combos & Hampers", slug: "combos", children: [] },
-  { label: "Gifting", slug: "gifting", children: [] },
-  { label: "New Arrivals", slug: "new-arrivals", children: [] },
-  { label: "Sale 🔥", slug: "sale", children: [], highlight: true },
+  {
+    label: "Festive Products",
+    slug: "festive-products",
+    children: [
+      { label: "Janmashtami", slug: "janmashtami" },
+      { label: "Rakhi", slug: "rakhi" },
+      { label: "Karwa chauth", slug: "karwa-chauth" },
+      { label: "Navratri", slug: "navratri" },
+      { label: "Diwali", slug: "diwali" },
+    ],
+  },
+  {
+    label: "Jewellery & Accessories",
+    slug: "jewellery-accessories",
+    children: [
+      { label: "Hairs", slug: "hairs" },
+      { label: "Earrings", slug: "earrings" },
+      { label: "Kangan", slug: "kangan" },
+      { label: "Necklace / Haar", slug: "necklace-haar" },
+      { label: "Bansuri", slug: "bansuri" },
+      { label: "Kamar Band", slug: "kamar-band" },
+      { label: "Attar / Ittar", slug: "attar-ittar" },
+      { label: "Bathtub", slug: "bathtub" },
+      { label: "Pooja Thali cover", slug: "pooja-thali-cover-accessory" },
+    ],
+  },
+  { label: "Upcoming Festival", slug: "upcoming", children: [] },
+  { label: "Support", slug: "support", children: [] },
 ];
 
 export default function Header() {
@@ -64,7 +95,7 @@ export default function Header() {
           position: "sticky",
           top: 0,
           zIndex: 50,
-          boxShadow: scrolled ? "0 2px 16px rgba(140,98,57,0.08)" : "none",
+          boxShadow: scrolled ? "0 2px 16px rgba(102,13,25,0.06)" : "none",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -72,23 +103,23 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#C5A059" strokeWidth="1" strokeDasharray="2 2" />
-                <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="#C5A059" opacity="0.15" />
-                <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="#C5A059" strokeWidth="1.5" />
-                <path d="M12 3V5M12 19V21" stroke="#C5A059" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold-light)" strokeWidth="1" strokeDasharray="2 2" />
+                <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold-light)" opacity="0.15" />
+                <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold-light)" strokeWidth="1.5" />
+                <path d="M12 3V5M12 19V21" stroke="var(--color-gold-light)" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <span
                 style={{
-                  fontFamily: "var(--font-display, Cinzel, serif)",
+                  fontFamily: "var(--font-display, Lato, sans-serif)",
                   fontSize: "1.25rem",
-                  color: "#8C6239",
+                  color: "var(--color-maroon)",
                   letterSpacing: "0.18em",
-                  fontWeight: 600,
+                  fontWeight: 900,
                   lineHeight: 1,
                   textTransform: "uppercase",
                 }}
               >
-                Little Madhav
+                Mourika
               </span>
             </Link>
 
@@ -104,9 +135,9 @@ export default function Header() {
                   <Link
                     href={`/collections/${item.slug}`}
                     style={{
-                      color: item.highlight ? "#C5A059" : "#1a1a1a",
-                      fontFamily: "var(--font-body, Poppins, sans-serif)",
-                      fontWeight: 500,
+                      color: "var(--color-black)",
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 600,
                       fontSize: "0.875rem",
                     }}
                     className="flex items-center gap-0.5 px-3 py-2 rounded-lg transition-colors hover:bg-maroon-50"
@@ -156,8 +187,8 @@ export default function Header() {
                           }}
                           className="hover:bg-maroon-50"
                           onMouseOver={(e) => {
-                            (e.currentTarget as HTMLElement).style.color = "#8C6239";
-                            (e.currentTarget as HTMLElement).style.backgroundColor = "#FAF7F2";
+                            (e.currentTarget as HTMLElement).style.color = "var(--color-maroon)";
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-cream)";
                           }}
                           onMouseOut={(e) => {
                             (e.currentTarget as HTMLElement).style.color = "#1a1a1a";
@@ -211,8 +242,8 @@ export default function Header() {
                       position: "absolute",
                       top: 4,
                       right: 4,
-                      backgroundColor: "#8C6239",
-                      color: "#FCFBF7",
+                      backgroundColor: "var(--color-maroon)",
+                      color: "var(--color-white)",
                       borderRadius: "9999px",
                       minWidth: 18,
                       height: 18,
@@ -221,7 +252,7 @@ export default function Header() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontFamily: "var(--font-body, Poppins, sans-serif)",
+                      fontFamily: "var(--font-body)",
                     }}
                   >
                     {cartCount > 99 ? "99+" : cartCount}
@@ -264,9 +295,9 @@ export default function Header() {
                     display: "block",
                     padding: "0.625rem 0.75rem",
                     borderRadius: "0.5rem",
-                    fontFamily: "var(--font-body, Poppins, sans-serif)",
-                    fontWeight: 600,
-                    color: item.highlight ? "#C5A059" : "#8C6239",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    color: "var(--color-maroon)",
                     fontSize: "0.9rem",
                   }}
                 >
@@ -342,17 +373,17 @@ export default function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for Rakhi, Jhumka, Combos..."
+                placeholder="Search for Dresses, Decor, Shringar..."
                 style={{
                   width: "100%",
                   padding: "0.75rem 0.75rem 0.75rem 2.5rem",
-                  border: "1.5px solid #D4A017",
+                  border: "1.5px solid var(--color-gold-light)",
                   borderRadius: "0.625rem",
                   fontSize: "0.9rem",
-                  fontFamily: "var(--font-body, Poppins, sans-serif)",
+                  fontFamily: "var(--font-body)",
                   outline: "none",
-                  backgroundColor: "#FFF8F0",
-                  color: "#1a1a1a",
+                  backgroundColor: "var(--color-white)",
+                  color: "var(--color-black)",
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && searchQuery.trim()) {
@@ -362,7 +393,7 @@ export default function Header() {
               />
             </div>
             <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              {["Lumba Rakhi", "Kundan Jhumka", "Diwali Hamper", "Pearl Earrings"].map((tag) => (
+              {["Luxe Dresses", "Shubh Labh", "Diwali Diyas", "Deity Necklace"].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => {
@@ -371,11 +402,11 @@ export default function Header() {
                   style={{
                     padding: "0.25rem 0.75rem",
                     borderRadius: "9999px",
-                    border: "1px solid #C5A059",
-                    backgroundColor: "#FCFBF7",
-                    color: "#8C6239",
+                    border: "1px solid var(--color-gold-light)",
+                    backgroundColor: "var(--color-cream-alt)",
+                    color: "var(--color-maroon)",
                     fontSize: "0.8rem",
-                    fontFamily: "var(--font-body, Poppins, sans-serif)",
+                    fontFamily: "var(--font-body)",
                     cursor: "pointer",
                   }}
                 >

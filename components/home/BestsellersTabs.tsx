@@ -8,10 +8,10 @@ interface Props {
 
 const TABS = [
   { label: "All Items", slug: "all" },
-  { label: "Rakhi Special", slug: "rakhi" },
-  { label: "Jhumka", slug: "jhumka" },
-  { label: "Combos", slug: "combos" },
-  { label: "Gift Hampers", slug: "gifting" },
+  { label: "Laddu Gopal Dresses", slug: "laddu-gopal-dresses" },
+  { label: "Festive Home Decor", slug: "festive-home-decor" },
+  { label: "Festive Products", slug: "festive-products" },
+  { label: "Jewellery & Accessories", slug: "jewellery-accessories" },
 ];
 
 export default function BestsellersTabs({ initialProducts }: Props) {
@@ -22,13 +22,16 @@ export default function BestsellersTabs({ initialProducts }: Props) {
     : initialProducts.filter((p) => {
         const catName = p.category?.name.toLowerCase() || "";
         const slug = p.slug.toLowerCase();
-        return catName.includes(tabSlugToQuery(activeSlug)) || slug.includes(tabSlugToQuery(activeSlug));
-      });
 
-  function tabSlugToQuery(slug: string) {
-    if (slug === "gifting") return "gift";
-    return slug;
-  }
+        let targetTerm = activeSlug;
+        if (activeSlug === "laddu-gopal-dresses") targetTerm = "laddu gopal";
+        else if (activeSlug === "festive-home-decor") targetTerm = "decor";
+        else if (activeSlug === "festive-products") targetTerm = "festive";
+        else if (activeSlug === "jewellery-accessories") targetTerm = "jewellery";
+        else if (activeSlug === "devotees-collection") targetTerm = "devotees";
+
+        return catName.includes(targetTerm) || slug.includes(targetTerm);
+      });
 
   return (
     <div>
@@ -51,10 +54,10 @@ export default function BestsellersTabs({ initialProducts }: Props) {
               style={{
                 padding: "0.625rem 1.25rem",
                 borderRadius: "0.25rem",
-                border: "1px solid #8C6239",
-                backgroundColor: isActive ? "#8C6239" : "transparent",
-                color: isActive ? "#FCFBF7" : "#8C6239",
-                fontFamily: "var(--font-body, Jost, sans-serif)",
+                border: "1px solid var(--color-maroon)",
+                backgroundColor: isActive ? "var(--color-maroon)" : "transparent",
+                color: isActive ? "var(--color-white)" : "var(--color-maroon)",
+                fontFamily: "var(--font-body, Lato, sans-serif)",
                 fontWeight: 600,
                 fontSize: "0.85rem",
                 cursor: "pointer",
@@ -64,7 +67,7 @@ export default function BestsellersTabs({ initialProducts }: Props) {
               }}
               onMouseOver={(e) => {
                 if (!isActive) {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(140, 98, 57, 0.05)";
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(102, 13, 25, 0.05)";
                 }
               }}
               onMouseOut={(e) => {

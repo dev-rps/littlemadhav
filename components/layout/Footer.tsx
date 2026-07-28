@@ -98,11 +98,11 @@ export default function Footer() {
                   textTransform: "uppercase",
                 }}
               >
-                Little Madhav
+                Mourika
               </span>
             </div>
             <p style={{ fontSize: "0.82rem", color: "#ccc", lineHeight: 1.6, fontFamily: "var(--font-body)", marginBottom: "1rem" }}>
-              Bringing you the finest handcrafted Rakhi, Jhumka, and festive jewellery. Made with love by Indian artisans.
+              Bringing you the finest handcrafted Deity dresses, home decor, and festive shringar accessories. Made with love by Indian artisans.
             </p>
             <p style={{ fontSize: "0.78rem", color: "#aaa", fontFamily: "var(--font-body)", marginBottom: "0.25rem" }}>
               GSTIN: 07AABCU9603R1ZX
@@ -111,15 +111,15 @@ export default function Footer() {
               📞 +91 98765 43210
             </p>
             <p style={{ fontSize: "0.78rem", color: "#aaa", fontFamily: "var(--font-body)" }}>
-              ✉️ hello@littlemadhav.com
+              ✉️ hello@mourika.com
             </p>
 
             {/* Social Icons */}
             <div style={{ display: "flex", gap: "0.75rem", marginTop: "1rem" }}>
               {[
-                { Icon: Share2, href: "https://instagram.com/littlemadhav", label: "Instagram" },
-                { Icon: Globe, href: "https://facebook.com/littlemadhav", label: "Facebook" },
-                { Icon: Play, href: "https://youtube.com/@littlemadhav", label: "YouTube" },
+                { Icon: Share2, href: "https://instagram.com/mourika", label: "Instagram" },
+                { Icon: Globe, href: "https://facebook.com/mourika", label: "Facebook" },
+                { Icon: Play, href: "https://youtube.com/@mourika", label: "YouTube" },
               ].map(({ Icon, href, label }) => (
                 <a
                   key={label}
@@ -271,7 +271,7 @@ export default function Footer() {
           }}
         >
           <p style={{ fontSize: "0.78rem", color: "#666", fontFamily: "var(--font-body)" }}>
-             © {new Date().getFullYear()} Little Madhav. All rights reserved.
+             © {new Date().getFullYear()} Mourika. All rights reserved.
           </p>
           <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
             {["UPI", "Cards", "Net Banking", "COD", "Wallets"].map((pm) => (

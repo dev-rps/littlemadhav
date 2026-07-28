@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 
 export default function FestiveSpecials() {
-  const [activeTab, setActiveTab] = useState<"all" | "rakhi" | "jhumka" | "combos">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "laddu-gopal-dresses" | "festive-home-decor" | "festive-products" | "jewellery-accessories">("all");
   const [products, setProducts] = useState<ProductCardData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,15 +23,15 @@ export default function FestiveSpecials() {
   }, [activeTab]);
 
   return (
-    <section style={{ padding: "4rem 0", backgroundColor: "#FCFBF7" }}>
+    <section style={{ padding: "4rem 0", backgroundColor: "var(--color-cream)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <p
             style={{
-              fontFamily: "var(--font-body, Jost, sans-serif)",
+              fontFamily: "var(--font-body, Lato, sans-serif)",
               fontSize: "0.85rem",
-              color: "#C5A059",
+              color: "var(--color-gold-dark)",
               textTransform: "uppercase",
               letterSpacing: "0.15em",
               fontWeight: 600,
@@ -42,10 +42,11 @@ export default function FestiveSpecials() {
           </p>
           <h2
             style={{
-              fontFamily: "var(--font-display, Cinzel, serif)",
+              fontFamily: "var(--font-display, Lato, sans-serif)",
               fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              color: "#8C6239",
+              color: "var(--color-maroon)",
               margin: 0,
+              fontWeight: 700,
             }}
           >
             Season&apos;s Festive Specials
@@ -62,9 +63,17 @@ export default function FestiveSpecials() {
             flexWrap: "wrap",
           }}
         >
-          {(["all", "rakhi", "jhumka", "combos"] as const).map((tab) => {
+          {(["all", "laddu-gopal-dresses", "festive-home-decor", "festive-products", "jewellery-accessories"] as const).map((tab) => {
             const isActive = activeTab === tab;
-            const label = tab === "all" ? "All Specials" : tab === "combos" ? "Combos & Hampers" : tab.charAt(0).toUpperCase() + tab.slice(1);
+            const label = tab === "all" 
+              ? "All Specials" 
+              : tab === "laddu-gopal-dresses" 
+              ? "Laddu Gopal Dresses" 
+              : tab === "festive-home-decor" 
+              ? "Festive Home Decor" 
+              : tab === "festive-products" 
+              ? "Festive Products" 
+              : "Jewellery & Accessories";
             return (
               <button
                 key={tab}
@@ -73,10 +82,10 @@ export default function FestiveSpecials() {
                 style={{
                   padding: "0.625rem 1.5rem",
                   borderRadius: "9999px",
-                  border: isActive ? "1.5px solid #8C6239" : "1.5px solid #C5A059",
-                  backgroundColor: isActive ? "#8C6239" : "transparent",
-                  color: isActive ? "#FCFBF7" : "#8C6239",
-                  fontFamily: "var(--font-body, Jost, sans-serif)",
+                  border: isActive ? "1.5px solid var(--color-maroon)" : "1.5px solid var(--color-gold-light)",
+                  backgroundColor: isActive ? "var(--color-maroon)" : "transparent",
+                  color: isActive ? "var(--color-white)" : "var(--color-maroon)",
+                  fontFamily: "var(--font-body, Lato, sans-serif)",
                   fontWeight: 600,
                   fontSize: "0.85rem",
                   cursor: "pointer",

@@ -60,44 +60,44 @@ function SearchPageContent() {
   }, [fetchResults, fetchRecommendations]);
 
   return (
-    <div style={{ minHeight: "80vh", backgroundColor: "#FFF8F0", paddingBottom: "4rem" }}>
+    <div style={{ minHeight: "80vh", backgroundColor: "var(--color-cream)", paddingBottom: "4rem" }}>
       {/* Header */}
-      <div style={{ backgroundColor: "#FFFBF5", borderBottom: "1px solid #F0E0C0", padding: "1.5rem 0" }}>
+      <div style={{ backgroundColor: "var(--color-cream-alt)", borderBottom: "1px solid rgba(186,172,157,0.3)", padding: "1.5rem 0" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h1 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "1.75rem", color: "#8B1E3F", margin: 0 }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "1.75rem", color: "var(--color-maroon)", margin: 0, fontWeight: 700 }}>
             Search Results
           </h1>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#888", margin: "0.25rem 0 0" }}>
-            Showing results for &ldquo;<strong style={{ color: "#D4A017" }}>{query}</strong>&rdquo;
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-taupe)", margin: "0.25rem 0 0" }}>
+            Showing results for &ldquo;<strong style={{ color: "var(--color-gold-dark)" }}>{query}</strong>&rdquo;
           </p>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {loading ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }} className="sm:grid-cols-3 lg:grid-cols-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} style={{ borderRadius: "1rem", backgroundColor: "#F5EDE0", aspectRatio: "3/4", animation: "pulse-soft 2s ease-in-out infinite" }} />
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} style={{ borderRadius: "var(--radius-card, 1.125rem)", backgroundColor: "var(--color-cream-alt)", aspectRatio: "3/4", animation: "pulse-soft 2s ease-in-out infinite" }} />
             ))}
           </div>
         ) : products.length === 0 ? (
           <div style={{ textAlign: "center", padding: "4rem 0" }}>
             <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔍</div>
-            <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)', serif", fontSize: "1.5rem", color: "#8B1E3F", margin: 0 }}>
+            <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", color: "var(--color-maroon)", margin: 0, fontWeight: 700 }}>
               No matches found
             </h2>
-            <p style={{ fontFamily: "var(--font-body)", color: "#888", fontSize: "0.9rem", marginTop: "0.5rem", marginBottom: "2rem" }}>
+            <p style={{ fontFamily: "var(--font-body)", color: "var(--color-taupe)", fontSize: "0.9rem", marginTop: "0.5rem", marginBottom: "2rem" }}>
               We couldn&apos;t find anything matching your search term. Check spelling or try something else.
             </p>
 
             {/* Recommendations */}
             {recommendations.length > 0 && (
               <div style={{ textAlign: "left", marginTop: "4rem" }}>
-                <h3 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.25rem", marginBottom: "1rem", textAlign: "center" }}>
+                <h3 style={{ fontFamily: "var(--font-display)", color: "var(--color-maroon)", fontSize: "1.25rem", marginBottom: "1rem", textAlign: "center", fontWeight: 700 }}>
                   Popular Picks for You
                 </h3>
                 <hr className="divider-gold" style={{ marginBottom: "2rem" }} />
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }} className="sm:grid-cols-3 lg:grid-cols-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                   {recommendations.map((prod) => (
                     <ProductCard key={prod.id} product={prod} />
                   ))}
@@ -107,10 +107,10 @@ function SearchPageContent() {
           </div>
         ) : (
           <div>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#666", marginBottom: "1.5rem" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-taupe)", marginBottom: "1.5rem" }}>
               Found {products.length} matching item{products.length > 1 ? "s" : ""}
             </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }} className="sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

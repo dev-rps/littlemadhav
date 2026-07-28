@@ -57,21 +57,21 @@ export default function ExitIntentPopup() {
     >
       <div
         style={{
-          backgroundColor: "#FFFBF5",
-          borderRadius: "1.25rem",
+          backgroundColor: "var(--color-cream)",
+          borderRadius: "1.125rem",
           maxWidth: 460,
           width: "100%",
           overflow: "hidden",
           position: "relative",
-          boxShadow: "0 20px 60px rgba(139,30,63,0.25)",
-          border: "2px solid #D4A017",
+          boxShadow: "0 20px 60px rgba(102,13,25,0.2)",
+          border: "2px solid var(--color-gold-dark)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Festive header */}
         <div
           style={{
-            background: "linear-gradient(135deg, #8B1E3F, #6B1630)",
+            background: "linear-gradient(135deg, var(--color-maroon), var(--color-maroon-dark))",
             padding: "1.5rem",
             textAlign: "center",
             position: "relative",
@@ -84,7 +84,7 @@ export default function ExitIntentPopup() {
               position: "absolute",
               top: 12,
               right: 12,
-              color: "#FFF8F080",
+              color: "rgba(255,255,255,0.5)",
               backgroundColor: "transparent",
               border: "none",
               cursor: "pointer",
@@ -98,16 +98,17 @@ export default function ExitIntentPopup() {
           <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>🎁</div>
           <h2
             style={{
-              fontFamily: "var(--font-display, 'Yeseva One', serif)",
-              color: "#D4A017",
+              fontFamily: "var(--font-display)",
+              color: "var(--color-gold-light)",
               fontSize: "1.5rem",
               margin: 0,
+              fontWeight: 700,
             }}
           >
             Wait! Here&apos;s a treat for you
           </h2>
-          <p style={{ color: "#FFF8F0aa", fontFamily: "var(--font-body)", fontSize: "0.875rem", marginTop: "0.4rem" }}>
-            Get <strong style={{ color: "#D4A017" }}>15% OFF</strong> on your first order
+          <p style={{ color: "rgba(255,255,255,0.75)", fontFamily: "var(--font-body)", fontSize: "0.875rem", marginTop: "0.4rem" }}>
+            Get <strong style={{ color: "var(--color-gold-light)" }}>15% OFF</strong> on your first order
           </p>
         </div>
 
@@ -119,7 +120,7 @@ export default function ExitIntentPopup() {
                 style={{
                   textAlign: "center",
                   fontFamily: "var(--font-body)",
-                  color: "#555",
+                  color: "var(--color-black)",
                   fontSize: "0.875rem",
                   marginBottom: "1rem",
                 }}
@@ -128,20 +129,20 @@ export default function ExitIntentPopup() {
               </p>
               <div
                 style={{
-                  backgroundColor: "#FFF8F0",
-                  border: "2px solid #D4A017",
+                  backgroundColor: "var(--color-cream-alt)",
+                  border: "2px solid var(--color-gold-dark)",
                   borderRadius: "0.5rem",
                   textAlign: "center",
                   padding: "0.625rem",
                   marginBottom: "1rem",
                   fontFamily: "var(--font-body)",
-                  fontWeight: 700,
-                  color: "#8B1E3F",
+                  fontWeight: 900,
+                  color: "var(--color-maroon)",
                   fontSize: "1.1rem",
                   letterSpacing: "0.1em",
                 }}
               >
-                RANG15
+                MOURIKA15
               </div>
               <form
                 onSubmit={(e) => {
@@ -160,27 +161,28 @@ export default function ExitIntentPopup() {
                   style={{
                     flex: 1,
                     padding: "0.625rem 0.875rem",
-                    border: "1.5px solid #F0E0C0",
-                    borderRadius: "0.5rem",
+                    border: "1.5px solid var(--color-taupe)",
+                    borderRadius: "9999px",
                     fontFamily: "var(--font-body)",
                     fontSize: "0.875rem",
                     outline: "none",
-                    backgroundColor: "#FFF8F0",
-                    color: "#1a1a1a",
+                    backgroundColor: "var(--color-white)",
+                    color: "var(--color-black)",
                   }}
                 />
                 <button
                   type="submit"
                   style={{
-                    backgroundColor: "#8B1E3F",
-                    color: "#FFF8F0",
+                    backgroundColor: "var(--color-maroon)",
+                    color: "var(--color-white)",
                     border: "none",
-                    borderRadius: "0.5rem",
-                    padding: "0.625rem 1rem",
+                    borderRadius: "9999px",
+                    padding: "0.625rem 1.25rem",
                     fontFamily: "var(--font-body)",
                     fontWeight: 700,
                     cursor: "pointer",
                     whiteSpace: "nowrap",
+                    transition: "all 0.2s",
                   }}
                 >
                   Claim Now
@@ -192,7 +194,7 @@ export default function ExitIntentPopup() {
                   style={{
                     backgroundColor: "transparent",
                     border: "none",
-                    color: "#aaa",
+                    color: "var(--color-taupe)",
                     fontSize: "0.8rem",
                     fontFamily: "var(--font-body)",
                     cursor: "pointer",
@@ -208,28 +210,30 @@ export default function ExitIntentPopup() {
               <div style={{ fontSize: "3rem", marginBottom: "0.75rem" }}>🎉</div>
               <h3
                 style={{
-                  fontFamily: "var(--font-display, 'Yeseva One', serif)",
-                  color: "#8B1E3F",
+                  fontFamily: "var(--font-display)",
+                  color: "var(--color-maroon)",
                   fontSize: "1.25rem",
                   marginBottom: "0.5rem",
+                  fontWeight: 700,
                 }}
               >
                 Code sent to your inbox!
               </h3>
-              <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "0.875rem", marginBottom: "1rem" }}>
-                Use <strong style={{ color: "#8B1E3F" }}>RANG15</strong> at checkout for 15% off.
+              <p style={{ fontFamily: "var(--font-body)", color: "var(--color-black)", fontSize: "0.875rem", marginBottom: "1rem" }}>
+                Use <strong style={{ color: "var(--color-maroon)" }}>MOURIKA15</strong> at checkout for 15% off.
               </p>
               <button
                 onClick={dismiss}
                 style={{
-                  backgroundColor: "#8B1E3F",
-                  color: "#FFF8F0",
+                  backgroundColor: "var(--color-maroon)",
+                  color: "var(--color-white)",
                   border: "none",
-                  borderRadius: "0.5rem",
+                  borderRadius: "9999px",
                   padding: "0.625rem 1.5rem",
                   fontFamily: "var(--font-body)",
                   fontWeight: 700,
                   cursor: "pointer",
+                  transition: "all 0.2s",
                 }}
               >
                 Shop Now 🛍️

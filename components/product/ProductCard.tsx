@@ -99,9 +99,9 @@ export default function ProductCard({ product }: Props) {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        border: "1px solid #EFEAE0",
-        borderRadius: "0.5rem",
-        backgroundColor: "#FFFDF9",
+        border: "1px solid rgba(186, 172, 157, 0.3)",
+        borderRadius: "var(--radius-card, 1.125rem)",
+        backgroundColor: "var(--color-cream-alt)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -121,13 +121,13 @@ export default function ProductCard({ product }: Props) {
         {product.isSale && discount > 0 && (
           <span
             style={{
-              backgroundColor: "#8C6239",
-              color: "#FCFBF7",
+              backgroundColor: "var(--color-blush)",
+              color: "var(--color-maroon)",
               fontSize: "0.68rem",
-              fontWeight: 700,
-              fontFamily: "var(--font-body, Jost, sans-serif)",
-              padding: "0.15rem 0.45rem",
-              borderRadius: "0.15rem",
+              fontWeight: 900,
+              fontFamily: "var(--font-body, Lato, sans-serif)",
+              padding: "0.2rem 0.5rem",
+              borderRadius: "0.375rem",
               letterSpacing: "0.05em",
             }}
           >
@@ -137,13 +137,13 @@ export default function ProductCard({ product }: Props) {
         {product.isNewArrival && (
           <span
             style={{
-              backgroundColor: "#2D6A4F",
-              color: "#FCFBF7",
+              backgroundColor: "var(--color-gold-dark)",
+              color: "var(--color-white)",
               fontSize: "0.68rem",
-              fontWeight: 700,
-              fontFamily: "var(--font-body, Jost, sans-serif)",
-              padding: "0.15rem 0.45rem",
-              borderRadius: "0.15rem",
+              fontWeight: 900,
+              fontFamily: "var(--font-body, Lato, sans-serif)",
+              padding: "0.2rem 0.5rem",
+              borderRadius: "0.375rem",
               letterSpacing: "0.05em",
             }}
           >
@@ -177,8 +177,8 @@ export default function ProductCard({ product }: Props) {
           top: "0.625rem",
           right: "0.625rem",
           zIndex: 2,
-          backgroundColor: "#FFFDF9",
-          border: "1px solid #EFEAE0",
+          backgroundColor: "var(--color-white)",
+          border: "1px solid var(--color-blush)",
           borderRadius: "50%",
           width: 30,
           height: 30,
@@ -192,8 +192,8 @@ export default function ProductCard({ product }: Props) {
       >
         <Heart
           size={14}
-          fill={isWishlisted ? "#8C6239" : "none"}
-          stroke={isWishlisted ? "#8C6239" : "#aaa"}
+          fill={isWishlisted ? "var(--color-maroon)" : "none"}
+          stroke={isWishlisted ? "var(--color-maroon)" : "var(--color-taupe)"}
         />
       </button>
 
@@ -203,8 +203,8 @@ export default function ProductCard({ product }: Props) {
           style={{
             position: "relative",
             overflow: "hidden",
-            aspectRatio: "1 / 1",
-            backgroundColor: "#F2EFE8",
+            aspectRatio: "3 / 4",
+            backgroundColor: "var(--color-cream)",
           }}
         >
           <Image
@@ -224,17 +224,17 @@ export default function ProductCard({ product }: Props) {
       {/* Info */}
       <div style={{ padding: "0.75rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
         {/* Brand Tag */}
-        <span style={{ fontSize: "0.62rem", color: "#888", fontFamily: "var(--font-body, Jost, sans-serif)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.15em" }}>
-          LITTLE MADHAV
+        <span style={{ fontSize: "0.62rem", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em" }}>
+          MOURIKA
         </span>
 
         {/* Name */}
         <Link href={`/products/${product.slug}`} style={{ textDecoration: "none" }}>
           <h3
             style={{
-              fontFamily: "var(--font-body, Jost, sans-serif)",
+              fontFamily: "var(--font-body, Lato, sans-serif)",
               fontSize: "0.88rem",
-              color: "#2c2520",
+              color: "var(--color-black)",
               margin: 0,
               fontWeight: 500,
               lineHeight: 1.35,
@@ -250,16 +250,30 @@ export default function ProductCard({ product }: Props) {
         </Link>
 
         {/* Rating */}
-        <StarRating rating={rating} count={reviewCount} />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+          <div style={{ display: "flex" }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Star
+                key={star}
+                size={11}
+                fill={star <= Math.round(rating) ? "var(--color-gold-dark)" : "none"}
+                stroke={star <= Math.round(rating) ? "var(--color-gold-dark)" : "var(--color-taupe)"}
+              />
+            ))}
+          </div>
+          <span style={{ fontSize: "0.7rem", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)" }}>
+            ({reviewCount})
+          </span>
+        </div>
 
         {/* Prices */}
         <div style={{ display: "flex", alignItems: "baseline", gap: "0.4rem", marginTop: "0.1rem" }}>
           <span
             style={{
-              fontFamily: "var(--font-body, Jost, sans-serif)",
-              fontWeight: 700,
+              fontFamily: "var(--font-body, Lato, sans-serif)",
+              fontWeight: 900,
               fontSize: "0.95rem",
-              color: "#8C6239",
+              color: "var(--color-maroon)",
             }}
           >
             {formatPrice(product.price)}
@@ -267,9 +281,9 @@ export default function ProductCard({ product }: Props) {
           {product.mrp > product.price && (
             <span
               style={{
-                fontFamily: "var(--font-body, Jost, sans-serif)",
+                fontFamily: "var(--font-body, Lato, sans-serif)",
                 fontSize: "0.78rem",
-                color: "#aaa",
+                color: "var(--color-taupe)",
                 textDecoration: "line-through",
               }}
             >
@@ -296,13 +310,13 @@ export default function ProductCard({ product }: Props) {
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    border: isSelected ? "1px solid #8C6239" : "1px solid #EFEAE0",
-                    backgroundColor: isSelected ? "#8C6239" : "#FFFDF9",
-                    color: isSelected ? "#FCFBF7" : "#888",
+                    border: isSelected ? "1px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
+                    backgroundColor: isSelected ? "var(--color-maroon)" : "var(--color-white)",
+                    color: isSelected ? "var(--color-white)" : "var(--color-taupe)",
                     fontSize: "0.65rem",
-                    fontFamily: "var(--font-body, Jost, sans-serif)",
+                    fontFamily: "var(--font-body, Lato, sans-serif)",
                     cursor: "pointer",
-                    fontWeight: isSelected ? 600 : 400,
+                    fontWeight: isSelected ? 700 : 400,
                     transition: "all 0.15s",
                   }}
                 >
@@ -328,11 +342,11 @@ export default function ProductCard({ product }: Props) {
           justifyContent: "center",
           gap: "0.4rem",
           padding: "0.75rem",
-          backgroundColor: "#8C6239",
-          color: "#FCFBF7",
+          backgroundColor: "var(--color-maroon)",
+          color: "var(--color-white)",
           border: "none",
-          fontFamily: "var(--font-body, Jost, sans-serif)",
-          fontWeight: 600,
+          fontFamily: "var(--font-body, Lato, sans-serif)",
+          fontWeight: 700,
           fontSize: "0.85rem",
           textTransform: "uppercase",
           letterSpacing: "0.05em",

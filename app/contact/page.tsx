@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const WHATSAPP_NUMBER = "919876543210";
 const WHATSAPP_MESSAGE = encodeURIComponent(
-  "Hi Little Madhav! I have a question about my order or a product."
+  "Hi Mourika! I have a question about my order or a product."
 );
 
 export default function ContactPage() {
@@ -129,7 +129,7 @@ export default function ContactPage() {
                   {
                     icon: <MapPin size={20} style={{ color: "#2D6A4F" }} />,
                     title: "Studio Warehouse",
-                    content: "Little Madhav D2C, GK-1, New Delhi, Delhi, 110048",
+                    content: "Mourika Studio, GK-1, New Delhi, Delhi, 110048",
                     desc: "Artisan center & shipping hub.",
                   },
                 ].map((item, idx) => (
@@ -390,7 +390,7 @@ export default function ContactPage() {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Little Madhav Greater Kailash Studio Location Map"
+            title="Mourika Studio Location Map, Greater Kailash, New Delhi"
           ></iframe>
         </div>
       </section>

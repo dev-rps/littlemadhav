@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 
 const announcements = [
   "🎁 Free shipping above ₹499 — Pan India delivery!",
-  "🎀 Rakhi delivered before Raksha Bandhan — Order now!",
-  "✨ Flat 10% off on prepaid orders — Use code RANG10",
+  "🌸 Beautiful Handcrafted Deity Dresses & Shringar — Order now!",
+  "✨ Flat 15% off on your first order — Use code MOURIKA15",
   "💛 Handcrafted with love by Indian artisans 🇮🇳",
   "🛡️ COD Available | Easy Returns | Secure Payments",
 ];
@@ -26,14 +26,14 @@ export default function AnnouncementBar() {
 
   return (
     <div
-      style={{ backgroundColor: "#8C6239", color: "#FCFBF7" }}
+      style={{ backgroundColor: "var(--color-maroon)", color: "var(--color-white)" }}
       className="text-center text-xs sm:text-sm py-2 px-4 font-medium tracking-wide"
     >
       <p
         style={{
           transition: "opacity 0.3s ease",
           opacity: fade ? 1 : 0,
-          fontFamily: "var(--font-body, Poppins, sans-serif)",
+          fontFamily: "var(--font-body)",
         }}
       >
         {announcements[current]}
