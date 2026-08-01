@@ -8,13 +8,6 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-// High-quality local product image URLs for categories
-const IMG_DEVOTEES = "/products/devotees/img1.jpg";
-const IMG_DRESSES = "/products/dresses/img1.jpg";
-const IMG_DECOR = "/products/decor/img1.jpg";
-const IMG_PRODUCTS = "/products/festive/img1.jpg";
-const IMG_JEWELLERY = "/products/jewellery/img1.jpg";
-
 async function main() {
   console.log("🌱 Cleaning Mourika database...");
   await prisma.review.deleteMany();
@@ -25,7 +18,7 @@ async function main() {
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
 
-  console.log("🌱 Seeding Mourika categories...");
+  console.log("🌱 Seeding Mourika categories with authentic folder photos...");
 
   // 1. Devotees collection
   const catDevotees = await prisma.category.create({
@@ -33,7 +26,7 @@ async function main() {
       name: "Devotees collection",
       slug: "devotees-collection",
       description: "Beautiful devotional combo collections for modern devotees.",
-      imageUrl: IMG_DEVOTEES,
+      imageUrl: "/products/devotees/img1.jpg",
       displayOrder: 1,
     },
   });
@@ -44,7 +37,7 @@ async function main() {
       name: "Laddu Gopal Dresses",
       slug: "laddu-gopal-dresses",
       description: "Handcrafted dresses for Bal Gopal — luxe silks, soft pastels, cottons & woollens.",
-      imageUrl: IMG_DRESSES,
+      imageUrl: "/products/dresses/img1.jpg",
       displayOrder: 2,
     },
   });
@@ -55,7 +48,7 @@ async function main() {
       name: "Festive Home Decor",
       slug: "festive-home-decor",
       description: "Traditional hangings, rangolis, torans & decorative covers.",
-      imageUrl: IMG_DECOR,
+      imageUrl: "/products/decor/img1.jpg",
       displayOrder: 3,
     },
   });
@@ -66,7 +59,7 @@ async function main() {
       name: "Festive Products",
       slug: "festive-products",
       description: "Occasion-specific items for Janmashtami, Rakhi, Karwa Chauth, Navratri & Diwali.",
-      imageUrl: IMG_PRODUCTS,
+      imageUrl: "/products/festive/img1.jpg",
       displayOrder: 4,
     },
   });
@@ -77,7 +70,7 @@ async function main() {
       name: "Jewellery & Accessories",
       slug: "jewellery-accessories",
       description: "Premium hair, earrings, kangan, bansuri & shringar accessories for deity worship.",
-      imageUrl: IMG_JEWELLERY,
+      imageUrl: "/products/jewellery/img1.jpg",
       displayOrder: 5,
     },
   });
@@ -101,9 +94,60 @@ async function main() {
       careInstructions: "Clean brass utensils with pitambari powder. Keep incense dry.",
       shippingInfo: "Ships within 24 hours.",
       tags: "combo,devotee,puja,gifting",
-      images: [{ url: IMG_DEVOTEES, alt: "Complete Devotional Puja Combo Box", isPrimary: true }],
+      folder: "devotees",
       variants: [],
     },
+    {
+      name: "Deluxe Devotee Aarti & Bhakti Gift Set",
+      slug: "deluxe-devotee-aarti-bhakti-gift-set",
+      description: "Deluxe spiritual gift hamper containing carved brass bell, kamal diya, natural attar oil, and velvet thali cover.",
+      price: 899,
+      mrp: 1299,
+      stock: 35,
+      categoryId: catDevotees.id,
+      isFeatured: true,
+      material: "Brass, Velvet, Pure oils",
+      occasion: "Spiritual Gifting, Housewarming",
+      careInstructions: "Wipe brass with dry cloth.",
+      shippingInfo: "Ships within 24 hours.",
+      tags: "combo,devotee,gift,aarti",
+      folder: "devotees",
+      variants: [],
+    },
+    {
+      name: "Shringar & Puja Divine Combo Hamper",
+      slug: "shringar-puja-divine-combo-hamper",
+      description: "Curated combo featuring deity dress, kangan, mukut, and bansuri accessories with puja samagri.",
+      price: 549,
+      mrp: 799,
+      stock: 50,
+      categoryId: catDevotees.id,
+      isSale: true,
+      material: "Silk, Alloy, Brass",
+      occasion: "Festive Puja & Shringar",
+      careInstructions: "Store in cool dry place.",
+      shippingInfo: "Ships in 24 hours.",
+      tags: "combo,shringar,hamper",
+      folder: "devotees",
+      variants: [],
+    },
+    {
+      name: "Supreme Devotional Ritual Box",
+      slug: "supreme-devotional-ritual-box",
+      description: "Complete ritual box featuring premium incense, kapoor thali, sandalwood paste, and brass snan patra.",
+      price: 749,
+      mrp: 1099,
+      stock: 30,
+      categoryId: catDevotees.id,
+      material: "Brass, Pure Sandalwood",
+      occasion: "Special Festivals, Rituals",
+      careInstructions: "Keep liquids separate from brass.",
+      shippingInfo: "Ships in 24 hours.",
+      tags: "combo,ritual,puja",
+      folder: "devotees",
+      variants: [],
+    },
+
     // ── Laddu Gopal Dresses ──────────────────────────────────────
     {
       name: "Luxe Embroidered Silk Dress",
@@ -120,7 +164,7 @@ async function main() {
       careInstructions: "Dry clean only. Do not iron directly on zari.",
       shippingInfo: "Ships within 24 hours.",
       tags: "dresses,luxe,silk,laddu-gopal",
-      images: [{ url: IMG_DRESSES, alt: "Luxe Embroidered Silk Dress", isPrimary: true }],
+      folder: "dresses",
       variants: [
         { name: "Color", value: "Red Kundan", stock: 30, priceAdj: 0 },
         { name: "Color", value: "White Kundan", stock: 30, priceAdj: 0 },
@@ -140,7 +184,7 @@ async function main() {
       careInstructions: "Gentle hand wash with cold water.",
       shippingInfo: "Ships in 24-48 hours.",
       tags: "dresses,pastel,summer,cotton",
-      images: [{ url: "https://images.unsplash.com/photo-1601250695645-0b1e8a810cde?w=600&q=80", alt: "Soft Pastel Floral Dress", isPrimary: true }],
+      folder: "dresses",
       variants: [
         { name: "Color", value: "Peach Pearl", stock: 40, priceAdj: 0 },
         { name: "Color", value: "Mint Green", stock: 40, priceAdj: 0 },
@@ -159,7 +203,7 @@ async function main() {
       careInstructions: "Wash with mild detergent. Hang dry.",
       shippingInfo: "Ships within 24 hours.",
       tags: "dresses,summer,cotton,block-print",
-      images: [{ url: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80", alt: "Summer Block Print Dress", isPrimary: true }],
+      folder: "dresses",
       variants: [],
     },
     {
@@ -176,42 +220,27 @@ async function main() {
       careInstructions: "Hand wash in warm water using woolen wash detergent.",
       shippingInfo: "Ships within 24 hours.",
       tags: "dresses,winter,woollen,set",
-      images: [{ url: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=600&q=80", alt: "Woollen Winter Dress", isPrimary: true }],
+      folder: "dresses",
       variants: [],
     },
     {
-      name: "Premium Summer Bedding Set",
-      slug: "premium-summer-bedding-set",
-      description: "A complete comfortable sleeping set for Bal Gopal. Includes one soft mattress, two cylindrical side bolsters, one central pillow, and a soft matching summer sheet.",
-      price: 399,
-      mrp: 599,
-      stock: 40,
+      name: "Radha Rani Divine Silk Dress Set",
+      slug: "radha-rani-divine-silk-dress-set",
+      description: "Handcrafted royal silk poshaak set for Radha Rani & Laddu Gopal, detailed with gold lace border.",
+      price: 499,
+      mrp: 749,
+      stock: 45,
       categoryId: catDresses.id,
-      isNewArrival: true,
-      material: "Cotton fill, Cotton satin covers",
-      occasion: "Night Sleeping, Daily Use",
-      careInstructions: "Removable covers are machine washable.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "bedding,summer,comfort",
-      images: [{ url: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=600&q=80", alt: "Premium Summer Bedding Set", isPrimary: true }],
-      variants: [],
-    },
-    {
-      name: "Woollen Winter Bedding Set",
-      slug: "woollen-winter-bedding-set",
-      description: "Keep your deity warm during chilly winter nights. Thick velvet padded mattress, fuzzy fleece pillow, and a heavy knitted warm wool blanket.",
-      price: 449,
-      mrp: 649,
-      stock: 35,
-      categoryId: catDresses.id,
-      material: "Velvet, Fleece, Acrylic wool",
-      occasion: "Winter Night Rest",
-      careInstructions: "Dry clean or gentle hand wash only.",
+      isFeatured: true,
+      material: "Silk, Zari lace",
+      occasion: "Special Festivals, Janmashtami",
+      careInstructions: "Dry clean only.",
       shippingInfo: "Ships in 24 hours.",
-      tags: "bedding,winter,woollen,fleece",
-      images: [{ url: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80", alt: "Woollen Winter Bedding Set", isPrimary: true }],
+      tags: "dresses,radharani,poshaak,silk",
+      folder: "radharani",
       variants: [],
     },
+
     // ── Festive Home Decor ───────────────────────────────────────
     {
       name: "Torans / Bandhanwal Hanging",
@@ -227,7 +256,7 @@ async function main() {
       careInstructions: "Gently wipe with dry cloth. Do not wash.",
       shippingInfo: "Ships within 24 hours.",
       tags: "decor,toran,hanging,door",
-      images: [{ url: IMG_DECOR, alt: "Toran Bandhanwal Hanging", isPrimary: true }],
+      folder: "bandhanwal",
       variants: [],
     },
     {
@@ -244,7 +273,7 @@ async function main() {
       careInstructions: "Store flat in box. Clean with dry cloth only.",
       shippingInfo: "Ships within 24 hours.",
       tags: "decor,rangoli,reusable,floor",
-      images: [{ url: "https://images.unsplash.com/photo-1587467512961-120760940315?w=800&q=80", alt: "Decorative Rangoli Set", isPrimary: true }],
+      folder: "decor",
       variants: [],
     },
     {
@@ -260,7 +289,7 @@ async function main() {
       careInstructions: "Dust gently. Avoid contact with moisture.",
       shippingInfo: "Ships in 24-48 hours.",
       tags: "decor,shubh-labh,accent,hanging",
-      images: [{ url: "https://images.unsplash.com/photo-1561101085-6e9f89b5b00b?w=600&q=80", alt: "Shubh Labh Hanging Accent", isPrimary: true }],
+      folder: "decor",
       variants: [],
     },
     {
@@ -276,9 +305,10 @@ async function main() {
       occasion: "Puja rituals, Aarti, Gifting",
       careInstructions: "Hand wash gently in cold water.",
       tags: "decor,thali-cover,silk,embroidery",
-      images: [{ url: "https://images.unsplash.com/photo-1601250695645-0b1e8a810cde?w=600&q=80", alt: "Embroidered Thali Cover", isPrimary: true }],
+      folder: "decor",
       variants: [],
     },
+
     // ── Festive Products ─────────────────────────────────────────
     {
       name: "Janmashtami Bal Gopal Swing (Jhula)",
@@ -294,7 +324,7 @@ async function main() {
       careInstructions: "Wipe with dry flannel cloth. Keep away from fire.",
       shippingInfo: "Ships in heavy box with padding.",
       tags: "festive,jhula,swing,janmashtami",
-      images: [{ url: IMG_PRODUCTS, alt: "Janmashtami Jhula Swing", isPrimary: true }],
+      folder: "festive",
       variants: [],
     },
     {
@@ -311,7 +341,7 @@ async function main() {
       careInstructions: "Keep dry. Wipe pearls with dry tissue.",
       shippingInfo: "Ships in 24 hours.",
       tags: "festive,rakhi,pearl,designer",
-      images: [{ url: "https://images.unsplash.com/photo-1601250695645-0b1e8a810cde?w=600&q=80", alt: "Designer Pearl Rakhi Set", isPrimary: true }],
+      folder: "festive",
       variants: [],
     },
     {
@@ -328,7 +358,7 @@ async function main() {
       careInstructions: "Wash internals with water. Avoid soaking the outer velvet decoration.",
       shippingInfo: "Ships within 24 hours.",
       tags: "festive,karwa-chauth,thali-set",
-      images: [{ url: "https://images.unsplash.com/photo-1574634534894-89d7576c8259?w=600&q=80", alt: "Karwa Chauth Pooja Set", isPrimary: true }],
+      folder: "festive",
       variants: [],
     },
     {
@@ -344,7 +374,7 @@ async function main() {
       careInstructions: "Store in dry place. Clean with damp cloth.",
       shippingInfo: "Ships in 24 hours.",
       tags: "festive,navratri,dandiya,garba",
-      images: [{ url: "https://images.unsplash.com/photo-1561101085-6e9f89b5b00b?w=600&q=80", alt: "Navratri Dandiya Sticks", isPrimary: true }],
+      folder: "festive",
       variants: [],
     },
     {
@@ -361,9 +391,10 @@ async function main() {
       careInstructions: "Slightly wet clay diyas before oil fill.",
       shippingInfo: "Ships in shock-absorbent eco-packaging.",
       tags: "festive,diyas,diwali,clay",
-      images: [{ url: "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=600&q=80", alt: "Diwali Diyas Pack", isPrimary: true }],
+      folder: "upcoming",
       variants: [],
     },
+
     // ── Jewellery & Accessories ──────────────────────────────────
     {
       name: "Premium Curly Deity Hair Wig",
@@ -378,7 +409,7 @@ async function main() {
       careInstructions: "Brush gently with a baby comb if messy.",
       shippingInfo: "Ships in 24 hours.",
       tags: "jewellery,hair,wig,accessory",
-      images: [{ url: IMG_JEWELLERY, alt: "Premium Deity Hair Wig", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -394,7 +425,7 @@ async function main() {
       occasion: "Festive Shringar",
       careInstructions: "Keep in airtight pouches when not in use.",
       tags: "jewellery,earrings,jhumka,accessory",
-      images: [{ url: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80", alt: "Miniature Gold Jhumka", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -409,7 +440,7 @@ async function main() {
       occasion: "Shringar Accessory",
       careInstructions: "Do not wet. Clean with cotton.",
       tags: "jewellery,kangan,bangles,accessory",
-      images: [{ url: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80", alt: "Stone Studded Kangan", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -425,7 +456,7 @@ async function main() {
       occasion: "Festive Shringar",
       careInstructions: "Store in zip pouches. Avoid water.",
       tags: "jewellery,necklace,haar,ruby",
-      images: [{ url: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80", alt: "Deity Pearl Haar Necklace", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -440,7 +471,7 @@ async function main() {
       occasion: "Bal Gopal Accessory",
       careInstructions: "Dust with dry cotton cloth.",
       tags: "jewellery,flute,bansuri,accessory",
-      images: [{ url: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80", alt: "Deity Golden Bansuri", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -455,7 +486,7 @@ async function main() {
       occasion: "Royal Shringar",
       careInstructions: "Keep in a dry, dark storage box.",
       tags: "jewellery,kamarband,waistband,accessory",
-      images: [{ url: "https://images.unsplash.com/photo-1561101085-6e9f89b5b00b?w=600&q=80", alt: "Deity Kamar Band", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -472,7 +503,7 @@ async function main() {
       careInstructions: "Keep bottle caps tightly closed when not in use.",
       shippingInfo: "Ships in glass bottles inside cardboard sleeves.",
       tags: "accessory,attar,ittar,fragrance",
-      images: [{ url: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=600&q=80", alt: "Fragrant Attar Set", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
     {
@@ -489,22 +520,7 @@ async function main() {
       careInstructions: "Clean with lemon or pitambari to retain shine.",
       shippingInfo: "Ships within 24 hours.",
       tags: "accessory,brass,bathtub,snan",
-      images: [{ url: "https://images.unsplash.com/photo-1609137144813-722a4901f464?w=600&q=80", alt: "Brass Snan Bathtub", isPrimary: true }],
-      variants: [],
-    },
-    {
-      name: "Velvet Pooja Thali Cover (Premium)",
-      slug: "velvet-pooja-thali-cover-premium",
-      description: "Premium velvet version of the Pooja Thali cover, decorated with golden thread lace borders and hanging beads.",
-      price: 129,
-      mrp: 199,
-      stock: 110,
-      categoryId: catJewellery.id,
-      material: "Velvet, Golden lace, Glass beads",
-      occasion: "Special Festivals, Gifting",
-      careInstructions: "Dry clean only. Do not wash at home.",
-      tags: "decor,thali-cover,velvet,premium",
-      images: [{ url: "https://images.unsplash.com/photo-1601250695645-0b1e8a810cde?w=600&q=80", alt: "Velvet Thali Cover", isPrimary: true }],
+      folder: "jewellery",
       variants: [],
     },
   ];
@@ -518,15 +534,23 @@ async function main() {
     { reviewerName: "Kajol Devgan", rating: 5, comment: "Stunning kundu jhumkas. Small but very detailed shringar jewellery. Will buy more sets for festive gifting.", isVerified: true },
   ];
 
-  for (const p of productsData) {
-    const { images, variants, ...productData } = p;
-    const product = await prisma.product.upsert({
-      where: { slug: productData.slug },
-      update: {},
-      create: {
+  for (let idx = 0; idx < productsData.length; idx++) {
+    const p = productsData[idx];
+    const { folder, variants, ...productData } = p;
+
+    // Build 4 distinct images from the product's exact folder
+    const images = [
+      { url: `/products/${folder}/img1.jpg`, alt: `${productData.name} Angle 1`, isPrimary: true },
+      { url: `/products/${folder}/img2.jpg`, alt: `${productData.name} Angle 2`, isPrimary: false },
+      { url: `/products/${folder}/img3.jpg`, alt: `${productData.name} Angle 3`, isPrimary: false },
+      { url: `/products/${folder}/img4.jpg`, alt: `${productData.name} Angle 4`, isPrimary: false },
+    ];
+
+    const product = await prisma.product.create({
+      data: {
         ...productData,
         images: {
-          create: images.map((img, idx) => ({ ...img, order: idx })),
+          create: images.map((img, orderIdx) => ({ ...img, order: orderIdx })),
         },
         variants: {
           create: variants,
@@ -534,24 +558,18 @@ async function main() {
       },
     });
 
-    // Add reviews
-    const pIdx = productsData.indexOf(p);
-    if (pIdx < reviews.length) {
-      const r = reviews[pIdx];
-      const existingReview = await prisma.review.findFirst({
-        where: { productId: product.id, reviewerName: r.reviewerName },
+    // Add review
+    if (idx < reviews.length) {
+      const r = reviews[idx];
+      await prisma.review.create({
+        data: { ...r, productId: product.id },
       });
-      if (!existingReview) {
-        await prisma.review.create({
-          data: { ...r, productId: product.id },
-        });
-      }
     }
 
-    console.log(`  ✅ ${productData.name}`);
+    console.log(`  ✅ [${folder.toUpperCase()}] ${productData.name}`);
   }
 
-  console.log("\n🎉 Mourika Database seeded successfully!");
+  console.log("\n🎉 Mourika Database 100% synchronized & seeded successfully!");
 }
 
 main()
