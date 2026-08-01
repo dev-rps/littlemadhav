@@ -105,9 +105,16 @@ export default function CartDrawer() {
           <button
             id="cart-drawer-close"
             onClick={closeDrawer}
-            style={{ color: "var(--color-taupe)", padding: "0.25rem", borderRadius: "0.375rem" }}
-            className="hover:bg-maroon-50 transition-colors"
-            aria-label="Close cart"
+            style={{
+              color: "var(--color-taupe)",
+              padding: "0.375rem",
+              borderRadius: "50%",
+              border: "none",
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            aria-label="Close shopping cart"
           >
             <X size={22} />
           </button>
@@ -226,6 +233,9 @@ export default function CartDrawer() {
                     width={72}
                     height={72}
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                    }}
                   />
                 </div>
 
@@ -270,6 +280,7 @@ export default function CartDrawer() {
                         cursor: "pointer",
                         backgroundColor: "transparent",
                       }}
+                      aria-label={`Decrease quantity of ${item.name}`}
                     >
                       <Minus size={12} />
                     </button>
@@ -298,6 +309,7 @@ export default function CartDrawer() {
                         cursor: "pointer",
                         backgroundColor: "transparent",
                       }}
+                      aria-label={`Increase quantity of ${item.name}`}
                     >
                       <Plus size={12} />
                     </button>

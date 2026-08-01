@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Yeseva_One, Poppins } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -8,17 +8,10 @@ import { Toaster } from "react-hot-toast";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import ExitIntentPopup from "@/components/home/ExitIntentPopup";
 
-const yesevaOne = Yeseva_One({
-  weight: "400",
+const playfair = Playfair_Display({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--font-playfair",
   display: "swap",
 });
 
@@ -49,7 +42,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={playfair.variable}>
       <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">{children}</main>
@@ -62,11 +55,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           toastOptions={{
             style: {
               background: "#FFFBF5",
-              color: "#1a1a1a",
-              border: "1px solid #D4A017",
-              fontFamily: "var(--font-body, Poppins, sans-serif)",
+              color: "#333333",
+              border: "1px solid var(--color-gold)",
+              fontFamily: "var(--font-body)",
+              borderRadius: "14px",
             },
-            success: { iconTheme: { primary: "#2D6A4F", secondary: "#FFFBF5" } },
+            success: { iconTheme: { primary: "#357C49", secondary: "#FFFBF5" } },
           }}
         />
       </body>

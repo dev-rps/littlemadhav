@@ -1,38 +1,42 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 
 const categories = [
   {
     name: "Devotees collection",
     slug: "devotees-collection",
-    imageUrl: "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&q=80",
     desc: "Divine Combos",
+    icon: "🕉️",
+    gradient: "linear-gradient(145deg, #FBD5CD 0%, #F4E8DB 100%)",
   },
   {
     name: "Laddu Gopal Dresses",
     slug: "laddu-gopal-dresses",
-    imageUrl: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400&q=80",
     desc: "Luxe & Pastel Dresses",
+    icon: "👗",
+    gradient: "linear-gradient(145deg, #FBF3E9 0%, #FBD5CD 100%)",
   },
   {
     name: "Festive Home Decor",
     slug: "festive-home-decor",
-    imageUrl: "https://images.unsplash.com/photo-1587467512961-120760940315?w=400&q=80",
     desc: "Torans & Rangolis",
+    icon: "🪔",
+    gradient: "linear-gradient(145deg, #F4E8DB 0%, #FBF3E9 100%)",
   },
   {
     name: "Festive Products",
     slug: "festive-products",
-    imageUrl: "https://images.unsplash.com/photo-1627130942770-e78c9d5b8f4e?w=400&q=80",
     desc: "Janmashtami & Diwali",
+    icon: "🎉",
+    gradient: "linear-gradient(145deg, #FBD5CD 0%, #FBF3E9 100%)",
   },
   {
     name: "Jewellery & Accessories",
     slug: "jewellery-accessories",
-    imageUrl: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=400&q=80",
     desc: "Bansuri & Ornaments",
+    icon: "💎",
+    gradient: "linear-gradient(145deg, #FBF3E9 0%, #F4E8DB 100%)",
   },
 ];
 
@@ -46,12 +50,12 @@ export default function CategoryGrid() {
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
           <p
             style={{
-              fontFamily: "var(--font-body, Lato, sans-serif)",
+              fontFamily: "var(--font-body)",
               fontSize: "0.8rem",
-              color: "var(--color-gold-dark)",
+              color: "var(--color-gold)",
               textTransform: "uppercase",
               letterSpacing: "0.15em",
-              fontWeight: 600,
+              fontWeight: 700,
               marginBottom: "0.5rem",
             }}
           >
@@ -59,7 +63,7 @@ export default function CategoryGrid() {
           </p>
           <h2
             style={{
-              fontFamily: "var(--font-display, Lato, sans-serif)",
+              fontFamily: "var(--font-display)",
               fontSize: "clamp(1.75rem, 4vw, 2.35rem)",
               color: "var(--color-maroon)",
               margin: 0,
@@ -75,11 +79,12 @@ export default function CategoryGrid() {
         {/* Circular Categories Grid */}
         <div
           style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: "2.5rem 2rem",
+            display: "grid",
+            gridTemplateColumns: "repeat(5, 1fr)",
+            gap: "2rem",
+            justifyItems: "center",
           }}
+          className="!grid-cols-3 sm:!grid-cols-5"
         >
           {categories.map((cat) => {
             const isHovered = hoveredSlug === cat.slug;
@@ -94,77 +99,74 @@ export default function CategoryGrid() {
                   alignItems: "center",
                   textDecoration: "none",
                   cursor: "pointer",
-                  width: "140px",
+                  width: "100%",
+                  maxWidth: "140px",
                 }}
                 onMouseEnter={() => setHoveredSlug(cat.slug)}
                 onMouseLeave={() => setHoveredSlug(null)}
               >
-                {/* Gold ring circle */}
+                {/* Gold ring circle with themed icon */}
                 <div
                   style={{
-                    width: "120px",
-                    height: "120px",
+                    width: "110px",
+                    height: "110px",
                     borderRadius: "50%",
-                    border: isHovered ? "2.5px solid var(--color-maroon)" : "1.5px solid var(--color-gold-light)",
+                    border: isHovered ? "2.5px solid var(--color-maroon)" : "2px solid var(--color-gold-light)",
                     padding: "4px",
                     backgroundColor: "var(--color-white)",
                     transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-                    boxShadow: isHovered 
-                      ? "var(--shadow-hover)" 
+                    boxShadow: isHovered
+                      ? "var(--shadow-hover)"
                       : "0 2px 10px rgba(102, 13, 25, 0.05)",
-                    transform: isHovered ? "translateY(-4px)" : "translateY(0)",
+                    transform: isHovered ? "translateY(-6px) scale(1.02)" : "translateY(0)",
                   }}
                 >
-                  {/* Image container */}
+                  {/* Icon container */}
                   <div
                     style={{
                       width: "100%",
                       height: "100%",
                       borderRadius: "50%",
-                      position: "relative",
-                      overflow: "hidden",
-                      backgroundColor: "var(--color-cream-alt)",
+                      background: cat.gradient,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "2.5rem",
+                      transition: "transform 0.5s ease",
+                      transform: isHovered ? "scale(1.08)" : "scale(1)",
                     }}
                   >
-                    <Image
-                      src={cat.imageUrl}
-                      alt={cat.name}
-                      fill
-                      sizes="120px"
-                      style={{
-                        objectFit: "cover",
-                        transition: "transform 0.5s ease",
-                        transform: isHovered ? "scale(1.12)" : "scale(1)",
-                      }}
-                    />
+                    {cat.icon}
                   </div>
                 </div>
 
                 {/* Category title */}
                 <p
                   style={{
-                    fontFamily: "var(--font-display, Lato, sans-serif)",
-                    fontSize: "0.95rem",
-                    color: isHovered ? "var(--color-maroon)" : "var(--color-black)",
-                    margin: "0.85rem 0 0.15rem",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.82rem",
+                    color: isHovered ? "var(--color-maroon)" : "var(--color-body)",
+                    margin: "0.75rem 0 0.15rem",
                     lineHeight: 1.2,
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "0.08em",
+                    letterSpacing: "0.06em",
                     transition: "color 0.2s ease",
+                    textAlign: "center",
                   }}
                 >
                   {cat.name}
                 </p>
 
-                {/* Optional small description */}
+                {/* Description */}
                 <p
                   style={{
-                    fontFamily: "var(--font-body, Lato, sans-serif)",
-                    fontSize: "0.75rem",
-                    color: "var(--color-taupe)",
+                    fontFamily: "var(--font-body)",
+                    fontSize: "0.72rem",
+                    color: "var(--color-muted)",
                     margin: 0,
-                    lineHeight: 1.2,
+                    lineHeight: 1.3,
+                    textAlign: "center",
                   }}
                 >
                   {cat.desc}

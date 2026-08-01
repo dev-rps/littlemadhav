@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice, getDiscountPercent } from "@/lib/utils";
 import toast from "react-hot-toast";
@@ -24,31 +24,41 @@ export interface ProductCardData {
 
 interface Props {
   product: ProductCardData;
+  onQuickView?: (product: ProductCardData) => void;
 }
 
-function StarRating({ rating, count }: { rating: number; count: number }) {
+/* ── Branded Fallback (cream bg + gold logo mark) ── */
+function BrandedFallback({ name }: { name: string }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-      <div style={{ display: "flex" }}>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            size={11}
-            fill={star <= Math.round(rating) ? "#C5A059" : "none"}
-            stroke={star <= Math.round(rating) ? "#C5A059" : "#ccc"}
-          />
-        ))}
-      </div>
-      <span style={{ fontSize: "0.7rem", color: "#888", fontFamily: "var(--font-body, Jost, sans-serif)" }}>
-        ({count})
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        background: "linear-gradient(145deg, #FBF3E9 0%, #F4E8DB 60%, #FBD5CD 100%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+      }}
+    >
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="#CD9703" strokeWidth="1" strokeDasharray="2 2" />
+        <circle cx="12" cy="12" r="6" fill="#CD9703" opacity="0.12" />
+        <circle cx="12" cy="12" r="4" stroke="#CD9703" strokeWidth="1.5" fill="none" />
+      </svg>
+      <span style={{ fontFamily: "var(--font-body)", fontSize: "0.6rem", color: "#BAAC9D", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase" }}>
+        MOURIKA
       </span>
     </div>
   );
 }
 
-export default function ProductCard({ product }: Props) {
-  const { addItem, openDrawer } = useCartStore();
+export default function ProductCard({ product, onQuickView }: Props) {
+  const { addItem } = useCartStore();
   const [hovered, setHovered] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
     product.variants[0]?.value
   );
@@ -56,11 +66,12 @@ export default function ProductCard({ product }: Props) {
   const addWishlistItem = useWishlistStore((s) => s.addItem);
   const removeWishlistItem = useWishlistStore((s) => s.removeItem);
 
-  const primaryImage = product.images[0]?.url ?? "/placeholder.jpg";
+  const primaryImage = product.images[0]?.url ?? "";
   const secondImage = product.images[1]?.url ?? primaryImage;
   const discount = getDiscountPercent(product.mrp, product.price);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
+  const savings = product.mrp - product.price;
 
   // Get unique variant names for grouping
   const variantGroups = product.variants.reduce<Record<string, string[]>>(
@@ -73,7 +84,7 @@ export default function ProductCard({ product }: Props) {
   );
   const firstVariantName = Object.keys(variantGroups)[0];
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem({
@@ -89,7 +100,13 @@ export default function ProductCard({ product }: Props) {
     toast.success(`${product.name.slice(0, 24)}… added to bag!`, {
       icon: "🛍️",
     });
-  };
+  }, [addItem, product, selectedVariant, primaryImage]);
+
+  const handleQuickView = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onQuickView?.(product);
+  }, [onQuickView, product]);
 
   return (
     <div
@@ -99,9 +116,8 @@ export default function ProductCard({ product }: Props) {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        border: "1px solid rgba(186, 172, 157, 0.3)",
-        borderRadius: "var(--radius-card, 1.125rem)",
-        backgroundColor: "var(--color-cream-alt)",
+        borderRadius: "8px",
+        backgroundColor: "var(--color-cream-card)",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -110,48 +126,23 @@ export default function ProductCard({ product }: Props) {
       <div
         style={{
           position: "absolute",
-          top: "0.625rem",
-          left: "0.625rem",
+          top: "0.5rem",
+          left: "0.5rem",
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          gap: "0.3rem",
+          gap: "0.25rem",
         }}
       >
         {product.isSale && discount > 0 && (
-          <span
-            style={{
-              backgroundColor: "var(--color-blush)",
-              color: "var(--color-maroon)",
-              fontSize: "0.68rem",
-              fontWeight: 900,
-              fontFamily: "var(--font-body, Lato, sans-serif)",
-              padding: "0.2rem 0.5rem",
-              borderRadius: "0.375rem",
-              letterSpacing: "0.05em",
-            }}
-          >
-            -{discount}%
-          </span>
+          <span className="badge-discount">-{discount}%</span>
         )}
         {product.isNewArrival && (
-          <span
-            style={{
-              backgroundColor: "var(--color-gold-dark)",
-              color: "var(--color-white)",
-              fontSize: "0.68rem",
-              fontWeight: 900,
-              fontFamily: "var(--font-body, Lato, sans-serif)",
-              padding: "0.2rem 0.5rem",
-              borderRadius: "0.375rem",
-              letterSpacing: "0.05em",
-            }}
-          >
-            NEW
-          </span>
+          <span className="badge-new">NEW</span>
         )}
       </div>
 
+      {/* Wishlist button */}
       <button
         id={`wishlist-${product.id}`}
         onClick={(e) => {
@@ -174,24 +165,25 @@ export default function ProductCard({ product }: Props) {
         }}
         style={{
           position: "absolute",
-          top: "0.625rem",
-          right: "0.625rem",
+          top: "0.5rem",
+          right: "0.5rem",
           zIndex: 2,
           backgroundColor: "var(--color-white)",
-          border: "1px solid var(--color-blush)",
+          border: "none",
           borderRadius: "50%",
-          width: 30,
-          height: 30,
+          width: 32,
+          height: 32,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
           transition: "all 0.2s",
+          boxShadow: "0 2px 8px rgba(102,13,25,0.1)",
         }}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
       >
         <Heart
-          size={14}
+          size={15}
           fill={isWishlisted ? "var(--color-maroon)" : "none"}
           stroke={isWishlisted ? "var(--color-maroon)" : "var(--color-taupe)"}
         />
@@ -203,46 +195,54 @@ export default function ProductCard({ product }: Props) {
           style={{
             position: "relative",
             overflow: "hidden",
-            aspectRatio: "3 / 4",
+            aspectRatio: "1 / 1",
             backgroundColor: "var(--color-cream)",
           }}
         >
-          <Image
-            src={hovered ? secondImage : primaryImage}
-            alt={product.images[0]?.alt ?? product.name}
-            fill
-            sizes="(max-width: 768px) 50vw, 25vw"
-            style={{
-              objectFit: "cover",
-              transition: "transform 0.4s ease, opacity 0.3s ease",
-              transform: hovered ? "scale(1.05)" : "scale(1)",
-            }}
-          />
+          {/* Skeleton shimmer while loading */}
+          {!imgLoaded && !imgError && (
+            <div className="skeleton" style={{ position: "absolute", inset: 0 }} />
+          )}
+
+          {/* Branded fallback on error */}
+          {imgError ? (
+            <BrandedFallback name={product.name} />
+          ) : (
+            <Image
+              src={hovered && secondImage !== primaryImage ? secondImage : primaryImage}
+              alt={product.images[0]?.alt ?? product.name}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              style={{
+                objectFit: "cover",
+                transition: "transform 0.4s ease, opacity 0.3s ease",
+                transform: hovered ? "scale(1.05)" : "scale(1)",
+                opacity: imgLoaded ? 1 : 0,
+              }}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgError(true)}
+            />
+          )}
         </div>
       </Link>
 
       {/* Info */}
-      <div style={{ padding: "0.75rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-        {/* Brand Tag */}
-        <span style={{ fontSize: "0.62rem", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.15em" }}>
-          MOURIKA
-        </span>
-
+      <div style={{ padding: "0.6rem 0.65rem", flex: 1, display: "flex", flexDirection: "column", gap: "0.25rem" }}>
         {/* Name */}
         <Link href={`/products/${product.slug}`} style={{ textDecoration: "none" }}>
           <h3
             style={{
-              fontFamily: "var(--font-body, Lato, sans-serif)",
-              fontSize: "0.88rem",
+              fontFamily: "var(--font-body)",
+              fontSize: "0.85rem",
               color: "var(--color-black)",
               margin: 0,
-              fontWeight: 500,
-              lineHeight: 1.35,
+              fontWeight: 600,
+              lineHeight: 1.3,
               display: "-webkit-box",
               WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
-              minHeight: "2.4rem",
+              minHeight: "2.2rem",
             }}
           >
             {product.name}
@@ -256,21 +256,21 @@ export default function ProductCard({ product }: Props) {
               <Star
                 key={star}
                 size={11}
-                fill={star <= Math.round(rating) ? "var(--color-gold-dark)" : "none"}
-                stroke={star <= Math.round(rating) ? "var(--color-gold-dark)" : "var(--color-taupe)"}
+                fill={star <= Math.round(rating) ? "var(--color-gold)" : "none"}
+                stroke={star <= Math.round(rating) ? "var(--color-gold)" : "var(--color-taupe)"}
               />
             ))}
           </div>
-          <span style={{ fontSize: "0.7rem", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)" }}>
+          <span style={{ fontSize: "0.68rem", color: "var(--color-muted)", fontFamily: "var(--font-body)" }}>
             ({reviewCount})
           </span>
         </div>
 
-        {/* Prices */}
-        <div style={{ display: "flex", alignItems: "baseline", gap: "0.4rem", marginTop: "0.1rem" }}>
+        {/* Prices + Savings */}
+        <div style={{ display: "flex", alignItems: "baseline", gap: "0.35rem", flexWrap: "wrap", marginTop: "0.15rem" }}>
           <span
             style={{
-              fontFamily: "var(--font-body, Lato, sans-serif)",
+              fontFamily: "var(--font-body)",
               fontWeight: 900,
               fontSize: "0.95rem",
               color: "var(--color-maroon)",
@@ -279,22 +279,34 @@ export default function ProductCard({ product }: Props) {
             {formatPrice(product.price)}
           </span>
           {product.mrp > product.price && (
-            <span
-              style={{
-                fontFamily: "var(--font-body, Lato, sans-serif)",
-                fontSize: "0.78rem",
-                color: "var(--color-taupe)",
-                textDecoration: "line-through",
-              }}
-            >
-              {formatPrice(product.mrp)}
-            </span>
+            <>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.75rem",
+                  color: "var(--color-muted)",
+                  textDecoration: "line-through",
+                }}
+              >
+                {formatPrice(product.mrp)}
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.65rem",
+                  color: "var(--color-green)",
+                  fontWeight: 700,
+                }}
+              >
+                Save {discount}%
+              </span>
+            </>
           )}
         </div>
 
         {/* Variant Selector */}
         {firstVariantName && variantGroups[firstVariantName].length > 1 && (
-          <div style={{ display: "flex", gap: "0.35rem", flexWrap: "wrap", marginTop: "0.2rem" }}>
+          <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", marginTop: "0.15rem" }}>
             {variantGroups[firstVariantName].slice(0, 4).map((val) => {
               const isSelected = selectedVariant === val;
               const isShort = val.length <= 4;
@@ -303,18 +315,18 @@ export default function ProductCard({ product }: Props) {
                   key={val}
                   onClick={(e) => { e.preventDefault(); setSelectedVariant(val); }}
                   style={{
-                    width: isShort ? "28px" : "auto",
-                    height: isShort ? "28px" : "auto",
-                    padding: isShort ? "0" : "0.2rem 0.55rem",
+                    width: isShort ? "26px" : "auto",
+                    height: isShort ? "26px" : "auto",
+                    padding: isShort ? "0" : "0.15rem 0.5rem",
                     borderRadius: isShort ? "50%" : "9999px",
                     display: "inline-flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    border: isSelected ? "1px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
+                    border: isSelected ? "1.5px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
                     backgroundColor: isSelected ? "var(--color-maroon)" : "var(--color-white)",
-                    color: isSelected ? "var(--color-white)" : "var(--color-taupe)",
-                    fontSize: "0.65rem",
-                    fontFamily: "var(--font-body, Lato, sans-serif)",
+                    color: isSelected ? "var(--color-white)" : "var(--color-muted)",
+                    fontSize: "0.62rem",
+                    fontFamily: "var(--font-body)",
                     cursor: "pointer",
                     fontWeight: isSelected ? 700 : 400,
                     transition: "all 0.15s",
@@ -328,38 +340,74 @@ export default function ProductCard({ product }: Props) {
         )}
       </div>
 
-      {/* Slide-up Full Width Add to Cart button */}
-      <button
-        id={`add-to-cart-${product.id}`}
-        onClick={handleAddToCart}
+      {/* Hover overlay buttons: Quick View + Add to Cart */}
+      <div
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "0.4rem",
-          padding: "0.75rem",
-          backgroundColor: "var(--color-maroon)",
-          color: "var(--color-white)",
-          border: "none",
-          fontFamily: "var(--font-body, Lato, sans-serif)",
-          fontWeight: 700,
-          fontSize: "0.85rem",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          cursor: "pointer",
+          gap: 0,
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           transform: hovered ? "translateY(0)" : "translateY(100%)",
           opacity: hovered ? 1 : 0,
           zIndex: 5,
         }}
       >
-        <ShoppingBag size={14} />
-        Add to Cart
-      </button>
+        {onQuickView && (
+          <button
+            onClick={handleQuickView}
+            style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.3rem",
+              padding: "0.65rem",
+              backgroundColor: "var(--color-gold)",
+              color: "var(--color-white)",
+              border: "none",
+              fontFamily: "var(--font-body)",
+              fontWeight: 700,
+              fontSize: "0.75rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
+              cursor: "pointer",
+            }}
+            aria-label={`Quick view ${product.name}`}
+          >
+            <Eye size={13} />
+            Quick View
+          </button>
+        )}
+        <button
+          id={`add-to-cart-${product.id}`}
+          onClick={handleAddToCart}
+          style={{
+            flex: onQuickView ? 1 : undefined,
+            width: onQuickView ? undefined : "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.35rem",
+            padding: "0.65rem",
+            backgroundColor: "var(--color-maroon)",
+            color: "var(--color-white)",
+            border: "none",
+            fontFamily: "var(--font-body)",
+            fontWeight: 700,
+            fontSize: "0.75rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            cursor: "pointer",
+          }}
+          aria-label={`Add ${product.name} to cart`}
+        >
+          <ShoppingBag size={13} />
+          Add to Cart
+        </button>
+      </div>
     </div>
   );
 }

@@ -64,45 +64,51 @@
 
 /* ── Mourika Design Tokens (Tailwind v4 @theme) ────────── */
 @theme {
-  /* Colors */
+  /* ── Brand Colors ── */
   --color-maroon:         #660D19;
-  --color-maroon-light:   #8E1F2E;
+  --color-maroon-light:   #8B1E3F;
   --color-maroon-dark:    #40040A;
   --color-maroon-50:      #FDF0F4;
   --color-maroon-100:     #FBD5CD;
 
-  --color-blush:          #FBD5CD;
+  --color-gold:           #CD9703;
   --color-gold-dark:      #CD9703;
   --color-gold-light:     #D5AD36;
+  --color-gold-hover:     #B8870E;
+
+  --color-blush:          #FBD5CD;
 
   --color-cream:          #FBF3E9;
   --color-cream-alt:      #F4E8DB;
-  --color-cream-card:     #F4E8DB;
+  --color-cream-card:     #FFFFFF;
   --color-cream-dark:     #F4E8DB;
 
-  --color-black:          #000000;
+  --color-black:          #1a1a1a;
   --color-white:          #FFFFFF;
   --color-taupe:          #BAAC9D;
   --color-green:          #357C49;
 
+  --color-body:           #333333;
+  --color-muted:          #777777;
+
   --color-festive-green:  #357C49;
   --color-festive-orange: #CD9703;
-  --color-gold:           #CD9703;
 
-  /* Fonts */
-  --font-display: "Lato", sans-serif;
-  --font-body:    "Lato", sans-serif;
+  /* ── Fonts ── */
+  --font-display: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-body:    "Lato", system-ui, sans-serif;
 
-  /* Shadows */
+  /* ── Shadows ── */
   --shadow-card:   0 2px 16px 0 rgba(102,13,25,0.06);
   --shadow-gold:   0 4px 24px 0 rgba(205,151,3,0.12);
-  --shadow-hover:  0 8px 32px 0 rgba(102,13,25,0.12);
+  --shadow-hover:  0 8px 32px 0 rgba(102,13,25,0.13);
 
-  /* Border radius */
+  /* ── Border Radius ── */
   --radius-card: 1.125rem;
   --radius-pill: 9999px;
+  --radius-btn:  14px;
 
-  /* Animations */
+  /* ── Animations ── */
   --animate-slide-in-right: slide-in-right 0.35s cubic-bezier(0.4,0,0.2,1);
   --animate-fade-up:        fade-up 0.5s cubic-bezier(0.4,0,0.2,1);
   --animate-shimmer:        shimmer 1.5s infinite linear;
@@ -118,6 +124,18 @@
   from { transform: translateY(24px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }
 }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-in-up {
+  from { transform: translateY(32px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
@@ -129,6 +147,13 @@
 @keyframes marquee {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
+}
+@keyframes skeleton-loading {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes ripple {
+  to { transform: scale(4); opacity: 0; }
 }
 
 /* ── Base Styles ───────────────────────────────────────────── */
@@ -146,15 +171,18 @@ html {
 
 body {
   background-color: var(--color-cream);
-  color: var(--color-black);
+  color: var(--color-body);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 700;
+  color: var(--color-maroon);
+  line-height: 1.25;
 }
 
 /* ── Custom Scrollbar ──────────────────────────────────────── */
@@ -166,6 +194,22 @@ h1, h2, h3, h4, h5, h6 {
 ::selection {
   background-color: rgba(251, 213, 205, 0.4);
   color: var(--color-maroon);
+}
+
+/* ── Focus Visible — Accessibility ─────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 /* ── Gold shimmer text utility ─────────────────────────────── */
@@ -193,16 +237,109 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Card with gold hover ─────────────────────────────────── */
 .card-festive {
-  background: var(--color-cream-alt);
+  background: var(--color-cream-card);
   border-radius: var(--radius-card, 1.125rem);
-  border: 1px solid rgba(186, 172, 157, 0.3);
-  box-shadow: 0 2px 16px 0 rgba(102,13,25,0.04);
+  border: 1px solid rgba(102,13,25,0.08);
+  box-shadow: var(--shadow-card);
   transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
 }
 .card-festive:hover {
   box-shadow: var(--shadow-hover);
-  border-color: var(--color-maroon);
+  border-color: rgba(102,13,25,0.15);
   transform: translateY(-4px);
+}
+
+/* ── Button Styles ─────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: var(--color-maroon);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary:hover {
+  background-color: var(--color-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(205,151,3,0.25);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-white);
+  color: var(--color-maroon);
+  border: 2px solid var(--color-gold);
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.btn-secondary:hover {
+  background-color: var(--color-cream-alt);
+  border-color: var(--color-maroon);
+  transform: translateY(-1px);
+}
+
+/* ── Badge Styles ──────────────────────────────────────────── */
+.badge-discount {
+  background-color: var(--color-maroon);
+  color: var(--color-white);
+  font-size: 0.68rem;
+  font-weight: 900;
+  font-family: var(--font-body);
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.375rem;
+  letter-spacing: 0.04em;
+}
+.badge-new {
+  background-color: var(--color-green);
+  color: var(--color-white);
+  font-size: 0.68rem;
+  font-weight: 900;
+  font-family: var(--font-body);
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.375rem;
+  letter-spacing: 0.04em;
+}
+.badge-bestseller {
+  background-color: var(--color-gold);
+  color: var(--color-white);
+  font-size: 0.68rem;
+  font-weight: 900;
+  font-family: var(--font-body);
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.375rem;
+  letter-spacing: 0.04em;
+}
+
+/* ── Skeleton Loading ──────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-cream-alt) 25%, var(--color-cream) 50%, var(--color-cream-alt) 75%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius-card);
 }
 
 /* ── Announcement marquee ─────────────────────────────────── */
@@ -216,19 +353,60 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Gradient Divider ─────────────────────────────────────── */
 .divider-gold {
   height: 2px;
-  background: linear-gradient(90deg, transparent, #C5A059, #D8B97D, #C5A059, transparent);
+  background: linear-gradient(90deg, transparent, var(--color-gold-dark), var(--color-gold-light), var(--color-gold-dark), transparent);
   border: none;
 }
 
 /* ── Circular Gold-Ring border ─────────────────────────────── */
 .border-gold-ring {
   padding: 3px;
-  border: 1.5px solid #c5a059;
+  border: 1.5px solid var(--color-gold-light);
   border-radius: 50%;
   display: inline-block;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 .border-gold-ring:hover {
   transform: scale(1.05);
-  border-color: #8C6239;
+  border-color: var(--color-maroon);
+}
+
+/* ── Scroll Animation Utility ──────────────────────────────── */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.animate-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Ripple Effect ─────────────────────────────────────────── */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  border-radius: 50%;
+}
+.ripple:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+/* ── Section Spacing (8px system) ──────────────────────────── */
+.section-padding {
+  padding: 4rem 0;
+}
+.section-padding-lg {
+  padding: 5rem 0;
 }

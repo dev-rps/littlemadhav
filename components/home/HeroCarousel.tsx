@@ -1,52 +1,43 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import FestivalCountdown from "@/components/ui/FestivalCountdown";
 
 const slides = [
   {
     id: 1,
     title: "This Festive Season,\nSend Divine Love",
-    subtitle: "Exquisitely handcrafted with pure thread, kundan & premium beads",
+    subtitle: "Exquisitely handcrafted rakhis with pure thread, kundan & premium beads",
     cta: "Shop Rakhi Collection",
     ctaHref: "/collections/rakhi",
     ctaSecondary: "View Combos",
-    ctaSecondaryHref: "/collections/combos",
+    ctaSecondaryHref: "/collections/festive-products",
     badge: "Special Teej & Rakhi Collection",
-    gradient: "linear-gradient(135deg, #FFFDF9 0%, #FAF7F2 60%, #F2EAE0 100%)",
-    accent: "#8C6239",
-    emoji: "🎀",
     festivalDate: new Date("2026-08-28"),
     festivalName: "Raksha Bandhan",
   },
   {
     id: 2,
-    title: "Jhumkas That\nSpeak Your Soul",
-    subtitle: "Oxidised · Kundan · Pearl · Terracotta — styled to make celebrations divine",
-    cta: "Explore Jhumkas",
-    ctaHref: "/collections/jhumka",
-    ctaSecondary: "Under ₹299",
-    ctaSecondaryHref: "/collections/jhumka?filter=budget",
+    title: "Dress Your Deity\nwith Divine Love",
+    subtitle: "Luxe fabrics, pastel hues & woollen warmth — handcrafted for Laddu Gopal",
+    cta: "Shop Laddu Gopal Dresses",
+    ctaHref: "/collections/laddu-gopal-dresses",
+    ctaSecondary: "View Woollen Sets",
+    ctaSecondaryHref: "/collections/woollen-dresses",
     badge: "Premium Handcrafted Quality",
-    gradient: "linear-gradient(135deg, #FCFBF7 0%, #F7F2E6 60%, #FFFDF9 100%)",
-    accent: "#8C6239",
-    emoji: "✨",
-    festivalDate: new Date("2026-10-12"),
-    festivalName: "Navratri",
+    festivalDate: new Date("2026-09-02"),
+    festivalName: "Janmashtami",
   },
   {
     id: 3,
     title: "Festival Hampers\nCurated with Care",
     subtitle: "Heritage gift boxes starting at ₹499 — perfect for your loved ones",
     cta: "Shop Gift Hampers",
-    ctaHref: "/collections/gifting",
-    ctaSecondary: "View Combos",
-    ctaSecondaryHref: "/collections/combos",
+    ctaHref: "/collections/festive-products",
+    ctaSecondary: "View Home Decor",
+    ctaSecondaryHref: "/collections/festive-home-decor",
     badge: "🎁 Free Premium Gift Wrapping",
-    gradient: "linear-gradient(135deg, #FFFDF9 0%, #F2EFE8 60%, #FAF7F2 100%)",
-    accent: "#C5A059",
-    emoji: "🪔",
     festivalDate: new Date("2026-11-08"),
     festivalName: "Diwali",
   },
@@ -54,51 +45,97 @@ const slides = [
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
 
-  const goTo = (idx: number) => {
-    if (animating) return;
-    setAnimating(true);
-    setCurrent(idx);
-    setTimeout(() => setAnimating(false), 600);
-  };
-
-  const prev = () => goTo((current - 1 + slides.length) % slides.length);
-  const next = () => goTo((current + 1) % slides.length);
+  const goTo = useCallback(
+    (idx: number) => {
+      setCurrent(idx);
+    },
+    []
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      goTo((current + 1) % slides.length);
+      setCurrent((prev) => (prev + 1) % slides.length);
     }, 5500);
     return () => clearInterval(interval);
-  }, [current]);
-
-  const slide = slides[current];
+  }, []);
 
   return (
     <section
       style={{
         position: "relative",
         overflow: "hidden",
-        background: slide.gradient,
-        minHeight: "75vh",
+        background: "linear-gradient(135deg, #FBF3E9 0%, #F4E8DB 40%, #FBF3E9 100%)",
+        minHeight: "72vh",
         display: "flex",
         alignItems: "center",
-        transition: "background 0.6s ease",
-        borderBottom: "1px solid #EFEAE0",
       }}
     >
+      {/* Hero background image — fills right half on desktop */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: "55%",
+          zIndex: 1,
+        }}
+        className="hidden md:block"
+      >
+        <Image
+          src="/hero-banner.png"
+          alt="Festive devotional accessories"
+          fill
+          sizes="55vw"
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
+          }}
+          priority
+        />
+        {/* Gradient fade from left to merge with text area */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(90deg, #FBF3E9 0%, rgba(251,243,233,0.65) 35%, transparent 75%)",
+          }}
+        />
+      </div>
+
+      {/* Mobile background image */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          opacity: 0.12,
+        }}
+        className="md:hidden"
+      >
+        <Image
+          src="/hero-banner.png"
+          alt=""
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+          priority
+        />
+      </div>
+
       {/* Mandala bg */}
       <div
         className="bg-mandala"
         style={{
           position: "absolute",
           inset: 0,
-          opacity: 0.05,
+          opacity: 0.04,
+          zIndex: 2,
         }}
       />
 
-      {/* Gold decorative circles */}
+      {/* Gold decorative background elements */}
       <div
         style={{
           position: "absolute",
@@ -107,8 +144,9 @@ export default function HeroCarousel() {
           width: "40vw",
           height: "40vw",
           borderRadius: "50%",
-          border: "1.5px solid rgba(197,160,89,0.15)",
+          border: "1.5px solid rgba(205,151,3,0.12)",
           pointerEvents: "none",
+          zIndex: 2,
         }}
       />
       <div
@@ -119,217 +157,169 @@ export default function HeroCarousel() {
           width: "35vw",
           height: "35vw",
           borderRadius: "50%",
-          border: "1.5px solid rgba(140,98,57,0.1)",
+          border: "1.5px solid rgba(205,151,3,0.08)",
           pointerEvents: "none",
+          zIndex: 2,
         }}
       />
 
-      <div
-        className="max-w-7xl mx-auto px-4 sm:px-6 w-full"
-        style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem", alignItems: "center" }}
-      >
+      {/* ── Carousel Sliding Track ── */}
+      <div style={{ position: "relative", zIndex: 5, width: "100%", overflow: "hidden" }}>
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "2rem",
-            alignItems: "center",
+            display: "flex",
+            width: `${slides.length * 100}%`,
+            transform: `translateX(-${(current * 100) / slides.length}%)`,
+            transition: "transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)",
           }}
-          className="md:grid-cols-2"
         >
-          {/* Left: Text */}
-          <div style={{ padding: "3rem 0", zIndex: 5 }}>
-            {/* Badge */}
+          {slides.map((slide) => (
             <div
+              key={slide.id}
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                backgroundColor: "rgba(197,160,89,0.1)",
-                border: "1px solid rgba(197,160,89,0.25)",
-                borderRadius: "9999px",
-                padding: "0.3rem 0.75rem",
-                marginBottom: "1.25rem",
+                width: `${100 / slides.length}%`,
+                flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: "0.72rem", color: "#8C6239", fontFamily: "var(--font-body, Jost, sans-serif)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-                {slide.badge}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1
-              style={{
-                fontFamily: "var(--font-display, Cinzel, serif)",
-                fontSize: "clamp(2rem, 4vw, 3.25rem)",
-                color: "#8C6239",
-                lineHeight: 1.2,
-                marginBottom: "1rem",
-                whiteSpace: "pre-line",
-                fontWeight: 500,
-              }}
-            >
-              {slide.title}
-            </h1>
-
-            {/* Subtitle */}
-            <p
-              style={{
-                fontFamily: "var(--font-body, Jost, sans-serif)",
-                fontSize: "clamp(0.85rem, 1.8vw, 0.98rem)",
-                color: "#555",
-                marginBottom: "2rem",
-                maxWidth: 460,
-                lineHeight: 1.5,
-              }}
-            >
-              {slide.subtitle}
-            </p>
-
-            {/* CTAs */}
-            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-              <Link
-                href={slide.ctaHref}
-                id={`hero-cta-${slide.id}`}
-                style={{
-                  display: "inline-block",
-                  padding: "0.75rem 1.75rem",
-                  backgroundColor: "#8C6239",
-                  color: "#FCFBF7",
-                  borderRadius: "0.25rem",
-                  fontFamily: "var(--font-body, Jost, sans-serif)",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  textDecoration: "none",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  transition: "all 0.25s ease",
-                  boxShadow: "0 4px 14px rgba(140,98,57,0.18)",
-                }}
-                onMouseOver={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "#734e2c";
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                }}
-                onMouseOut={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "#8C6239";
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                }}
-              >
-                {slide.cta} →
-              </Link>
-              <Link
-                href={slide.ctaSecondaryHref}
-                style={{
-                  display: "inline-block",
-                  padding: "0.75rem 1.5rem",
-                  backgroundColor: "transparent",
-                  color: "#8C6239",
-                  border: "1.5px solid #8C6239",
-                  borderRadius: "0.25rem",
-                  fontFamily: "var(--font-body, Jost, sans-serif)",
-                  fontWeight: 600,
-                  fontSize: "0.85rem",
-                  textDecoration: "none",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  transition: "all 0.25s ease",
-                }}
-                onMouseOver={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(140,98,57,0.05)";
-                }}
-                onMouseOut={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                }}
-              >
-                {slide.ctaSecondary}
-              </Link>
-            </div>
-
-            {/* Trust Badges */}
-            <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap", marginTop: "2rem" }}>
-              {["COD Available", "Easy Exchange Only", "Premium Quality"].map((trust) => (
-                <span
-                  key={trust}
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full py-12 md:py-16">
+                <div
                   style={{
-                    fontSize: "0.72rem",
-                    color: "#888",
-                    fontFamily: "var(--font-body, Jost, sans-serif)",
-                    display: "flex",
+                    display: "grid",
+                    gridTemplateColumns: "1fr",
+                    gap: "2rem",
                     alignItems: "center",
-                    gap: "0.25rem",
-                    fontWeight: 500,
                   }}
+                  className="md:grid-cols-2"
                 >
-                  ✓ {trust}
-                </span>
-              ))}
-            </div>
-          </div>
+                  {/* Left Text Block — Fixed min-height to prevent jumping */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      minHeight: "360px",
+                    }}
+                  >
+                    {/* Badge */}
+                    <div style={{ minHeight: "32px", marginBottom: "1rem" }}>
+                      <div
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          backgroundColor: "rgba(102,13,25,0.08)",
+                          border: "1px solid rgba(102,13,25,0.15)",
+                          borderRadius: "9999px",
+                          padding: "0.35rem 0.85rem",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "0.72rem",
+                            color: "var(--color-maroon)",
+                            fontFamily: "var(--font-body)",
+                            fontWeight: 700,
+                            letterSpacing: "0.06em",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {slide.badge}
+                        </span>
+                      </div>
+                    </div>
 
-          {/* Right: Countdown + Emoji */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "1.5rem",
-              padding: "2rem 0",
-              zIndex: 5,
-            }}
-            className="hidden md:flex"
-          >
-            <div style={{ fontSize: "7rem", lineHeight: 1, userSelect: "none", filter: "drop-shadow(0 10px 20px rgba(140,98,57,0.15))" }}>
-              {slide.emoji}
+                    {/* Title — Fixed line-height and height allocation */}
+                    <h1
+                      style={{
+                        fontFamily: "var(--font-display)",
+                        fontSize: "clamp(2rem, 4vw, 3.15rem)",
+                        color: "var(--color-maroon)",
+                        lineHeight: 1.18,
+                        marginBottom: "1rem",
+                        whiteSpace: "pre-line",
+                        fontWeight: 700,
+                        minHeight: "7rem",
+                        display: "flex",
+                        alignItems: "flex-end",
+                      }}
+                    >
+                      {slide.title}
+                    </h1>
+
+                    {/* Subtitle */}
+                    <p
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
+                        color: "var(--color-muted)",
+                        marginBottom: "1.75rem",
+                        maxWidth: 460,
+                        lineHeight: 1.6,
+                        minHeight: "3.2rem",
+                      }}
+                    >
+                      {slide.subtitle}
+                    </p>
+
+                    {/* CTAs */}
+                    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
+                      <Link
+                        href={slide.ctaHref}
+                        id={`hero-cta-${slide.id}`}
+                        className="btn-primary ripple"
+                      >
+                        {slide.cta} →
+                      </Link>
+                      <Link
+                        href={slide.ctaSecondaryHref}
+                        className="btn-secondary"
+                      >
+                        {slide.ctaSecondary}
+                      </Link>
+                    </div>
+
+                    {/* Trust Badges */}
+                    <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
+                      {["COD Available", "Easy Exchange", "Handcrafted Quality"].map((trust) => (
+                        <span
+                          key={trust}
+                          style={{
+                            fontSize: "0.75rem",
+                            color: "var(--color-muted)",
+                            fontFamily: "var(--font-body)",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.3rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          <span style={{ color: "var(--color-green)" }}>✓</span> {trust}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Right: Countdown — Locked vertical position on desktop */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      minHeight: "360px",
+                    }}
+                    className="hidden md:flex"
+                  >
+                    <FestivalCountdown targetDate={slide.festivalDate} name={slide.festivalName} />
+                  </div>
+                </div>
+              </div>
             </div>
-            <FestivalCountdown targetDate={slide.festivalDate} name={slide.festivalName} />
-          </div>
+          ))}
         </div>
       </div>
 
-      {/* Prev / Next */}
-      {[
-        { onClick: prev, side: "left", icon: <ChevronLeft size={18} />, id: "hero-prev" },
-        { onClick: next, side: "right", icon: <ChevronRight size={18} />, id: "hero-next" },
-      ].map(({ onClick, side, icon, id }) => (
-        <button
-          key={side}
-          id={id}
-          onClick={onClick}
-          aria-label={`${side === "left" ? "Previous" : "Next"} slide`}
-          style={{
-            position: "absolute",
-            top: "50%",
-            [side]: "1.25rem",
-            transform: "translateY(-50%)",
-            backgroundColor: "rgba(255,253,249,0.75)",
-            border: "1px solid rgba(140,98,57,0.25)",
-            borderRadius: "50%",
-            width: 40,
-            height: 40,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#8C6239",
-            cursor: "pointer",
-            transition: "all 0.25s",
-            boxShadow: "0 2px 10px rgba(140,98,57,0.06)",
-            zIndex: 10,
-          }}
-          onMouseOver={(e) => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "#FAF7F2";
-            (e.currentTarget as HTMLElement).style.borderColor = "#8C6239";
-          }}
-          onMouseOut={(e) => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,253,249,0.75)";
-            (e.currentTarget as HTMLElement).style.borderColor = "rgba(140,98,57,0.25)";
-          }}
-        >
-          {icon}
-        </button>
-      ))}
-
-      {/* Dot indicators */}
+      {/* Dot Indicators */}
       <div
         style={{
           position: "absolute",
@@ -337,7 +327,7 @@ export default function HeroCarousel() {
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
-          gap: "0.4rem",
+          gap: "0.45rem",
           zIndex: 10,
         }}
       >
@@ -347,13 +337,14 @@ export default function HeroCarousel() {
             onClick={() => goTo(i)}
             aria-label={`Go to slide ${i + 1}`}
             style={{
-              width: i === current ? 18 : 6,
-              height: 6,
+              width: i === current ? 26 : 8,
+              height: 8,
               borderRadius: "9999px",
-              backgroundColor: i === current ? "#8C6239" : "rgba(140,98,57,0.25)",
+              backgroundColor:
+                i === current ? "var(--color-maroon)" : "rgba(102,13,25,0.22)",
               border: "none",
               cursor: "pointer",
-              transition: "all 0.3s ease",
+              transition: "all 0.35s ease",
               padding: 0,
             }}
           />

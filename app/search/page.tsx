@@ -6,8 +6,8 @@ import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 
 function SearchLoading() {
   return (
-    <div style={{ minHeight: "60vh", backgroundColor: "#FFF8F0", display: "flex", alignItems: "center", justifyItems: "center", justifyContent: "center" }}>
-      <div style={{ fontFamily: "var(--font-body)", color: "#888" }}>Searching our craft collection...</div>
+    <div style={{ minHeight: "60vh", backgroundColor: "var(--color-cream)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)" }}>Searching our craft collection...</div>
     </div>
   );
 }
@@ -75,9 +75,9 @@ function SearchPageContent() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} style={{ borderRadius: "var(--radius-card, 1.125rem)", backgroundColor: "var(--color-cream-alt)", aspectRatio: "3/4", animation: "pulse-soft 2s ease-in-out infinite" }} />
+              <div key={i} className="skeleton" style={{ aspectRatio: "4/5" }} />
             ))}
           </div>
         ) : products.length === 0 ? (
@@ -97,7 +97,7 @@ function SearchPageContent() {
                   Popular Picks for You
                 </h3>
                 <hr className="divider-gold" style={{ marginBottom: "2rem" }} />
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   {recommendations.map((prod) => (
                     <ProductCard key={prod.id} product={prod} />
                   ))}
@@ -110,7 +110,7 @@ function SearchPageContent() {
             <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-taupe)", marginBottom: "1.5rem" }}>
               Found {products.length} matching item{products.length > 1 ? "s" : ""}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

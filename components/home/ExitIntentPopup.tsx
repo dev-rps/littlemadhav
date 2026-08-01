@@ -61,10 +61,12 @@ export default function ExitIntentPopup() {
           borderRadius: "1.125rem",
           maxWidth: 460,
           width: "100%",
-          overflow: "hidden",
+          maxHeight: "calc(100vh - 2rem)",
+          overflowY: "auto",
           position: "relative",
           boxShadow: "0 20px 60px rgba(102,13,25,0.2)",
           border: "2px solid var(--color-gold-dark)",
+          animation: "scale-in 0.25s ease",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -82,16 +84,23 @@ export default function ExitIntentPopup() {
             onClick={dismiss}
             style={{
               position: "absolute",
-              top: 12,
-              right: 12,
-              color: "rgba(255,255,255,0.5)",
-              backgroundColor: "transparent",
+              top: 10,
+              right: 10,
+              color: "rgba(255,255,255,0.7)",
+              backgroundColor: "rgba(255,255,255,0.1)",
               border: "none",
               cursor: "pointer",
               fontSize: "1.25rem",
               lineHeight: 1,
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.2s",
             }}
-            aria-label="Close popup"
+            aria-label="Close discount popup"
           >
             ✕
           </button>
@@ -149,7 +158,7 @@ export default function ExitIntentPopup() {
                   e.preventDefault();
                   setSubmitted(true);
                 }}
-                style={{ display: "flex", gap: "0.5rem" }}
+                style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}
               >
                 <input
                   id="exit-popup-email"
@@ -159,7 +168,8 @@ export default function ExitIntentPopup() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
                   style={{
-                    flex: 1,
+                    flex: "1 1 200px",
+                    minWidth: 0,
                     padding: "0.625rem 0.875rem",
                     border: "1.5px solid var(--color-taupe)",
                     borderRadius: "9999px",

@@ -11,7 +11,7 @@ function StarRow({ count }: { count: number }) {
   return (
     <div style={{ display: "flex", gap: "0.15rem" }}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} style={{ color: s <= count ? "#D4A017" : "#E0D0C0", fontSize: "0.9rem" }}>★</span>
+        <span key={s} style={{ color: s <= count ? "var(--color-gold)" : "rgba(255,255,255,0.2)", fontSize: "0.9rem" }}>★</span>
       ))}
     </div>
   );
@@ -21,8 +21,8 @@ export default function TestimonialsSection() {
   return (
     <section
       style={{
-        padding: "4rem 0",
-        background: "linear-gradient(135deg, #8B1E3F 0%, #6B1630 100%)",
+        padding: "4.5rem 0",
+        background: "linear-gradient(135deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -32,13 +32,13 @@ export default function TestimonialsSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6" style={{ position: "relative" }}>
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#D4A017", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600, marginBottom: "0.5rem" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-gold)", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700, marginBottom: "0.5rem" }}>
             Real Reviews
           </p>
-          <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "clamp(1.75rem, 4vw, 2.5rem)", color: "#FFF8F0", margin: 0 }}>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.75rem, 4vw, 2.5rem)", color: "#FFF8F0", margin: 0 }}>
             10,000+ Happy Customers
           </h2>
-          <p style={{ fontFamily: "var(--font-body)", color: "#FFF8F099", marginTop: "0.5rem", fontSize: "0.9rem" }}>
+          <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,248,240,0.6)", marginTop: "0.5rem", fontSize: "0.9rem" }}>
             Don&apos;t take our word for it — here&apos;s what our family says
           </p>
         </div>
@@ -52,41 +52,43 @@ export default function TestimonialsSection() {
               key={t.name}
               style={{
                 backgroundColor: "rgba(255,248,240,0.08)",
-                border: "1px solid rgba(212,160,23,0.25)",
-                borderRadius: "1rem",
+                border: "1px solid rgba(205,151,3,0.25)",
+                borderRadius: "18px",
                 padding: "1.5rem",
                 backdropFilter: "blur(10px)",
                 transition: "all 0.3s ease",
               }}
               onMouseOver={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,248,240,0.12)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(212,160,23,0.5)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(205,151,3,0.5)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
               }}
               onMouseOut={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(255,248,240,0.08)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(212,160,23,0.25)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(205,151,3,0.25)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.875rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", backgroundColor: "#D4A01730", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", backgroundColor: "rgba(205,151,3,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>
                     {t.emoji}
                   </div>
                   <div>
                     <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, color: "#FFF8F0", fontSize: "0.875rem", margin: 0 }}>
                       {t.name}
                     </p>
-                    <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#FFF8F066", margin: 0 }}>
+                    <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "rgba(255,248,240,0.4)", margin: 0 }}>
                       {t.city}
                     </p>
                   </div>
                 </div>
-                <span style={{ fontSize: "0.7rem", color: "#2D6A4F", backgroundColor: "#E8F5EE", padding: "0.2rem 0.5rem", borderRadius: "9999px", fontFamily: "var(--font-body)", fontWeight: 600 }}>
+                <span style={{ fontSize: "0.7rem", color: "var(--color-green)", backgroundColor: "rgba(53,124,73,0.15)", padding: "0.2rem 0.5rem", borderRadius: "9999px", fontFamily: "var(--font-body)", fontWeight: 600 }}>
                   ✓ Verified
                 </span>
               </div>
               <StarRow count={t.rating} />
-              <p style={{ fontFamily: "var(--font-body)", color: "#FFF8F0cc", fontSize: "0.875rem", lineHeight: 1.6, marginTop: "0.75rem" }}>
+              <p style={{ fontFamily: "var(--font-body)", color: "rgba(255,248,240,0.8)", fontSize: "0.875rem", lineHeight: 1.6, marginTop: "0.75rem" }}>
                 &ldquo;{t.text}&rdquo;
               </p>
             </div>
@@ -101,10 +103,10 @@ export default function TestimonialsSection() {
             { value: "98%", label: "Positive Reviews" },
           ].map(({ value, label }) => (
             <div key={label} style={{ textAlign: "center" }}>
-              <p style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "2rem", color: "#D4A017", margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-display)", fontSize: "2rem", color: "var(--color-gold)", margin: 0 }}>
                 {value}
               </p>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#FFF8F099", margin: 0 }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "rgba(255,248,240,0.6)", margin: 0 }}>
                 {label}
               </p>
             </div>

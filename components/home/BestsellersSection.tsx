@@ -65,7 +65,7 @@ export default async function BestsellersSection() {
           <div>
             <p
               style={{
-                fontFamily: "var(--font-body, Lato, sans-serif)",
+                fontFamily: "var(--font-body)",
                 fontSize: "0.8rem",
                 color: "var(--color-gold-dark)",
                 textTransform: "uppercase",
@@ -78,7 +78,7 @@ export default async function BestsellersSection() {
             </p>
             <h2
               style={{
-                fontFamily: "var(--font-display, Lato, sans-serif)",
+                fontFamily: "var(--font-display)",
                 fontSize: "clamp(1.75rem, 4vw, 2.35rem)",
                 color: "var(--color-maroon)",
                 margin: 0,
@@ -91,7 +91,7 @@ export default async function BestsellersSection() {
           <Link
             href="/collections/all"
             style={{
-              fontFamily: "var(--font-body, Lato, sans-serif)",
+              fontFamily: "var(--font-body)",
               fontWeight: 600,
               fontSize: "0.85rem",
               color: "var(--color-maroon)",
@@ -110,7 +110,7 @@ export default async function BestsellersSection() {
         <hr className="divider-gold" style={{ marginBottom: "2.5rem" }} />
 
         {products.length === 0 ? (
-          <p style={{ textAlign: "center", color: "var(--color-taupe)", fontFamily: "var(--font-body, Lato, sans-serif)", padding: "3rem 0" }}>
+          <p style={{ textAlign: "center", color: "var(--color-taupe)", fontFamily: "var(--font-body)", padding: "3rem 0" }}>
             Products loading...
           </p>
         ) : (
@@ -122,16 +122,11 @@ export default async function BestsellersSection() {
           <Link
             href="/collections/all"
             id="bestsellers-view-all"
-            className="inline-block border-2 border-maroon text-maroon hover:bg-maroon hover:text-cream transition-all duration-200"
+            className="btn-secondary"
             style={{
+              display: "inline-flex",
               padding: "0.75rem 2.25rem",
-              borderRadius: "0.25rem",
-              fontFamily: "var(--font-body, Lato, sans-serif)",
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              textDecoration: "none",
-              textTransform: "uppercase",
-              letterSpacing: "0.05em",
+              borderRadius: "9999px",
             }}
           >
             Explore Full Collection →

@@ -18,7 +18,7 @@ function ProductsSkeleton() {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", padding: "4rem 0" }}>
       {[...Array(4)].map((_, i) => (
-        <div key={i} style={{ borderRadius: "1rem", backgroundColor: "#F5EDE0", aspectRatio: "3/4", animation: "pulse-soft 2s ease-in-out infinite" }} />
+        <div key={i} className="skeleton" style={{ aspectRatio: "4/5" }} />
       ))}
     </div>
   );
@@ -26,15 +26,35 @@ function ProductsSkeleton() {
 
 // Festival banner between sections
 function FestivalBanner() {
+  const festivalCards = [
+    {
+      icon: "🎀",
+      title: "Raksha Bandhan Ready",
+      desc: "Ships before the festival — guaranteed",
+      cta: "Shop Rakhi",
+      href: "/collections/rakhi",
+      gradient: "linear-gradient(135deg, #660D19 0%, #8B1E3F 100%)",
+    },
+    {
+      icon: "🪔",
+      title: "Diwali Gifting",
+      desc: "Festive home decor loved by everyone",
+      cta: "Shop Decor",
+      href: "/collections/festive-home-decor",
+      gradient: "linear-gradient(135deg, #CD9703 0%, #D5AD36 100%)",
+    },
+    {
+      icon: "💎",
+      title: "Jewellery & Accessories",
+      desc: "Elegant deity shringar for every occasion",
+      cta: "Shop Jewellery",
+      href: "/collections/jewellery-accessories",
+      gradient: "linear-gradient(135deg, #357C49 0%, #4A9D5E 100%)",
+    },
+  ];
+
   return (
-    <section
-      style={{
-        padding: "2.5rem 0",
-        background: "linear-gradient(135deg, #FEF9EC, #FFF8F0)",
-        borderTop: "1px solid #F0E0C0",
-        borderBottom: "1px solid #F0E0C0",
-      }}
-    >
+    <section style={{ padding: "3rem 0", backgroundColor: "var(--color-cream-alt)" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div
           style={{
@@ -44,63 +64,43 @@ function FestivalBanner() {
           }}
           className="sm:grid-cols-3"
         >
-          {[
-            {
-              icon: "🎀",
-              title: "Raksha Bandhan Ready",
-              desc: "Ships before the festival — guaranteed",
-              cta: "Shop Rakhi",
-              href: "/collections/rakhi",
-              color: "#8B1E3F",
-            },
-            {
-              icon: "🪔",
-              title: "Diwali Gifting",
-              desc: "Jewellery hampers loved by everyone",
-              cta: "Shop Hampers",
-              href: "/collections/gifting",
-              color: "#D4A017",
-            },
-            {
-              icon: "💃",
-              title: "Navratri Collection",
-              desc: "Bold, colorful jhumkas for garba night",
-              cta: "Shop Jhumkas",
-              href: "/collections/jhumka",
-              color: "#E76F51",
-            },
-          ].map((item) => (
+          {festivalCards.map((item) => (
             <div
               key={item.title}
-              className="hover:border-gold hover:shadow-[0_4px_20px_rgba(212,160,23,0.12)] transition-all duration-300"
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: "1rem",
-                padding: "1.25rem",
-                backgroundColor: "#FFFBF5",
-                borderRadius: "0.875rem",
-                border: "1px solid #F0E0C0",
+                padding: "1.5rem",
+                background: item.gradient,
+                borderRadius: "18px",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+                minHeight: "120px",
               }}
             >
-              <span style={{ fontSize: "2.5rem", flexShrink: 0 }}>{item.icon}</span>
+              <span style={{ fontSize: "2.5rem", flexShrink: 0, filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>{item.icon}</span>
               <div style={{ flex: 1 }}>
-                <p style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: item.color, fontSize: "1rem", margin: "0 0 0.2rem" }}>
+                <p style={{ fontFamily: "var(--font-display)", color: "#FFFFFF", fontSize: "1.05rem", margin: "0 0 0.25rem", fontWeight: 700 }}>
                   {item.title}
                 </p>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#666", margin: "0 0 0.5rem" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "rgba(255,255,255,0.8)", margin: "0 0 0.6rem" }}>
                   {item.desc}
                 </p>
                 <Link
                   href={item.href}
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: "0.78rem",
-                    color: item.color,
+                    color: "#FFFFFF",
                     textDecoration: "none",
-                    borderBottom: `1px solid ${item.color}`,
-                    paddingBottom: "0.1rem",
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                    padding: "0.35rem 0.85rem",
+                    borderRadius: "9999px",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    display: "inline-block",
+                    transition: "all 0.2s",
                   }}
                 >
                   {item.cta} →
@@ -140,11 +140,11 @@ export default function HomePage() {
       {/* 6. Testimonials */}
       <TestimonialsSection />
 
-      {/* 7. Instagram Strip Placeholder */}
-      <section style={{ padding: "3.5rem 0", backgroundColor: "#FFFBF5" }}>
+      {/* 7. Instagram Strip */}
+      <section style={{ padding: "3.5rem 0", backgroundColor: "var(--color-cream-alt)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-gold-dark)", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600 }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-gold)", textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 700 }}>
               @mourika
             </p>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.75rem", color: "var(--color-maroon)", margin: "0.25rem 0 0" }}>
@@ -155,39 +155,31 @@ export default function HomePage() {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="hover:opacity-80 transition-opacity duration-200"
                 style={{
                   aspectRatio: "1",
-                  backgroundColor: i % 2 === 0 ? "#F9D6E1" : "#FCF0C5",
-                  borderRadius: "0.5rem",
+                  background: i % 2 === 0
+                    ? "linear-gradient(145deg, #FBD5CD, #F4E8DB)"
+                    : "linear-gradient(145deg, #FBF3E9, #F4E8DB)",
+                  borderRadius: "14px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: "2rem",
                   cursor: "pointer",
+                  transition: "all 0.25s ease",
                 }}
               >
                 {["🎀", "💎", "🪔", "🎁", "✨", "🌸"][i]}
               </div>
             ))}
           </div>
-          <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
+          <div style={{ textAlign: "center", marginTop: "1.5rem" }}>
             <a
               href="https://instagram.com/mourika"
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                padding: "0.625rem 1.5rem",
-                border: "1.5px solid var(--color-maroon)",
-                color: "var(--color-maroon)",
-                borderRadius: "0.5rem",
-                fontFamily: "var(--font-body)",
-                fontWeight: 600,
-                fontSize: "0.875rem",
-                textDecoration: "none",
-                transition: "all 0.2s",
-              }}
+              className="btn-secondary"
+              style={{ display: "inline-block" }}
             >
               Follow @mourika →
             </a>

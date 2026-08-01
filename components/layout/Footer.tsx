@@ -34,13 +34,13 @@ export default function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: "#1c1815",
+        backgroundColor: "#1a0a0e",
         color: "#FCFBF7",
-        borderTop: "3px solid #C5A059",
+        borderTop: "3px solid var(--color-gold)",
       }}
     >
       {/* Trust Strip */}
-      <div style={{ backgroundColor: "#8C6239", padding: "0.75rem 0" }}>
+      <div style={{ backgroundColor: "var(--color-maroon)", padding: "0.75rem 0" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem 2rem" }}>
             {[
@@ -53,10 +53,11 @@ export default function Footer() {
               <span
                 key={item}
                 style={{
-                  fontSize: "0.8rem",
-                  fontFamily: "var(--font-body, Poppins, sans-serif)",
+                  fontSize: "0.78rem",
+                  fontFamily: "var(--font-body)",
                   fontWeight: 500,
                   whiteSpace: "nowrap",
+                  color: "rgba(255,255,255,0.9)",
                 }}
               >
                 {item}
@@ -77,24 +78,25 @@ export default function Footer() {
                   width: 36,
                   height: 36,
                   borderRadius: "50%",
-                  background: "linear-gradient(135deg, #8C6239, #C5A059)",
+                  background: "linear-gradient(135deg, var(--color-maroon), var(--color-gold))",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   color: "#FCFBF7",
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: 700,
+                  fontFamily: "var(--font-display)",
                 }}
               >
-                LM
+                M
               </div>
               <span
                 style={{
-                  fontFamily: "var(--font-display, Cinzel, serif)",
+                  fontFamily: "var(--font-display)",
                   fontSize: "1.25rem",
-                  color: "#C5A059",
+                  color: "var(--color-gold)",
                   letterSpacing: "0.1em",
-                  fontWeight: 600,
+                  fontWeight: 700,
                   textTransform: "uppercase",
                 }}
               >
@@ -130,22 +132,22 @@ export default function Footer() {
                   style={{
                     width: 36,
                     height: 36,
-                    border: "1px solid #C5A05960",
+                    border: "1px solid rgba(205,151,3,0.35)",
                     borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "#C5A059",
+                    color: "var(--color-gold)",
                     transition: "all 0.2s",
                     backgroundColor: "transparent",
                   }}
                   onMouseOver={(e) => {
-                    (e.currentTarget as HTMLElement).style.backgroundColor = "#C5A059";
-                    (e.currentTarget as HTMLElement).style.color = "#1c1815";
+                    (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-gold)";
+                    (e.currentTarget as HTMLElement).style.color = "#1a0a0e";
                   }}
                   onMouseOut={(e) => {
                     (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                    (e.currentTarget as HTMLElement).style.color = "#C5A059";
+                    (e.currentTarget as HTMLElement).style.color = "var(--color-gold)";
                   }}
                 >
                   <Icon size={16} />
@@ -159,9 +161,9 @@ export default function Footer() {
             <div key={title}>
               <h3
                 style={{
-                  fontFamily: "var(--font-body, Jost, sans-serif)",
+                  fontFamily: "var(--font-body)",
                   fontWeight: 700,
-                  color: "#C5A059",
+                  color: "var(--color-gold)",
                   fontSize: "0.85rem",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
@@ -182,7 +184,7 @@ export default function Footer() {
                         textDecoration: "none",
                         transition: "color 0.2s",
                       }}
-                      onMouseOver={(e) => { (e.currentTarget as HTMLElement).style.color = "#C5A059"; }}
+                      onMouseOver={(e) => { (e.currentTarget as HTMLElement).style.color = "var(--color-gold)"; }}
                       onMouseOut={(e) => { (e.currentTarget as HTMLElement).style.color = "#aaa"; }}
                     >
                       {link.label}
@@ -197,19 +199,20 @@ export default function Footer() {
         {/* Newsletter */}
         <div
           style={{
-            marginTop: "2rem",
+            marginTop: "2.5rem",
             padding: "1.5rem",
-            border: "1px solid #C5A05930",
-            borderRadius: "0.75rem",
+            border: "1px solid rgba(205,151,3,0.2)",
+            borderRadius: "18px",
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "space-between",
             gap: "1rem",
+            background: "linear-gradient(135deg, rgba(102,13,25,0.3) 0%, rgba(205,151,3,0.08) 100%)",
           }}
         >
           <div>
-            <p style={{ fontFamily: "var(--font-display, Cinzel, serif)", color: "#C5A059", fontSize: "1rem" }}>
+            <p style={{ fontFamily: "var(--font-display)", color: "var(--color-gold)", fontSize: "1.1rem", fontWeight: 700 }}>
               Get festive offers in your inbox 🎁
             </p>
             <p style={{ fontSize: "0.8rem", color: "#aaa", fontFamily: "var(--font-body)", marginTop: "0.25rem" }}>
@@ -226,9 +229,9 @@ export default function Footer() {
               placeholder="your@email.com"
               style={{
                 padding: "0.625rem 1rem",
-                borderRadius: "0.5rem",
-                border: "1px solid #C5A05950",
-                backgroundColor: "#2a211b",
+                borderRadius: "var(--radius-btn)",
+                border: "1px solid rgba(205,151,3,0.3)",
+                backgroundColor: "rgba(255,255,255,0.05)",
                 color: "#FCFBF7",
                 fontSize: "0.85rem",
                 fontFamily: "var(--font-body)",
@@ -238,18 +241,11 @@ export default function Footer() {
             />
             <button
               type="submit"
+              className="btn-primary"
               style={{
+                backgroundColor: "var(--color-gold)",
+                color: "#1a0a0e",
                 padding: "0.625rem 1.25rem",
-                backgroundColor: "#C5A059",
-                color: "#1c1815",
-                border: "none",
-                borderRadius: "0.5rem",
-                fontFamily: "var(--font-body)",
-                fontWeight: 700,
-                fontSize: "0.85rem",
-                cursor: "pointer",
-                transition: "background-color 0.2s",
-                whiteSpace: "nowrap",
               }}
             >
               Subscribe
@@ -262,7 +258,7 @@ export default function Footer() {
           style={{
             marginTop: "1.5rem",
             paddingTop: "1rem",
-            borderTop: "1px solid #C5A05920",
+            borderTop: "1px solid rgba(205,151,3,0.12)",
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
@@ -279,8 +275,8 @@ export default function Footer() {
                 key={pm}
                 style={{
                   padding: "0.2rem 0.5rem",
-                  border: "1px solid #C5A05930",
-                  borderRadius: "0.25rem",
+                  border: "1px solid rgba(205,151,3,0.2)",
+                  borderRadius: "6px",
                   fontSize: "0.7rem",
                   color: "#888",
                   fontFamily: "var(--font-body)",

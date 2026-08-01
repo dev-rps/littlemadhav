@@ -1,13 +1,13 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Heart, Search, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, Headphones } from "lucide-react";
 import { useCartCount, useCartStore } from "@/lib/store";
 import AnnouncementBar from "./AnnouncementBar";
 
-const megaMenu = [
+const categories = [
   {
-    label: "Devotees collection",
+    label: "Devotees Collection",
     slug: "devotees-collection",
     children: [],
   },
@@ -30,7 +30,7 @@ const megaMenu = [
       { label: "Torans / Bandhanwal", slug: "torans-bandhanwal" },
       { label: "Decorative Rangoli", slug: "decorative-rangoli" },
       { label: "Shubh Labh", slug: "shubh-labh" },
-      { label: "Pooja Thali cover", slug: "pooja-thali-cover" },
+      { label: "Pooja Thali Cover", slug: "pooja-thali-cover" },
     ],
   },
   {
@@ -39,7 +39,7 @@ const megaMenu = [
     children: [
       { label: "Janmashtami", slug: "janmashtami" },
       { label: "Rakhi", slug: "rakhi" },
-      { label: "Karwa chauth", slug: "karwa-chauth" },
+      { label: "Karwa Chauth", slug: "karwa-chauth" },
       { label: "Navratri", slug: "navratri" },
       { label: "Diwali", slug: "diwali" },
     ],
@@ -56,11 +56,9 @@ const megaMenu = [
       { label: "Kamar Band", slug: "kamar-band" },
       { label: "Attar / Ittar", slug: "attar-ittar" },
       { label: "Bathtub", slug: "bathtub" },
-      { label: "Pooja Thali cover", slug: "pooja-thali-cover-accessory" },
     ],
   },
   { label: "Upcoming Festival", slug: "upcoming", children: [] },
-  { label: "Support", slug: "support", children: [] },
 ];
 
 export default function Header() {
@@ -86,35 +84,37 @@ export default function Header() {
   return (
     <>
       <AnnouncementBar />
+
       <header
         style={{
-          backgroundColor: scrolled ? "rgba(252,251,247,0.97)" : "#FCFBF7",
-          borderBottom: "1px solid #EFEAE0",
+          backgroundColor: scrolled ? "rgba(255,255,255,0.98)" : "#FFFFFF",
+          borderBottom: "2px solid var(--color-gold)",
           backdropFilter: scrolled ? "blur(10px)" : "none",
           transition: "all 0.3s ease",
           position: "sticky",
           top: 0,
           zIndex: 50,
-          boxShadow: scrolled ? "0 2px 16px rgba(102,13,25,0.06)" : "none",
+          boxShadow: scrolled ? "0 4px 20px rgba(102,13,25,0.08)" : "none",
         }}
       >
+        {/* ── Main Navbar Row (Logo & Icons) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16 sm:h-18">
+          <div className="flex items-center justify-between h-14 sm:h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Mourika Home">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold-light)" strokeWidth="1" strokeDasharray="2 2" />
-                <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold-light)" opacity="0.15" />
-                <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold-light)" strokeWidth="1.5" />
-                <path d="M12 3V5M12 19V21" stroke="var(--color-gold-light)" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold)" strokeWidth="1" strokeDasharray="2 2" />
+                <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold)" opacity="0.15" />
+                <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold)" strokeWidth="1.5" />
+                <path d="M12 3V5M12 19V21" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
               <span
                 style={{
-                  fontFamily: "var(--font-display, Lato, sans-serif)",
-                  fontSize: "1.25rem",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "1.35rem",
                   color: "var(--color-maroon)",
                   letterSpacing: "0.18em",
-                  fontWeight: 900,
+                  fontWeight: 700,
                   lineHeight: 1,
                   textTransform: "uppercase",
                 }}
@@ -123,96 +123,35 @@ export default function Header() {
               </span>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center justify-center gap-1 flex-grow">
-              {megaMenu.map((item) => (
-                <div
-                  key={item.slug}
-                  className="relative"
-                  onMouseEnter={() => setActiveMenu(item.slug)}
-                  onMouseLeave={() => setActiveMenu(null)}
-                >
-                  <Link
-                    href={`/collections/${item.slug}`}
-                    style={{
-                      color: "var(--color-black)",
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 600,
-                      fontSize: "0.875rem",
-                    }}
-                    className="flex items-center gap-0.5 px-3 py-2 rounded-lg transition-colors hover:bg-maroon-50"
-                  >
-                    {item.label}
-                    {item.children.length > 0 && (
-                      <ChevronDown
-                        size={14}
-                        style={{
-                          transition: "transform 0.2s",
-                          transform: activeMenu === item.slug ? "rotate(180deg)" : "rotate(0deg)",
-                        }}
-                      />
-                    )}
-                  </Link>
-
-                  {/* Mega Dropdown */}
-                  {item.children.length > 0 && activeMenu === item.slug && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        backgroundColor: "#FFFBF5",
-                        border: "1px solid #F0E0C0",
-                        borderRadius: "0.75rem",
-                        boxShadow: "0 8px 32px rgba(140,98,57,0.12)",
-                        padding: "0.75rem",
-                        minWidth: 180,
-                        zIndex: 60,
-                        animation: "fade-up 0.2s ease",
-                      }}
-                    >
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.slug}
-                          href={`/collections/${child.slug}`}
-                          style={{
-                            display: "block",
-                            padding: "0.5rem 0.75rem",
-                            borderRadius: "0.5rem",
-                            color: "#1a1a1a",
-                            fontFamily: "var(--font-body, Poppins, sans-serif)",
-                            fontSize: "0.875rem",
-                            transition: "all 0.15s",
-                          }}
-                          className="hover:bg-maroon-50"
-                          onMouseOver={(e) => {
-                            (e.currentTarget as HTMLElement).style.color = "var(--color-maroon)";
-                            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-cream)";
-                          }}
-                          onMouseOut={(e) => {
-                            (e.currentTarget as HTMLElement).style.color = "#1a1a1a";
-                            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                          }}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
-
             {/* Right Icons */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              {/* Support — desktop only */}
+              <Link
+                href="/contact"
+                style={{ color: "var(--color-maroon)", textDecoration: "none" }}
+                className="hidden lg:flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors"
+                aria-label="Customer support"
+              >
+                <Headphones size={17} />
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 600,
+                    fontSize: "0.82rem",
+                    color: "var(--color-maroon)",
+                  }}
+                >
+                  Support
+                </span>
+              </Link>
+
               {/* Search */}
               <button
                 id="header-search-btn"
                 onClick={() => setSearchOpen(true)}
-                style={{ color: "#1a1a1a" }}
-                className="p-2 rounded-lg hover:bg-maroon-50 transition-colors"
-                aria-label="Search"
+                style={{ color: "var(--color-maroon)" }}
+                className="p-2 rounded-lg hover:bg-orange-50 transition-colors"
+                aria-label="Open search"
               >
                 <Search size={20} />
               </button>
@@ -220,9 +159,9 @@ export default function Header() {
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                style={{ color: "#1a1a1a" }}
-                className="p-2 rounded-lg hover:bg-maroon-50 transition-colors hidden sm:flex"
-                aria-label="Wishlist"
+                style={{ color: "var(--color-maroon)" }}
+                className="p-2 rounded-lg hover:bg-orange-50 transition-colors hidden sm:flex"
+                aria-label="View wishlist"
               >
                 <Heart size={20} />
               </Link>
@@ -231,9 +170,9 @@ export default function Header() {
               <button
                 id="header-cart-btn"
                 onClick={openDrawer}
-                style={{ color: "#1a1a1a", position: "relative" }}
-                className="p-2 rounded-lg hover:bg-maroon-50 transition-colors"
-                aria-label="Shopping cart"
+                style={{ color: "var(--color-maroon)", position: "relative" }}
+                className="p-2 rounded-lg hover:bg-orange-50 transition-colors"
+                aria-label={`Shopping cart${cartCount > 0 ? `, ${cartCount} items` : ''}`}
               >
                 <ShoppingBag size={20} />
                 {cartCount > 0 && (
@@ -264,12 +203,119 @@ export default function Header() {
               <button
                 id="header-mobile-menu-btn"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                style={{ color: "#1a1a1a" }}
-                className="p-2 rounded-lg hover:bg-maroon-50 transition-colors lg:hidden"
-                aria-label="Menu"
+                style={{ color: "var(--color-maroon)" }}
+                className="p-2 rounded-lg hover:bg-orange-50 transition-colors lg:hidden"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Category Strip Bar (UNDER Main Navbar & CENTER ALIGNED) ── */}
+        <div
+          className="hidden lg:block"
+          style={{
+            backgroundColor: "#FAF3EB",
+            borderTop: "1px solid rgba(205,151,3,0.12)",
+          }}
+        >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center", /* Center aligned */
+                height: "40px",
+                gap: "0.25rem",
+              }}
+            >
+              {categories.map((item) => (
+                <div
+                  key={item.slug}
+                  className="relative"
+                  onMouseEnter={() => setActiveMenu(item.slug)}
+                  onMouseLeave={() => setActiveMenu(null)}
+                >
+                  <Link
+                    href={`/collections/${item.slug}`}
+                    style={{
+                      color: "var(--color-maroon)",
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 600,
+                      fontSize: "0.82rem",
+                      transition: "all 0.2s",
+                      textDecoration: "none",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "3px",
+                      padding: "0 0.85rem",
+                      height: "40px",
+                      whiteSpace: "nowrap",
+                      borderBottom: activeMenu === item.slug ? "2px solid var(--color-maroon)" : "2px solid transparent",
+                    }}
+                  >
+                    {item.label}
+                    {item.children.length > 0 && (
+                      <ChevronDown
+                        size={12}
+                        style={{
+                          transition: "transform 0.2s",
+                          transform: activeMenu === item.slug ? "rotate(180deg)" : "rotate(0deg)",
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  {item.children.length > 0 && activeMenu === item.slug && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        backgroundColor: "#FFFFFF",
+                        border: "1px solid rgba(102,13,25,0.08)",
+                        borderRadius: "0 0 0.75rem 0.75rem",
+                        boxShadow: "0 8px 32px rgba(102,13,25,0.12)",
+                        padding: "0.5rem 0",
+                        minWidth: 210,
+                        zIndex: 60,
+                        animation: "fade-up 0.2s ease",
+                      }}
+                    >
+                      {item.children.map((child) => (
+                        <Link
+                          key={child.slug}
+                          href={`/collections/${child.slug}`}
+                          style={{
+                            display: "block",
+                            padding: "0.45rem 1.1rem",
+                            color: "var(--color-body)",
+                            fontFamily: "var(--font-body)",
+                            fontSize: "0.83rem",
+                            transition: "all 0.15s",
+                            textDecoration: "none",
+                          }}
+                          onMouseOver={(e) => {
+                            (e.currentTarget as HTMLElement).style.color = "var(--color-maroon)";
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-cream)";
+                          }}
+                          onMouseOut={(e) => {
+                            (e.currentTarget as HTMLElement).style.color = "var(--color-body)";
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                          }}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -278,15 +324,39 @@ export default function Header() {
         {mobileOpen && (
           <div
             style={{
-              backgroundColor: "#FFFBF5",
-              borderTop: "1px solid #F0E0C0",
+              backgroundColor: "#FFFFFF",
+              borderTop: "1px solid rgba(102,13,25,0.08)",
               padding: "1rem",
               maxHeight: "70vh",
               overflowY: "auto",
             }}
             className="lg:hidden"
           >
-            {megaMenu.map((item) => (
+            {/* Support link mobile */}
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                padding: "0.625rem 0.75rem",
+                borderRadius: "0.5rem",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                color: "var(--color-gold-dark)",
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                marginBottom: "0.5rem",
+                borderBottom: "1px solid rgba(205,151,3,0.15)",
+                paddingBottom: "0.75rem",
+              }}
+            >
+              <Headphones size={16} />
+              Support
+            </Link>
+
+            {categories.map((item) => (
               <div key={item.slug} className="mb-1">
                 <Link
                   href={`/collections/${item.slug}`}
@@ -299,6 +369,7 @@ export default function Header() {
                     fontWeight: 700,
                     color: "var(--color-maroon)",
                     fontSize: "0.9rem",
+                    textDecoration: "none",
                   }}
                 >
                   {item.label}
@@ -313,9 +384,10 @@ export default function Header() {
                         style={{
                           display: "block",
                           padding: "0.375rem 0.75rem",
-                          color: "#555",
-                          fontFamily: "var(--font-body, Poppins, sans-serif)",
+                          color: "var(--color-muted)",
+                          fontFamily: "var(--font-body)",
                           fontSize: "0.85rem",
+                          textDecoration: "none",
                         }}
                       >
                         {child.label}
@@ -343,16 +415,20 @@ export default function Header() {
             paddingTop: "5rem",
           }}
           onClick={() => setSearchOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search products"
         >
           <div
             style={{
-              backgroundColor: "#FFFBF5",
+              backgroundColor: "#FFFFFF",
               borderRadius: "1rem",
               padding: "1.5rem",
               width: "100%",
               maxWidth: 560,
               margin: "0 1rem",
-              boxShadow: "0 20px 60px rgba(139,30,63,0.2)",
+              boxShadow: "0 20px 60px rgba(102,13,25,0.2)",
+              animation: "scale-in 0.2s ease",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -364,7 +440,7 @@ export default function Header() {
                   left: 12,
                   top: "50%",
                   transform: "translateY(-50%)",
-                  color: "#888",
+                  color: "var(--color-taupe)",
                 }}
               />
               <input
@@ -377,13 +453,13 @@ export default function Header() {
                 style={{
                   width: "100%",
                   padding: "0.75rem 0.75rem 0.75rem 2.5rem",
-                  border: "1.5px solid var(--color-gold-light)",
-                  borderRadius: "0.625rem",
+                  border: "2px solid var(--color-gold)",
+                  borderRadius: "var(--radius-btn)",
                   fontSize: "0.9rem",
                   fontFamily: "var(--font-body)",
                   outline: "none",
                   backgroundColor: "var(--color-white)",
-                  color: "var(--color-black)",
+                  color: "var(--color-body)",
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && searchQuery.trim()) {
@@ -393,7 +469,7 @@ export default function Header() {
               />
             </div>
             <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              {["Luxe Dresses", "Shubh Labh", "Diwali Diyas", "Deity Necklace"].map((tag) => (
+              {["Laddu Gopal Dress", "Shubh Labh", "Diwali Diyas", "Rakhi"].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => {
@@ -402,12 +478,14 @@ export default function Header() {
                   style={{
                     padding: "0.25rem 0.75rem",
                     borderRadius: "9999px",
-                    border: "1px solid var(--color-gold-light)",
-                    backgroundColor: "var(--color-cream-alt)",
+                    border: "1px solid var(--color-gold)",
+                    backgroundColor: "var(--color-cream)",
                     color: "var(--color-maroon)",
                     fontSize: "0.8rem",
                     fontFamily: "var(--font-body)",
+                    fontWeight: 600,
                     cursor: "pointer",
+                    transition: "all 0.2s",
                   }}
                 >
                   {tag}

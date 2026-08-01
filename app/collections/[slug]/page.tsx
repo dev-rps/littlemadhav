@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { SlidersHorizontal, X } from "lucide-react";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
+import QuickViewModal from "@/components/product/QuickViewModal";
 
 interface CollectionPageProps {
   params: Promise<{ slug: string }>;
@@ -30,7 +31,10 @@ const sortOptions = [
 function CollectionLoading() {
   return (
     <div style={{ minHeight: "80vh", backgroundColor: "var(--color-cream)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ fontFamily: "var(--font-body)", color: "var(--color-taupe)" }}>Loading collection...</div>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+        <div className="skeleton" style={{ width: 48, height: 48, borderRadius: "50%" }} />
+        <div style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)" }}>Loading collection...</div>
+      </div>
     </div>
   );
 }
@@ -53,6 +57,7 @@ function CollectionPageContent({ params }: CollectionPageProps) {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [quickViewProduct, setQuickViewProduct] = useState<ProductCardData | null>(null);
 
   useEffect(() => {
     params.then((p) => setSlug(p.slug));
@@ -96,7 +101,7 @@ function CollectionPageContent({ params }: CollectionPageProps) {
       {/* Breadcrumb */}
       <div style={{ backgroundColor: "var(--color-cream-alt)", borderBottom: "1px solid rgba(186,172,157,0.3)", padding: "0.75rem 0" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <nav style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-taupe)", display: "flex", gap: "0.375rem", alignItems: "center" }}>
+          <nav style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-taupe)", display: "flex", gap: "0.375rem", alignItems: "center" }} aria-label="Breadcrumb">
             <Link href="/" style={{ color: "var(--color-taupe)", textDecoration: "none" }}>Home</Link>
             <span>/</span>
             <span style={{ color: "var(--color-maroon)", fontWeight: 600 }}>{title}</span>
@@ -104,20 +109,20 @@ function CollectionPageContent({ params }: CollectionPageProps) {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
           <div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.5rem, 4vw, 2.25rem)", color: "var(--color-maroon)", margin: 0, fontWeight: 700 }}>
               {title}
             </h1>
-            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-taupe)", margin: "0.25rem 0 0" }}>
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "var(--color-muted)", margin: "0.25rem 0 0" }}>
               {loading ? "Loading..." : `${total} products`}
             </p>
           </div>
 
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-            {/* Filters toggle (mobile) */}
+            {/* Filters toggle */}
             <button
               id="collection-filter-btn"
               onClick={() => setShowFilters(!showFilters)}
@@ -126,16 +131,17 @@ function CollectionPageContent({ params }: CollectionPageProps) {
                 alignItems: "center",
                 gap: "0.4rem",
                 padding: "0.5rem 1rem",
-                border: "1.5px solid var(--color-gold-dark)",
+                border: showFilters ? "2px solid var(--color-maroon)" : "1.5px solid var(--color-gold)",
                 borderRadius: "9999px",
-                backgroundColor: showFilters ? "var(--color-gold-dark)" : "transparent",
-                color: showFilters ? "var(--color-white)" : "var(--color-gold-dark)",
+                backgroundColor: showFilters ? "var(--color-maroon)" : "transparent",
+                color: showFilters ? "var(--color-white)" : "var(--color-maroon)",
                 fontFamily: "var(--font-body)",
                 fontWeight: 600,
                 fontSize: "0.85rem",
                 cursor: "pointer",
                 transition: "all 0.2s",
               }}
+              aria-label={showFilters ? "Hide filters" : "Show filters"}
             >
               <SlidersHorizontal size={16} />
               Filters
@@ -149,14 +155,15 @@ function CollectionPageContent({ params }: CollectionPageProps) {
               style={{
                 padding: "0.5rem 0.875rem",
                 border: "1.5px solid rgba(186,172,157,0.3)",
-                borderRadius: "0.5rem",
+                borderRadius: "14px",
                 backgroundColor: "var(--color-white)",
-                color: "var(--color-black)",
+                color: "var(--color-body)",
                 fontFamily: "var(--font-body)",
                 fontSize: "0.85rem",
                 cursor: "pointer",
                 outline: "none",
               }}
+              aria-label="Sort products"
             >
               {sortOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -167,30 +174,29 @@ function CollectionPageContent({ params }: CollectionPageProps) {
 
         <hr className="divider-gold" style={{ marginBottom: "1.5rem" }} />
 
-        <div style={{ display: "grid", gridTemplateColumns: showFilters ? "240px 1fr" : "1fr", gap: "1.5rem" }} className={showFilters ? "lg:grid-cols-[240px_1fr]" : ""}>
+        <div style={{ display: "grid", gridTemplateColumns: showFilters ? "240px 1fr" : "1fr", gap: "1.5rem" }} className={showFilters ? "!grid-cols-1 lg:!grid-cols-[240px_1fr]" : ""}>
           {/* Sidebar Filters */}
           {showFilters && (
             <aside
               style={{
                 backgroundColor: "var(--color-cream-alt)",
-                borderRadius: "1.125rem",
+                borderRadius: "18px",
                 border: "1px solid rgba(186,172,157,0.3)",
                 padding: "1.25rem",
                 height: "fit-content",
-                position: "sticky",
-                top: "5rem",
               }}
+              className="lg:sticky lg:top-20"
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
                 <h3 style={{ fontFamily: "var(--font-display)", color: "var(--color-maroon)", fontSize: "1rem", margin: 0, fontWeight: 700 }}>Filters</h3>
-                <button onClick={() => setShowFilters(false)} style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "var(--color-taupe)" }}>
+                <button onClick={() => setShowFilters(false)} style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", color: "var(--color-taupe)" }} aria-label="Close filters">
                   <X size={18} />
                 </button>
               </div>
 
               {/* Price Range */}
               <div style={{ marginBottom: "1.25rem" }}>
-                <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", color: "var(--color-black)", marginBottom: "0.5rem" }}>Price Range</p>
+                <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", color: "var(--color-body)", marginBottom: "0.5rem" }}>Price Range</p>
                 <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                   {[[0, 299], [299, 599], [599, 999], [999, 2000]].map(([min, max]) => (
                     <button
@@ -201,7 +207,7 @@ function CollectionPageContent({ params }: CollectionPageProps) {
                         border: priceRange[0] === min && priceRange[1] === max ? "1.5px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
                         borderRadius: "9999px",
                         backgroundColor: priceRange[0] === min && priceRange[1] === max ? "var(--color-blush)" : "var(--color-white)",
-                        color: priceRange[0] === min && priceRange[1] === max ? "var(--color-maroon)" : "var(--color-taupe)",
+                        color: priceRange[0] === min && priceRange[1] === max ? "var(--color-maroon)" : "var(--color-muted)",
                         fontSize: "0.78rem",
                         fontFamily: "var(--font-body)",
                         cursor: "pointer",
@@ -217,7 +223,7 @@ function CollectionPageContent({ params }: CollectionPageProps) {
 
               {/* Category Quick Links */}
               <div>
-                <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", color: "var(--color-black)", marginBottom: "0.5rem" }}>Category</p>
+                <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", color: "var(--color-body)", marginBottom: "0.5rem" }}>Category</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                   {Object.entries(categoryLabels).map(([catSlug, catLabel]) => (
                     <Link
@@ -225,10 +231,10 @@ function CollectionPageContent({ params }: CollectionPageProps) {
                       href={`/collections/${catSlug}`}
                       style={{
                         padding: "0.375rem 0.5rem",
-                        borderRadius: "0.375rem",
+                        borderRadius: "0.5rem",
                         fontFamily: "var(--font-body)",
                         fontSize: "0.82rem",
-                        color: slug === catSlug ? "var(--color-maroon)" : "var(--color-black)",
+                        color: slug === catSlug ? "var(--color-maroon)" : "var(--color-body)",
                         fontWeight: slug === catSlug ? 700 : 400,
                         textDecoration: "none",
                         backgroundColor: slug === catSlug ? "var(--color-blush)" : "transparent",
@@ -250,7 +256,7 @@ function CollectionPageContent({ params }: CollectionPageProps) {
                   border: "1px solid var(--color-taupe)",
                   borderRadius: "9999px",
                   backgroundColor: "transparent",
-                  color: "var(--color-taupe)",
+                  color: "var(--color-muted)",
                   fontFamily: "var(--font-body)",
                   fontSize: "0.8rem",
                   cursor: "pointer",
@@ -266,29 +272,29 @@ function CollectionPageContent({ params }: CollectionPageProps) {
           {/* Product Grid */}
           <div>
             {loading ? (
-              <div className={`grid grid-cols-2 gap-4 ${showFilters ? 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}`}>
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} style={{ borderRadius: "var(--radius-card, 1.125rem)", backgroundColor: "var(--color-cream-alt)", aspectRatio: "3/4" }} />
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+                {[...Array(10)].map((_, i) => (
+                  <div key={i} className="skeleton" style={{ aspectRatio: "1/1", borderRadius: "8px" }} />
                 ))}
               </div>
             ) : products.length === 0 ? (
               <div style={{ textAlign: "center", padding: "4rem 0" }}>
-                <p style={{ fontFamily: "var(--font-body)", color: "var(--color-taupe)", fontSize: "1rem" }}>No products found for this filter.</p>
+                <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", fontSize: "1rem" }}>No products found for this filter.</p>
                 <Link href="/collections/all" style={{ color: "var(--color-maroon)", fontFamily: "var(--font-body)", fontWeight: 600, marginTop: "0.75rem", display: "inline-block", textDecoration: "none" }}>
                   View all products →
                 </Link>
               </div>
             ) : (
-              <div className={`grid grid-cols-2 gap-4 ${showFilters ? 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' : 'sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}`}>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
                 {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} onQuickView={setQuickViewProduct} />
                 ))}
               </div>
             )}
 
             {/* Pagination */}
             {total > 12 && (
-              <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", marginTop: "2rem" }}>
+              <div style={{ display: "flex", justifyContent: "center", gap: "0.5rem", marginTop: "2rem", flexWrap: "wrap" }}>
                 {[...Array(Math.ceil(total / 12))].map((_, i) => (
                   <button
                     key={i}
@@ -296,14 +302,16 @@ function CollectionPageContent({ params }: CollectionPageProps) {
                     style={{
                       width: 36,
                       height: 36,
-                      borderRadius: "0.375rem",
-                      border: page === i + 1 ? "none" : "1px solid #F0E0C0",
-                      backgroundColor: page === i + 1 ? "#8B1E3F" : "transparent",
-                      color: page === i + 1 ? "#FFF8F0" : "#555",
+                      borderRadius: "0.5rem",
+                      border: page === i + 1 ? "none" : "1px solid var(--color-gold-light)",
+                      backgroundColor: page === i + 1 ? "var(--color-maroon)" : "transparent",
+                      color: page === i + 1 ? "var(--color-white)" : "var(--color-muted)",
                       fontFamily: "var(--font-body)",
                       fontWeight: 600,
                       cursor: "pointer",
+                      transition: "all 0.2s",
                     }}
+                    aria-label={`Page ${i + 1}`}
                   >
                     {i + 1}
                   </button>
@@ -313,6 +321,14 @@ function CollectionPageContent({ params }: CollectionPageProps) {
           </div>
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+        />
+      )}
     </div>
   );
 }

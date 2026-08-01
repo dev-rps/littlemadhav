@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
+import QuickViewModal from "@/components/product/QuickViewModal";
 
 interface Props {
   initialProducts: ProductCardData[];
@@ -16,6 +17,7 @@ const TABS = [
 
 export default function BestsellersTabs({ initialProducts }: Props) {
   const [activeSlug, setActiveSlug] = useState("all");
+  const [quickViewProduct, setQuickViewProduct] = useState<ProductCardData | null>(null);
 
   const filteredProducts = activeSlug === "all"
     ? initialProducts
@@ -40,7 +42,7 @@ export default function BestsellersTabs({ initialProducts }: Props) {
         style={{
           display: "flex",
           justifyContent: "center",
-          gap: "0.75rem",
+          gap: "0.6rem",
           flexWrap: "wrap",
           marginBottom: "2.5rem",
         }}
@@ -52,28 +54,18 @@ export default function BestsellersTabs({ initialProducts }: Props) {
               key={tab.slug}
               onClick={() => setActiveSlug(tab.slug)}
               style={{
-                padding: "0.625rem 1.25rem",
-                borderRadius: "0.25rem",
-                border: "1px solid var(--color-maroon)",
+                padding: "0.6rem 1.25rem",
+                borderRadius: "9999px",
+                border: isActive ? "2px solid var(--color-maroon)" : "1.5px solid var(--color-gold-light)",
                 backgroundColor: isActive ? "var(--color-maroon)" : "transparent",
                 color: isActive ? "var(--color-white)" : "var(--color-maroon)",
-                fontFamily: "var(--font-body, Lato, sans-serif)",
-                fontWeight: 600,
-                fontSize: "0.85rem",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                fontSize: "0.82rem",
                 cursor: "pointer",
-                transition: "all 0.2s ease",
+                transition: "all 0.25s ease",
                 textTransform: "uppercase",
-                letterSpacing: "0.05em",
-              }}
-              onMouseOver={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "rgba(102, 13, 25, 0.05)";
-                }
-              }}
-              onMouseOut={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                }
+                letterSpacing: "0.04em",
               }}
             >
               {tab.label}
@@ -87,26 +79,31 @@ export default function BestsellersTabs({ initialProducts }: Props) {
         <p
           style={{
             textAlign: "center",
-            color: "#888",
-            fontFamily: "var(--font-body, Jost, sans-serif)",
+            color: "var(--color-muted)",
+            fontFamily: "var(--font-body)",
             padding: "4rem 0",
           }}
         >
           No products found in this category.
         </p>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "1.25rem 1rem",
-          }}
-          className="sm:grid-cols-3 lg:grid-cols-4"
-        >
+        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3.5 sm:gap-6">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              onQuickView={setQuickViewProduct}
+            />
           ))}
         </div>
+      )}
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+        />
       )}
     </div>
   );
