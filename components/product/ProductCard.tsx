@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
@@ -58,7 +58,14 @@ export default function ProductCard({ product, onQuickView }: Props) {
   const { addItem } = useCartStore();
   const [hovered, setHovered] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [primaryError, setPrimaryError] = useState(false);
+  const [secondError, setSecondError] = useState(false);
+  const [hasHover, setHasHover] = useState(false);
+
+  useEffect(() => {
+    setHasHover(window.matchMedia("(hover: hover)").matches);
+  }, []);
+
   const [selectedVariant, setSelectedVariant] = useState<string | undefined>(
     product.variants[0]?.value
   );
@@ -68,6 +75,8 @@ export default function ProductCard({ product, onQuickView }: Props) {
 
   const primaryImage = product.images[0]?.url ?? "";
   const secondImage = product.images[1]?.url ?? primaryImage;
+  const showSecondImage = hasHover && hovered && secondImage !== primaryImage && !secondError;
+  const currentSrc = showSecondImage ? secondImage : primaryImage;
   const discount = getDiscountPercent(product.mrp, product.price);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
@@ -200,27 +209,33 @@ export default function ProductCard({ product, onQuickView }: Props) {
           }}
         >
           {/* Skeleton shimmer while loading */}
-          {!imgLoaded && !imgError && (
+          {!imgLoaded && !primaryError && (
             <div className="skeleton" style={{ position: "absolute", inset: 0 }} />
           )}
 
           {/* Branded fallback on error */}
-          {imgError ? (
+          {primaryError ? (
             <BrandedFallback name={product.name} />
           ) : (
             <Image
-              src={hovered && secondImage !== primaryImage ? secondImage : primaryImage}
+              src={currentSrc}
               alt={product.images[0]?.alt ?? product.name}
               fill
               sizes="(max-width: 768px) 50vw, 25vw"
               style={{
                 objectFit: "cover",
                 transition: "transform 0.4s ease, opacity 0.3s ease",
-                transform: hovered ? "scale(1.05)" : "scale(1)",
+                transform: showSecondImage ? "scale(1.05)" : "scale(1)",
                 opacity: imgLoaded ? 1 : 0,
               }}
               onLoad={() => setImgLoaded(true)}
-              onError={() => setImgError(true)}
+              onError={() => {
+                if (showSecondImage) {
+                  setSecondError(true);
+                } else {
+                  setPrimaryError(true);
+                }
+              }}
             />
           )}
         </div>
