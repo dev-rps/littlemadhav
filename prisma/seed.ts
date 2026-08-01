@@ -8,12 +8,12 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-// High-quality public Unsplash URLs for our new categories
-const IMG_DEVOTEES = "https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=600&q=80";
-const IMG_DRESSES = "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=600&q=80";
-const IMG_DECOR = "https://images.unsplash.com/photo-1587467512961-120760940315?w=600&q=80";
-const IMG_PRODUCTS = "https://images.unsplash.com/photo-1627130942770-e78c9d5b8f4e?w=600&q=80";
-const IMG_JEWELLERY = "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=600&q=80";
+// High-quality local product image URLs for categories
+const IMG_DEVOTEES = "/products/devotees/img1.jpg";
+const IMG_DRESSES = "/products/dresses/img1.jpg";
+const IMG_DECOR = "/products/decor/img1.jpg";
+const IMG_PRODUCTS = "/products/festive/img1.jpg";
+const IMG_JEWELLERY = "/products/jewellery/img1.jpg";
 
 async function main() {
   console.log("🌱 Cleaning Mourika database...");
