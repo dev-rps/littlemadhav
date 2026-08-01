@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -27,7 +30,6 @@ export async function GET(request: NextRequest) {
     }
 
     if (category) {
-      // Check for specific subcategory / tag aliases
       const catLower = category.toLowerCase();
 
       // Subcategories under Laddu Gopal Dresses
@@ -191,10 +193,19 @@ export async function GET(request: NextRequest) {
       category: p.category,
     }));
 
-    return NextResponse.json({
-      products: enriched,
-      pagination: { page, limit, total: finalTotal, totalPages: Math.ceil(finalTotal / limit) },
-    });
+    return NextResponse.json(
+      {
+        products: enriched,
+        pagination: { page, limit, total: finalTotal, totalPages: Math.ceil(finalTotal / limit) },
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
+        },
+      }
+    );
   } catch (error) {
     console.error("Products API error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });

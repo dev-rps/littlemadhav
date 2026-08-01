@@ -340,14 +340,44 @@ export default function ProductCard({ product, onQuickView }: Props) {
         )}
       </div>
 
-      {/* Hover overlay buttons: Quick View + Add to Cart */}
+      {/* Mobile Quick Action Button (always accessible on touch devices) */}
+      <div className="block sm:hidden" style={{ padding: "0 0.65rem 0.65rem" }}>
+        <button
+          id={`mobile-add-to-cart-${product.id}`}
+          onClick={handleAddToCart}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.3rem",
+            padding: "0.45rem",
+            backgroundColor: "var(--color-maroon)",
+            color: "var(--color-white)",
+            border: "none",
+            borderRadius: "6px",
+            fontFamily: "var(--font-body)",
+            fontWeight: 700,
+            fontSize: "0.72rem",
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            cursor: "pointer",
+          }}
+          aria-label={`Add ${product.name} to cart`}
+        >
+          <ShoppingBag size={12} />
+          Add to Cart
+        </button>
+      </div>
+
+      {/* Desktop Hover overlay buttons */}
       <div
+        className="hidden sm:flex"
         style={{
           position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
-          display: "flex",
           gap: 0,
           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           transform: hovered ? "translateY(0)" : "translateY(100%)",
