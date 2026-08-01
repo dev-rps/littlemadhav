@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const categories = [
@@ -7,36 +8,49 @@ const categories = [
     name: "Devotees collection",
     slug: "devotees-collection",
     desc: "Divine Combos",
-    icon: "🕉️",
-    gradient: "linear-gradient(145deg, #FBD5CD 0%, #F4E8DB 100%)",
+    imageUrl: "/products/devotees/img1.jpg",
   },
   {
     name: "Laddu Gopal Dresses",
     slug: "laddu-gopal-dresses",
     desc: "Luxe & Pastel Dresses",
-    icon: "👗",
-    gradient: "linear-gradient(145deg, #FBF3E9 0%, #FBD5CD 100%)",
+    imageUrl: "/products/dresses/img1.jpg",
   },
   {
     name: "Festive Home Decor",
     slug: "festive-home-decor",
     desc: "Torans & Rangolis",
-    icon: "🪔",
-    gradient: "linear-gradient(145deg, #F4E8DB 0%, #FBF3E9 100%)",
+    imageUrl: "/products/decor/img1.jpg",
   },
   {
     name: "Festive Products",
     slug: "festive-products",
     desc: "Janmashtami & Diwali",
-    icon: "🎉",
-    gradient: "linear-gradient(145deg, #FBD5CD 0%, #FBF3E9 100%)",
+    imageUrl: "/products/festive/img1.jpg",
   },
   {
     name: "Jewellery & Accessories",
     slug: "jewellery-accessories",
     desc: "Bansuri & Ornaments",
-    icon: "💎",
-    gradient: "linear-gradient(145deg, #FBF3E9 0%, #F4E8DB 100%)",
+    imageUrl: "/products/jewellery/img1.jpg",
+  },
+  {
+    name: "Bandhanwal & Torans",
+    slug: "torans-bandhanwal",
+    desc: "Door Hangings",
+    imageUrl: "/products/bandhanwal/img1.jpg",
+  },
+  {
+    name: "Radha Rani Dresses",
+    slug: "radha-rani-dresses",
+    desc: "Divine Poshaak",
+    imageUrl: "/products/radharani/img1.jpg",
+  },
+  {
+    name: "Upcoming Festival",
+    slug: "upcoming",
+    desc: "Teej & Rakhi Special",
+    imageUrl: "/products/upcoming/img1.jpg",
   },
 ];
 
@@ -76,15 +90,14 @@ export default function CategoryGrid() {
 
         <hr className="divider-gold" style={{ marginBottom: "3rem" }} />
 
-        {/* Circular Categories Grid */}
+        {/* Circular Categories Grid with Real Photos */}
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(5, 1fr)",
-            gap: "2rem",
+            gap: "2rem 1.5rem",
             justifyItems: "center",
           }}
-          className="!grid-cols-3 sm:!grid-cols-5"
+          className="grid-cols-2 sm:grid-cols-4 lg:grid-cols-4"
         >
           {categories.map((cat) => {
             const isHovered = hoveredSlug === cat.slug;
@@ -100,43 +113,51 @@ export default function CategoryGrid() {
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "100%",
-                  maxWidth: "140px",
+                  maxWidth: "160px",
                 }}
                 onMouseEnter={() => setHoveredSlug(cat.slug)}
                 onMouseLeave={() => setHoveredSlug(null)}
               >
-                {/* Gold ring circle with themed icon */}
+                {/* Gold ring circle with real categorised product photo */}
                 <div
                   style={{
-                    width: "110px",
-                    height: "110px",
+                    width: "120px",
+                    height: "120px",
                     borderRadius: "50%",
-                    border: isHovered ? "2.5px solid var(--color-maroon)" : "2px solid var(--color-gold-light)",
+                    border: isHovered ? "3px solid var(--color-maroon)" : "2px solid var(--color-gold)",
                     padding: "4px",
                     backgroundColor: "var(--color-white)",
                     transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
                     boxShadow: isHovered
-                      ? "var(--shadow-hover)"
-                      : "0 2px 10px rgba(102, 13, 25, 0.05)",
-                    transform: isHovered ? "translateY(-6px) scale(1.02)" : "translateY(0)",
+                      ? "0 10px 25px rgba(102, 13, 25, 0.18)"
+                      : "0 4px 14px rgba(102, 13, 25, 0.06)",
+                    transform: isHovered ? "translateY(-6px) scale(1.03)" : "translateY(0)",
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
-                  {/* Icon container */}
+                  {/* Real Image Container */}
                   <div
                     style={{
                       width: "100%",
                       height: "100%",
                       borderRadius: "50%",
-                      background: cat.gradient,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "2.5rem",
-                      transition: "transform 0.5s ease",
-                      transform: isHovered ? "scale(1.08)" : "scale(1)",
+                      overflow: "hidden",
+                      position: "relative",
+                      backgroundColor: "#F4E8DB",
                     }}
                   >
-                    {cat.icon}
+                    <Image
+                      src={cat.imageUrl}
+                      alt={cat.name}
+                      fill
+                      sizes="120px"
+                      style={{
+                        objectFit: "cover",
+                        transition: "transform 0.5s ease",
+                        transform: isHovered ? "scale(1.12)" : "scale(1)",
+                      }}
+                    />
                   </div>
                 </div>
 
@@ -144,13 +165,13 @@ export default function CategoryGrid() {
                 <p
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "0.82rem",
-                    color: isHovered ? "var(--color-maroon)" : "var(--color-body)",
-                    margin: "0.75rem 0 0.15rem",
-                    lineHeight: 1.2,
+                    fontSize: "0.85rem",
+                    color: isHovered ? "var(--color-maroon)" : "var(--color-black)",
+                    margin: "0.85rem 0 0.15rem",
+                    lineHeight: 1.25,
                     fontWeight: 700,
                     textTransform: "uppercase",
-                    letterSpacing: "0.06em",
+                    letterSpacing: "0.05em",
                     transition: "color 0.2s ease",
                     textAlign: "center",
                   }}
@@ -162,7 +183,7 @@ export default function CategoryGrid() {
                 <p
                   style={{
                     fontFamily: "var(--font-body)",
-                    fontSize: "0.72rem",
+                    fontSize: "0.75rem",
                     color: "var(--color-muted)",
                     margin: 0,
                     lineHeight: 1.3,
