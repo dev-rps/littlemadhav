@@ -1,14 +1,10 @@
 "use client";
-import { useState, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { SlidersHorizontal, X } from "lucide-react";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 import QuickViewModal from "@/components/product/QuickViewModal";
-
-interface CollectionPageProps {
-  params: Promise<{ slug: string }>;
-}
 
 const categoryLabels: Record<string, string> = {
   "devotees-collection": "Devotees collection",
@@ -39,16 +35,17 @@ function CollectionLoading() {
   );
 }
 
-export default function CollectionPage({ params }: CollectionPageProps) {
+export default function CollectionPage() {
   return (
     <Suspense fallback={<CollectionLoading />}>
-      <CollectionPageContent params={params} />
+      <CollectionPageContent />
     </Suspense>
   );
 }
 
-function CollectionPageContent({ params }: CollectionPageProps) {
-  const [slug, setSlug] = useState<string>("all");
+function CollectionPageContent() {
+  const params = useParams<{ slug: string }>();
+  const slug = params?.slug || "all";
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<ProductCardData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,39 +57,49 @@ function CollectionPageContent({ params }: CollectionPageProps) {
   const [quickViewProduct, setQuickViewProduct] = useState<ProductCardData | null>(null);
 
   useEffect(() => {
-    params.then((p) => setSlug(p.slug));
-  }, [params]);
+    let active = true;
 
-  const fetchProducts = useCallback(async () => {
-    if (!slug) return;
-    setLoading(true);
-    try {
-      const qs = new URLSearchParams({
-        sort,
-        page: String(page),
-        limit: "12",
-      });
-      // Map slug to API params
-      if (slug === "sale") qs.set("sale", "true");
-      else if (slug === "new-arrivals") qs.set("new", "true");
-      else if (slug !== "all") qs.set("category", slug);
-      if (priceRange[0] > 0) qs.set("minPrice", String(priceRange[0]));
-      if (priceRange[1] < 2000) qs.set("maxPrice", String(priceRange[1]));
+    const loadProducts = async () => {
+      setLoading(true);
+      try {
+        const qs = new URLSearchParams({
+          sort,
+          page: String(page),
+          limit: "12",
+        });
+        
+        // Map slug to API params
+        if (slug === "sale") qs.set("sale", "true");
+        else if (slug === "new-arrivals") qs.set("new", "true");
+        else if (slug !== "all") qs.set("category", slug);
+        
+        if (priceRange[0] > 0) qs.set("minPrice", String(priceRange[0]));
+        if (priceRange[1] < 2000) qs.set("maxPrice", String(priceRange[1]));
 
-      const res = await fetch(`/api/products?${qs}`);
-      const data = await res.json();
-      setProducts(data.products ?? []);
-      setTotal(data.pagination?.total ?? 0);
-    } catch {
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
+        const res = await fetch(`/api/products?${qs}`);
+        const data = await res.json();
+        
+        if (active) {
+          setProducts(data.products ?? []);
+          setTotal(data.pagination?.total ?? 0);
+        }
+      } catch {
+        if (active) {
+          setProducts([]);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadProducts();
+
+    return () => {
+      active = false;
+    };
   }, [slug, sort, page, priceRange]);
-
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
 
   const title = categoryLabels[slug] ?? slug;
 

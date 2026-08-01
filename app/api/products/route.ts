@@ -144,19 +144,30 @@ export async function GET(request: NextRequest) {
     let finalTotal = total;
 
     if (products.length === 0 && category && category !== "all") {
-      const fallbackProducts = await prisma.product.findMany({
-        include: {
-          images: { orderBy: { order: "asc" }, take: 2 },
-          variants: true,
-          category: { select: { name: true } },
-          reviews: { select: { rating: true } },
-        },
-        orderBy,
-        skip: (page - 1) * limit,
-        take: limit,
-      });
-      finalProducts = fallbackProducts;
-      finalTotal = fallbackProducts.length;
+      const parentSlug = getParentCategorySlug(category);
+      if (parentSlug) {
+        const fallbackWhere = { category: { slug: parentSlug } };
+        const [fallbackProducts, fallbackTotal] = await Promise.all([
+          prisma.product.findMany({
+            where: fallbackWhere,
+            include: {
+              images: { orderBy: { order: "asc" }, take: 2 },
+              variants: true,
+              category: { select: { name: true } },
+              reviews: { select: { rating: true } },
+            },
+            orderBy,
+            skip: (page - 1) * limit,
+            take: limit,
+          }),
+          prisma.product.count({ where: fallbackWhere }),
+        ]);
+        finalProducts = fallbackProducts;
+        finalTotal = fallbackTotal;
+      } else {
+        finalProducts = [];
+        finalTotal = 0;
+      }
     }
 
     const enriched = finalProducts.map((p: any) => ({
@@ -188,4 +199,70 @@ export async function GET(request: NextRequest) {
     console.error("Products API error:", error);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
   }
+}
+
+function getParentCategorySlug(category: string): string | null {
+  const catLower = category.toLowerCase();
+
+  // Subcategories under Laddu Gopal Dresses
+  if (
+    catLower === "luxe-dresses" ||
+    catLower === "soft-pastel-dresses" ||
+    catLower === "summer-collection" ||
+    catLower === "woollen-dresses" ||
+    catLower === "summer-bedding-set" ||
+    catLower === "woollen-bedding-set" ||
+    catLower === "radha-rani-dresses"
+  ) {
+    return "laddu-gopal-dresses";
+  }
+
+  // Subcategories under Festive Home Decor
+  if (
+    catLower === "torans-bandhanwal" ||
+    catLower === "decorative-rangoli" ||
+    catLower === "shubh-labh" ||
+    catLower === "pooja-thali-cover"
+  ) {
+    return "festive-home-decor";
+  }
+
+  // Subcategories under Festive Products
+  if (
+    catLower === "janmashtami" ||
+    catLower === "rakhi" ||
+    catLower === "karwa-chauth" ||
+    catLower === "navratri" ||
+    catLower === "diwali"
+  ) {
+    return "festive-products";
+  }
+
+  // Subcategories under Jewellery & Accessories
+  if (
+    catLower === "hairs" ||
+    catLower === "earrings" ||
+    catLower === "kangan" ||
+    catLower === "necklace-haar" ||
+    catLower === "bansuri" ||
+    catLower === "kamar-band" ||
+    catLower === "attar-ittar" ||
+    catLower === "bathtub" ||
+    catLower === "pooja-thali-cover-accessory"
+  ) {
+    return "jewellery-accessories";
+  }
+
+  // Direct main categories slug check
+  if (
+    catLower === "devotees-collection" ||
+    catLower === "laddu-gopal-dresses" ||
+    catLower === "festive-home-decor" ||
+    catLower === "festive-products" ||
+    catLower === "jewellery-accessories"
+  ) {
+    return catLower;
+  }
+
+  return null;
 }
