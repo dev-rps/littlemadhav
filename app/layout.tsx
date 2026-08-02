@@ -7,6 +7,7 @@ import CartDrawer from "@/components/layout/CartDrawer";
 import { Toaster } from "react-hot-toast";
 import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import ExitIntentPopup from "@/components/home/ExitIntentPopup";
+import ServiceWorkerCleaner from "@/components/ui/ServiceWorkerCleaner";
 
 const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={playfair.variable}>
       <body className="min-h-screen flex flex-col">
+        <ServiceWorkerCleaner />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
