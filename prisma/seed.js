@@ -42,13 +42,21 @@ async function main() {
 
   for (let i = 0; i < products.length; i++) {
     const { images, variants, ...productData } = products[i];
+    const baseVariants = variants.filter(v => v.name !== "Size");
+    const sizeVariants = [
+      { name: "Size", value: "1", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "2", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "3", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "4", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "5", stock: 15, priceAdj: 0 },
+    ];
     const product = await prisma.product.upsert({
       where: { slug: productData.slug },
       update: {},
       create: {
         ...productData,
         images: { create: images },
-        variants: { create: variants },
+        variants: { create: [...baseVariants, ...sizeVariants] },
       },
     });
     if (i < reviews.length) {

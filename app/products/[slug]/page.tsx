@@ -47,7 +47,21 @@ export default function ProductDetailPage() {
     fetch(`/api/products/${slug}`)
       .then((r) => r.json())
       .then((data) => {
-        if (data.error) { setProduct(null); } else { setProduct(data); }
+        if (data.error) {
+          setProduct(null);
+        } else {
+          setProduct(data);
+          // Pre-select first option for each variant category
+          if (data.variants && data.variants.length > 0) {
+            const defaults: Record<string, string> = {};
+            data.variants.forEach((v: any) => {
+              if (!defaults[v.name]) {
+                defaults[v.name] = v.value;
+              }
+            });
+            setSelectedVariants(defaults);
+          }
+        }
         setLoading(false);
       })
       .catch(() => setLoading(false));

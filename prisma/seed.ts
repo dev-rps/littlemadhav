@@ -546,6 +546,15 @@ async function main() {
       { url: `/products/${folder}/img4.jpg`, alt: `${productData.name} Angle 4`, isPrimary: false },
     ];
 
+    const baseVariants = variants.filter((v: any) => v.name !== "Size");
+    const sizeVariants = [
+      { name: "Size", value: "1", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "2", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "3", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "4", stock: 15, priceAdj: 0 },
+      { name: "Size", value: "5", stock: 15, priceAdj: 0 },
+    ];
+
     const product = await prisma.product.create({
       data: {
         ...productData,
@@ -553,7 +562,7 @@ async function main() {
           create: images.map((img, orderIdx) => ({ ...img, order: orderIdx })),
         },
         variants: {
-          create: variants,
+          create: [...baseVariants, ...sizeVariants],
         },
       },
     });
