@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateOrderNumber } from "@/lib/utils";
+import { generateOrderNumber, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import { z } from "zod";
 import crypto from "crypto";
 
@@ -72,9 +72,13 @@ export async function POST(request: NextRequest) {
 
     // Verify Razorpay signature if online payment
     if (data.paymentMethod === "razorpay") {
+      const secret = process.env.RAZORPAY_KEY_SECRET;
+      if (!secret) {
+        return NextResponse.json({ error: "Server error: Razorpay key secret is not configured" }, { status: 500 });
+      }
       const sign = data.razorpayOrderId + "|" + data.razorpayPaymentId;
       const expectedSign = crypto
-        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
+        .createHmac("sha256", secret)
         .update(sign)
         .digest("hex");
 
@@ -93,7 +97,7 @@ export async function POST(request: NextRequest) {
       subtotal += price * item.quantity;
     }
 
-    const shippingFee = subtotal >= 499 ? 0 : 49;
+    const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 49;
     const total = subtotal + shippingFee;
 
     const order = await prisma.order.create({

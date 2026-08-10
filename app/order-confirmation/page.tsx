@@ -9,8 +9,12 @@ interface Order {
   orderNumber: string;
   customerName: string;
   customerPhone: string;
+  subtotal: number;
+  shippingFee: number;
   total: number;
   paymentMethod: string;
+  paymentStatus: string;
+  razorpayPaymentId?: string;
   status: string;
   items: { name: string; quantity: number; price: number }[];
   createdAt: string;
@@ -56,8 +60,8 @@ function OrderConfirmationContent() {
 
   const WHATSAPP_NUMBER = "919876543210";
   const whatsappMsg = orderNumber
-    ? encodeURIComponent(`Hi Mourika! I just placed order #${orderNumber}. Could you please confirm it?`)
-    : encodeURIComponent("Hi Mourika! I just placed an order. Could you please confirm it?");
+    ? encodeURIComponent(`Hi! I just placed order #${orderNumber}. Could you please confirm it?`)
+    : encodeURIComponent("Hi! I just placed an order. Could you please confirm it?");
 
   return (
     <div style={{ backgroundColor: "#FFF8F0", minHeight: "100vh", padding: "3rem 0" }}>
@@ -84,8 +88,8 @@ function OrderConfirmationContent() {
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#888", margin: 0 }}>Order Number</p>
                 <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "1rem", color: "#8B1E3F", margin: 0 }}>#{order.orderNumber}</p>
               </div>
-              <span style={{ padding: "0.3rem 0.875rem", backgroundColor: "#E8F5EE", color: "#2D6A4F", borderRadius: "9999px", fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.8rem" }}>
-                ✓ {order.paymentMethod === "cod" ? "COD" : "Paid Online"}
+              <span style={{ padding: "0.3rem 0.875rem", backgroundColor: order.paymentMethod === "razorpay" ? "#E8F5EE" : "#FEF9EC", color: order.paymentMethod === "razorpay" ? "#2D6A4F" : "#B8890F", borderRadius: "9999px", fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.8rem" }}>
+                ✓ {order.paymentMethod === "razorpay" ? "Paid Online via Razorpay" : "Cash on Delivery (COD)"}
               </span>
             </div>
 
@@ -102,10 +106,28 @@ function OrderConfirmationContent() {
               </div>
             </div>
 
-            {/* Total */}
-            <div style={{ padding: "1.25rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.1rem" }}>Total Paid</span>
-              <span style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.25rem" }}>{formatPrice(order.total)}</span>
+            {/* Bill Summary */}
+            <div style={{ padding: "1.25rem 1.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#555" }}>
+                <span>Subtotal</span>
+                <span>{formatPrice(order.subtotal ?? order.total)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#555" }}>
+                <span>Delivery / Shipping</span>
+                <span style={{ color: order.shippingFee === 0 ? "#2D6A4F" : "#555" }}>{order.shippingFee === 0 ? "FREE" : formatPrice(order.shippingFee)}</span>
+              </div>
+              <div style={{ borderTop: "1px solid #F0E0C0", paddingTop: "0.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.1rem" }}>Total Amount Paid</span>
+                <span style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.25rem" }}>{formatPrice(order.total)}</span>
+              </div>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#2D6A4F", margin: 0, fontWeight: 600, textAlign: "right" }}>
+                ✓ Inclusive of all taxes (GST)
+              </p>
+              {order.razorpayPaymentId && (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "#888", margin: "0.25rem 0 0 0", textAlign: "right" }}>
+                  Payment ID: <code style={{ backgroundColor: "#F5EDE0", padding: "0.1rem 0.3rem", borderRadius: "0.25rem" }}>{order.razorpayPaymentId}</code>
+                </p>
+              )}
             </div>
           </div>
         ) : (

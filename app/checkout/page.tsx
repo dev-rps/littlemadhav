@@ -103,7 +103,7 @@ export default function CheckoutPage() {
       toast.dismiss(loadingToast);
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+        key: orderData.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Little Madhav",
@@ -157,6 +157,7 @@ export default function CheckoutPage() {
         modal: {
           ondismiss: function () {
             setSubmitting(false);
+            toast.error("Payment cancelled or popup closed");
           },
         },
       };
@@ -298,18 +299,18 @@ export default function CheckoutPage() {
               <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.1rem", marginBottom: "1.25rem" }}>Payment Method</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {[
-                  { value: "cod" as const, label: "Cash on Delivery (COD)", desc: "Pay when your order arrives", icon: "💵" },
-                  { value: "razorpay" as const, label: "Pay Online (UPI / Card / Net Banking)", desc: "Secure checkout via Razorpay", icon: "💳" },
+                  { value: "cod" as const, label: "Cash on Delivery (COD)", desc: "Pay cash when your package arrives at your doorstep", icon: "💵" },
+                  { value: "razorpay" as const, label: "Pay Online via Razorpay", desc: "Instant checkout with UPI, Google Pay, PhonePe, Paytm, Cards & Netbanking", icon: "💳" },
                 ].map((opt) => (
                   <label
                     key={opt.value}
                     id={`payment-${opt.value}`}
                     style={{
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "flex-start",
                       gap: "0.875rem",
                       padding: "0.875rem",
-                      border: form.paymentMethod === opt.value ? "2px solid #D4A017" : "1.5px solid #F0E0C0",
+                      border: form.paymentMethod === opt.value ? "2px solid #8B1E3F" : "1.5px solid #F0E0C0",
                       borderRadius: "0.625rem",
                       backgroundColor: form.paymentMethod === opt.value ? "#FEF9EC" : "#FFF8F0",
                       cursor: "pointer",
@@ -321,12 +322,32 @@ export default function CheckoutPage() {
                       value={opt.value}
                       checked={form.paymentMethod === opt.value}
                       onChange={() => setForm((f) => ({ ...f, paymentMethod: opt.value }))}
-                      style={{ accentColor: "#8B1E3F" }}
+                      style={{ accentColor: "#8B1E3F", marginTop: "0.2rem" }}
                     />
-                    <span style={{ fontSize: "1.5rem" }}>{opt.icon}</span>
-                    <div>
+                    <span style={{ fontSize: "1.5rem", lineHeight: 1 }}>{opt.icon}</span>
+                    <div style={{ flex: 1 }}>
                       <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.9rem", color: "#1a1a1a", margin: 0 }}>{opt.label}</p>
-                      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#888", margin: 0 }}>{opt.desc}</p>
+                      <p style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#666", margin: "0.15rem 0 0 0" }}>{opt.desc}</p>
+                      {opt.value === "razorpay" && form.paymentMethod === "razorpay" && (
+                        <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
+                          {["Google Pay", "PhonePe", "Paytm", "UPI", "Cards", "NetBanking"].map((badge) => (
+                            <span
+                              key={badge}
+                              style={{
+                                fontSize: "0.68rem",
+                                fontWeight: 600,
+                                padding: "0.15rem 0.4rem",
+                                backgroundColor: "#FFFBF5",
+                                border: "1px solid #D4A017",
+                                borderRadius: "0.25rem",
+                                color: "#8B1E3F",
+                              }}
+                            >
+                              {badge}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </label>
                 ))}
@@ -349,9 +370,14 @@ export default function CheckoutPage() {
                 fontSize: "1rem",
                 cursor: submitting ? "not-allowed" : "pointer",
                 transition: "background-color 0.2s",
+                boxShadow: submitting ? "none" : "0 4px 12px rgba(139, 30, 63, 0.2)",
               }}
             >
-              {submitting ? "Processing..." : form.paymentMethod === "cod" ? "Place Order (COD) →" : "Proceed to Pay →"}
+              {submitting
+                ? "Processing Order..."
+                : form.paymentMethod === "cod"
+                ? "Place Order (COD) →"
+                : `Pay ${formatPrice(total + shippingFee)} via Razorpay 🔒`}
             </button>
           </form>
 
@@ -391,8 +417,11 @@ export default function CheckoutPage() {
                   <span style={{ color: shippingFee === 0 ? "#2D6A4F" : "#555" }}>{shippingFee === 0 ? "FREE" : formatPrice(shippingFee)}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "1.1rem", color: "#8B1E3F", marginTop: "0.25rem", paddingTop: "0.4rem", borderTop: "1px solid #F0E0C0" }}>
-                  <span>Total</span><span>{formatPrice(total + shippingFee)}</span>
+                  <span>Total Payable</span><span>{formatPrice(total + shippingFee)}</span>
                 </div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", color: "#2D6A4F", textAlign: "right", margin: "0.2rem 0 0 0", fontWeight: 600 }}>
+                  ✓ Inclusive of all taxes (GST)
+                </p>
               </div>
               {/* Delivery estimate */}
               <div style={{ marginTop: "0.875rem", padding: "0.625rem 0.75rem", backgroundColor: "#E8F5EE", borderRadius: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>

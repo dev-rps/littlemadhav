@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import Razorpay from "razorpay";
-
-const razorpay = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "",
-});
 
 async function calculateProductPrice(productId: string, variantStr?: string) {
   const product = await prisma.product.findUnique({
@@ -36,6 +32,22 @@ async function calculateProductPrice(productId: string, variantStr?: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      console.error("Razorpay API credentials missing in environment");
+      return NextResponse.json(
+        { error: "Razorpay API key or secret not configured on server" },
+        { status: 500 }
+      );
+    }
+
+    const razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    });
+
     const body = await request.json();
     const { items } = body;
 
@@ -43,7 +55,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Empty or invalid cart items" }, { status: 400 });
     }
 
-    // Securely calculate total on the server
+    // Securely calculate total on the server using database pricing
     let subtotal = 0;
     for (const item of items) {
       const price = await calculateProductPrice(item.productId, item.variant);
@@ -53,11 +65,10 @@ export async function POST(request: NextRequest) {
       subtotal += price * item.quantity;
     }
 
-    const shippingFee = subtotal >= 499 ? 0 : 49;
+    const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 49;
     const total = subtotal + shippingFee;
 
-    // Create Razorpay Order
-    // Amount must be in the smallest currency unit (paisa for INR)
+    // Create Razorpay Order (amount in smallest currency unit, i.e., paisa for INR)
     const options = {
       amount: Math.round(total * 100),
       currency: "INR",
@@ -70,6 +81,10 @@ export async function POST(request: NextRequest) {
       id: order.id,
       amount: order.amount,
       currency: order.currency,
+      key: keyId,
+      subtotal,
+      shippingFee,
+      total,
       success: true,
     });
   } catch (error) {
@@ -77,3 +92,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to create payment order" }, { status: 500 });
   }
 }
+
