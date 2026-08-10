@@ -79,7 +79,7 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
   const token = await getShiprocketToken();
   if (!token) {
     console.warn("Skipping Shiprocket order creation: Auth token unavailable.");
-    return null;
+    return { success: false, error: "Shiprocket authentication token unavailable. Check SHIPROCKET_EMAIL & SHIPROCKET_PASSWORD." };
   }
 
   // Format date to "YYYY-MM-DD HH:mm"
@@ -93,11 +93,13 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
   const firstName = nameParts[0] || input.customerName;
   const lastName = nameParts.slice(1).join(" ") || ".";
 
-  const payload = {
+  // Sanitize phone number to 10 digits
+  const sanitizedPhone = input.customerPhone.replace(/\D/g, "").slice(-10);
+
+  const payload: Record<string, any> = {
     order_id: input.orderId,
     order_date: formattedDate,
     pickup_location: input.pickupLocation || process.env.SHIPROCKET_PICKUP_LOCATION || "warehouse",
-    channel_id: process.env.SHIPROCKET_CHANNEL_ID || "11797508",
     comment: "Website order",
     billing_customer_name: firstName,
     billing_last_name: lastName,
@@ -108,7 +110,7 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
     billing_state: input.state,
     billing_country: "India",
     billing_email: input.customerEmail,
-    billing_phone: input.customerPhone,
+    billing_phone: sanitizedPhone,
     shipping_is_billing: true,
     order_items: input.items.map((item, idx) => ({
       name: item.name,
@@ -130,6 +132,11 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
     weight: 0.5,
   };
 
+  // Only include channel_id if explicitly defined in environment variables (do NOT pass arbitrary channel ID)
+  if (process.env.SHIPROCKET_CHANNEL_ID && process.env.SHIPROCKET_CHANNEL_ID.trim().length > 0) {
+    payload.channel_id = process.env.SHIPROCKET_CHANNEL_ID.trim();
+  }
+
   try {
     const res = await fetch(`${SHIPROCKET_API_BASE}/orders/create/adhoc`, {
       method: "POST",
@@ -141,9 +148,12 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
     });
 
     const data = await res.json();
-    if (!res.ok) {
-      console.error("Shiprocket create order API error:", data);
-      return { success: false, error: data };
+    if (!res.ok || data.status_code === 400 || data.status_code === 422) {
+      const errorMsg =
+        data.message ||
+        (data.errors ? (typeof data.errors === "string" ? data.errors : JSON.stringify(data.errors)) : "Shiprocket order creation failed");
+      console.error("Shiprocket create order API error:", res.status, data);
+      return { success: false, error: errorMsg, raw: data };
     }
 
     return {
@@ -154,9 +164,9 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
       courierName: data.courier_name || null,
       raw: data,
     };
-  } catch (err) {
+  } catch (err: any) {
     console.error("Failed to create order in Shiprocket:", err);
-    return { success: false, error: err };
+    return { success: false, error: err.message || "Network error connecting to Shiprocket" };
   }
 }
 

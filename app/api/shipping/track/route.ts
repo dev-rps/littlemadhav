@@ -35,17 +35,22 @@ export async function GET(request: NextRequest) {
 
     // Fallback response if order exists in DB but AWB hasn't been assigned by courier yet
     if (order) {
+      const isSynced = !!order.shiprocketOrderId;
       return NextResponse.json({
         success: true,
         order,
         tracking: {
           success: true,
-          status: order.status === "placed" ? "Order Placed - Processing for Pickup" : order.status,
+          status: isSynced
+            ? (order.status === "placed" ? "Order Confirmed - AWB Assignment Pending" : order.status)
+            : "Order Placed - Pending Courier Sync",
           courierName: order.courierName || "Shiprocket Express",
           activities: [
             {
               date: order.createdAt,
-              status: "Order received & submitted for shipment processing",
+              status: isSynced
+                ? "Order received & pushed to Shiprocket logistics network"
+                : "Order received in database (logistics sync pending/unverified)",
               location: "Warehouse",
             },
           ],

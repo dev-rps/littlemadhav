@@ -155,6 +155,7 @@ export async function POST(request: NextRequest) {
 
     // Automatically sync order to Shiprocket
     let finalOrder = order;
+    let shiprocketSyncStatus = { success: false, error: null as string | null };
     try {
       const shiprocketResult = await createShiprocketOrder({
         orderId: order.orderNumber,
@@ -188,12 +189,18 @@ export async function POST(request: NextRequest) {
           } as any,
           include: { items: true },
         })) as typeof order;
+        shiprocketSyncStatus = { success: true, error: null };
+      } else {
+        const errorMsg = shiprocketResult?.error || "Unknown Shiprocket API error";
+        console.error(`[Order ${order.orderNumber}] Shiprocket creation failed:`, errorMsg);
+        shiprocketSyncStatus = { success: false, error: typeof errorMsg === "string" ? errorMsg : JSON.stringify(errorMsg) };
       }
-    } catch (srErr) {
-      console.error("Non-blocking Shiprocket sync error:", srErr);
+    } catch (srErr: any) {
+      console.error(`[Order ${order.orderNumber}] Non-blocking Shiprocket sync exception:`, srErr);
+      shiprocketSyncStatus = { success: false, error: srErr.message || "Failed to sync to Shiprocket" };
     }
 
-    return NextResponse.json({ order: finalOrder, success: true }, { status: 201 });
+    return NextResponse.json({ order: finalOrder, shiprocketSync: shiprocketSyncStatus, success: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Validation failed", details: error.issues }, { status: 400 });
