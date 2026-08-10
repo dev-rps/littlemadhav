@@ -9,11 +9,13 @@ const categories = [
   {
     label: "Devotees Collection",
     slug: "devotees-collection",
+    icon: "🌸",
     children: [],
   },
   {
     label: "Laddu Gopal Dresses",
     slug: "laddu-gopal-dresses",
+    icon: "👗",
     children: [
       { label: "Luxe Dresses", slug: "luxe-dresses" },
       { label: "Soft Pastel Dresses", slug: "soft-pastel-dresses" },
@@ -26,6 +28,7 @@ const categories = [
   {
     label: "Festive Home Decor",
     slug: "festive-home-decor",
+    icon: "🪔",
     children: [
       { label: "Torans / Bandhanwal", slug: "torans-bandhanwal" },
       { label: "Decorative Rangoli", slug: "decorative-rangoli" },
@@ -36,6 +39,7 @@ const categories = [
   {
     label: "Festive Products",
     slug: "festive-products",
+    icon: "🪅",
     children: [
       { label: "Janmashtami", slug: "janmashtami" },
       { label: "Rakhi", slug: "rakhi" },
@@ -47,6 +51,7 @@ const categories = [
   {
     label: "Jewellery & Accessories",
     slug: "jewellery-accessories",
+    icon: "👑",
     children: [
       { label: "Hairs", slug: "hairs" },
       { label: "Earrings", slug: "earrings" },
@@ -58,7 +63,7 @@ const categories = [
       { label: "Bathtub", slug: "bathtub" },
     ],
   },
-  { label: "Upcoming Festival", slug: "upcoming", children: [] },
+  { label: "Upcoming Festival", slug: "upcoming", icon: "🎉", children: [] },
 ];
 
 export default function Header() {
@@ -330,12 +335,12 @@ export default function Header() {
             style={{
               position: "fixed",
               inset: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              backgroundColor: "rgba(0, 0, 0, 0.45)",
               backdropFilter: "blur(4px)",
               zIndex: 90,
               display: "flex",
               justifyContent: "flex-start",
-              animation: "fade-in 0.2s ease",
+              animation: "fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
             }}
             className="lg:hidden"
             onClick={() => setMobileOpen(false)}
@@ -348,8 +353,9 @@ export default function Header() {
                 backgroundColor: "#FFFFFF",
                 display: "flex",
                 flexDirection: "column",
-                boxShadow: "4px 0 24px rgba(102,13,25,0.15)",
-                animation: "slide-in-right 0.25s ease reverse",
+                boxShadow: "6px 0 30px rgba(102,13,25,0.18)",
+                animation: "slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+                willChange: "transform",
               }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -421,6 +427,7 @@ export default function Header() {
                     padding: "0.75rem 1rem",
                     borderRadius: "0.75rem",
                     backgroundColor: "#FAF3EB",
+                    border: "1px solid rgba(205,151,3,0.3)",
                     color: "var(--color-maroon)",
                     fontFamily: "var(--font-body)",
                     fontWeight: 700,
@@ -428,8 +435,11 @@ export default function Header() {
                     textDecoration: "none",
                   }}
                 >
-                  <span>Home</span>
-                  <span style={{ fontSize: "0.75rem", opacity: 0.6 }}>→</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                    <span style={{ fontSize: "1rem" }}>🏠</span>
+                    <span>Home</span>
+                  </div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
                 </Link>
 
                 <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-muted)", margin: "0.75rem 0 0.25rem 0.5rem", fontWeight: 700 }}>
@@ -447,19 +457,22 @@ export default function Header() {
                       justifyContent: "space-between",
                       padding: "0.75rem 1rem",
                       borderRadius: "0.75rem",
-                      border: "1px solid rgba(102,13,25,0.06)",
-                      backgroundColor: "#FFFFFF",
+                      border: "1px solid rgba(205,151,3,0.25)",
+                      backgroundColor: "#FAF3EB",
                       color: "var(--color-maroon)",
                       fontFamily: "var(--font-body)",
-                      fontWeight: 600,
+                      fontWeight: 700,
                       fontSize: "0.88rem",
                       textDecoration: "none",
-                      boxShadow: "0 2px 8px rgba(102,13,25,0.02)",
+                      boxShadow: "0 2px 8px rgba(102,13,25,0.03)",
                       transition: "all 0.15s ease",
                     }}
                   >
-                    <span>{item.label}</span>
-                    <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)" }}>→</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                      <span style={{ fontSize: "1rem" }}>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </div>
+                    <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
                   </Link>
                 ))}
 
@@ -473,20 +486,23 @@ export default function Header() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.625rem",
+                    justifyContent: "space-between",
                     padding: "0.75rem 1rem",
                     borderRadius: "0.75rem",
-                    border: "1px solid rgba(102,13,25,0.06)",
-                    backgroundColor: "#FFFFFF",
+                    border: "1px solid rgba(205,151,3,0.3)",
+                    backgroundColor: "#FAF3EB",
                     color: "var(--color-maroon)",
                     fontFamily: "var(--font-body)",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: "0.88rem",
                     textDecoration: "none",
                   }}
                 >
-                  <Heart size={18} style={{ color: "var(--color-maroon)" }} />
-                  <span>My Wishlist</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                    <Heart size={18} style={{ color: "var(--color-maroon)" }} />
+                    <span>My Wishlist</span>
+                  </div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
                 </Link>
 
                 <Link
@@ -495,20 +511,23 @@ export default function Header() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "0.625rem",
+                    justifyContent: "space-between",
                     padding: "0.75rem 1rem",
                     borderRadius: "0.75rem",
-                    border: "1px solid rgba(205,151,3,0.3)",
+                    border: "1px solid rgba(205,151,3,0.35)",
                     backgroundColor: "#FEF9EC",
                     color: "var(--color-maroon)",
                     fontFamily: "var(--font-body)",
-                    fontWeight: 600,
+                    fontWeight: 700,
                     fontSize: "0.88rem",
                     textDecoration: "none",
                   }}
                 >
-                  <Headphones size={18} style={{ color: "var(--color-gold-dark)" }} />
-                  <span>Customer Support</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                    <Headphones size={18} style={{ color: "var(--color-gold-dark)" }} />
+                    <span>Customer Support</span>
+                  </div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
                 </Link>
               </div>
 
