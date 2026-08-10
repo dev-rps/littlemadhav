@@ -8,11 +8,11 @@ let tokenExpiresAt: number | null = null;
  * Caches token in memory for up to 9 days (Shiprocket tokens are valid for 10 days).
  */
 export async function getShiprocketToken(): Promise<string | null> {
-  const email = process.env.SHIPROCKET_EMAIL?.trim();
-  const password = process.env.SHIPROCKET_PASSWORD?.trim();
+  const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
+  const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
 
   if (!email || !password) {
-    console.warn("Shiprocket credentials (SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD) missing in .env");
+    console.warn("Shiprocket credentials (SHIPROCKET_API_EMAIL / SHIPROCKET_API_PASSWORD or SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD) missing in .env");
     return null;
   }
 

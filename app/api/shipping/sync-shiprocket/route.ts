@@ -8,8 +8,8 @@ import { createShiprocketOrder, getShiprocketToken } from "@/lib/shiprocket";
  */
 export async function GET() {
   try {
-    const email = process.env.SHIPROCKET_EMAIL;
-    const password = process.env.SHIPROCKET_PASSWORD;
+    const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
+    const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
     const pickupLocation = process.env.SHIPROCKET_PICKUP_LOCATION || "warehouse (default)";
     const channelId = process.env.SHIPROCKET_CHANNEL_ID || "Not configured (Adhoc default)";
 
@@ -17,7 +17,7 @@ export async function GET() {
       return NextResponse.json({
         success: false,
         authenticated: false,
-        error: "Missing Shiprocket credentials in environment variables (SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD)",
+        error: "Missing Shiprocket credentials in environment variables (SHIPROCKET_API_EMAIL / SHIPROCKET_API_PASSWORD or SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD)",
         envConfig: {
           emailConfigured: !!email,
           passwordConfigured: !!password,
