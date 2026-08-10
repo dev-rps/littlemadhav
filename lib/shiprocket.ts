@@ -96,8 +96,8 @@ export async function createShiprocketOrder(input: ShiprocketOrderInput) {
   const payload = {
     order_id: input.orderId,
     order_date: formattedDate,
-    pickup_location: input.pickupLocation || process.env.SHIPROCKET_PICKUP_LOCATION || "Primary",
-    channel_id: "",
+    pickup_location: input.pickupLocation || process.env.SHIPROCKET_PICKUP_LOCATION || "warehouse",
+    channel_id: process.env.SHIPROCKET_CHANNEL_ID || "11797508",
     comment: "Website order",
     billing_customer_name: firstName,
     billing_last_name: lastName,
