@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
+import { FREE_SHIPPING_THRESHOLD, getSizeAdjustment } from "@/lib/utils";
 import Razorpay from "razorpay";
 
 async function calculateProductPrice(productId: string, variantStr?: string) {
@@ -25,6 +25,21 @@ async function calculateProductPrice(productId: string, variantStr?: string) {
           price += matchingVariant.priceAdj;
         }
       }
+    }
+
+    // Size-based dynamic price modifier (e.g. Size: 2 -> +100 INR per size increase from size 1)
+    const sizePart = parts.find(part => {
+      const colonIndex = part.indexOf(":");
+      if (colonIndex !== -1) {
+        const name = part.substring(0, colonIndex).trim();
+        return name.toLowerCase() === "size";
+      }
+      return false;
+    });
+    if (sizePart) {
+      const colonIndex = sizePart.indexOf(":");
+      const value = sizePart.substring(colonIndex + 1).trim();
+      price += getSizeAdjustment(value);
     }
   }
   return price;

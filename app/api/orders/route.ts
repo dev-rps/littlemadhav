@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateOrderNumber, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
+import { generateOrderNumber, FREE_SHIPPING_THRESHOLD, getSizeAdjustment } from "@/lib/utils";
 import { z } from "zod";
 import crypto from "crypto";
 import { createShiprocketOrder } from "@/lib/shiprocket";
@@ -61,6 +61,21 @@ async function calculateProductPrice(productId: string, variantStr?: string) {
           price += matchingVariant.priceAdj;
         }
       }
+    }
+
+    // Size-based dynamic price modifier (e.g. Size: 2 -> +100 INR per size increase from size 1)
+    const sizePart = parts.find(part => {
+      const colonIndex = part.indexOf(":");
+      if (colonIndex !== -1) {
+        const name = part.substring(0, colonIndex).trim();
+        return name.toLowerCase() === "size";
+      }
+      return false;
+    });
+    if (sizePart) {
+      const colonIndex = sizePart.indexOf(":");
+      const value = sizePart.substring(colonIndex + 1).trim();
+      price += getSizeAdjustment(value);
     }
   }
   return price;
@@ -159,16 +174,16 @@ export async function POST(request: NextRequest) {
       });
 
       if (shiprocketResult && shiprocketResult.success) {
-        finalOrder = await prisma.order.update({
+        finalOrder = (await prisma.order.update({
           where: { id: order.id },
           data: {
-            shiprocketOrderId: shiprocketResult.shiprocketOrderId,
-            shiprocketShipmentId: shiprocketResult.shiprocketShipmentId,
+            shiprocketOrderId: shiprocketResult.shiprocketOrderId ? Number(shiprocketResult.shiprocketOrderId) : null,
+            shiprocketShipmentId: shiprocketResult.shiprocketShipmentId ? Number(shiprocketResult.shiprocketShipmentId) : null,
             awbCode: shiprocketResult.awbCode,
             courierName: shiprocketResult.courierName,
-          },
+          } as any,
           include: { items: true },
-        });
+        })) as typeof order;
       }
     } catch (srErr) {
       console.error("Non-blocking Shiprocket sync error:", srErr);

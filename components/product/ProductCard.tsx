@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
-import { formatPrice, getDiscountPercent } from "@/lib/utils";
+import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 export interface ProductCardData {
@@ -77,10 +77,18 @@ export default function ProductCard({ product, onQuickView }: Props) {
   const secondImage = product.images[1]?.url ?? primaryImage;
   const showSecondImage = hasHover && hovered && secondImage !== primaryImage && !secondError;
   const currentSrc = showSecondImage ? secondImage : primaryImage;
-  const discount = getDiscountPercent(product.mrp, product.price);
+  const isSizeVariant = product.variants.some(v => v.value === selectedVariant && v.name.toLowerCase() === 'size');
+  const sizeAdjustment = isSizeVariant ? getSizeAdjustment(selectedVariant) : 0;
+  const adjustedPrice = product.price + sizeAdjustment;
+  const adjustedMrp = product.mrp + sizeAdjustment;
+  const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
-  const savings = product.mrp - product.price;
+  const savings = adjustedMrp - adjustedPrice;
+
+  // Format variant string as "Name: Value"
+  const matchingVarObj = product.variants.find(v => v.value === selectedVariant);
+  const formattedVariant = matchingVarObj ? `${matchingVarObj.name}: ${selectedVariant}` : selectedVariant;
 
   // Get unique variant names for grouping
   const variantGroups = product.variants.reduce<Record<string, string[]>>(
@@ -99,17 +107,17 @@ export default function ProductCard({ product, onQuickView }: Props) {
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
-      mrp: product.mrp,
+      price: adjustedPrice,
+      mrp: adjustedMrp,
       quantity: 1,
-      variant: selectedVariant,
+      variant: formattedVariant,
       imageUrl: primaryImage,
       slug: product.slug,
     });
     toast.success(`${product.name.slice(0, 24)}… added to bag!`, {
       icon: "🛍️",
     });
-  }, [addItem, product, selectedVariant, primaryImage]);
+  }, [addItem, product, formattedVariant, primaryImage, adjustedPrice, adjustedMrp]);
 
   const handleQuickView = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -291,9 +299,9 @@ export default function ProductCard({ product, onQuickView }: Props) {
               color: "var(--color-maroon)",
             }}
           >
-            {formatPrice(product.price)}
+            {formatPrice(adjustedPrice)}
           </span>
-          {product.mrp > product.price && (
+          {adjustedMrp > adjustedPrice && (
             <>
               <span
                 style={{
@@ -303,7 +311,7 @@ export default function ProductCard({ product, onQuickView }: Props) {
                   textDecoration: "line-through",
                 }}
               >
-                {formatPrice(product.mrp)}
+                {formatPrice(adjustedMrp)}
               </span>
               <span
                 style={{

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { X, ShoppingBag, Star } from "lucide-react";
 import { ProductCardData } from "./ProductCard";
 import { useCartStore } from "@/lib/store";
-import { formatPrice, getDiscountPercent } from "@/lib/utils";
+import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -22,9 +22,18 @@ export default function QuickViewModal({ product, onClose }: Props) {
 
   if (!product) return null;
 
-  const discount = getDiscountPercent(product.mrp, product.price);
+  const effectiveVariant = selectedVariant ?? product.variants[0]?.value;
+  const isSizeVariant = product.variants.some(v => v.value === effectiveVariant && v.name.toLowerCase() === 'size');
+  const sizeAdjustment = isSizeVariant ? getSizeAdjustment(effectiveVariant) : 0;
+  const adjustedPrice = product.price + sizeAdjustment;
+  const adjustedMrp = product.mrp + sizeAdjustment;
+  const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
+
+  // Format variant string as "Name: Value"
+  const matchingVarObj = product.variants.find(v => v.value === effectiveVariant);
+  const formattedVariant = matchingVarObj ? `${matchingVarObj.name}: ${effectiveVariant}` : effectiveVariant;
 
   // Build up to 4 thumbnails; pad with nulls if fewer images
   const MAX_THUMBS = 4;
@@ -46,10 +55,10 @@ export default function QuickViewModal({ product, onClose }: Props) {
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
-      mrp: product.mrp,
+      price: adjustedPrice,
+      mrp: adjustedMrp,
       quantity: 1,
-      variant: selectedVariant ?? product.variants[0]?.value,
+      variant: formattedVariant,
       imageUrl: product.images[0]?.url ?? "",
       slug: product.slug,
     });
@@ -321,9 +330,9 @@ export default function QuickViewModal({ product, onClose }: Props) {
                   color: "var(--color-maroon)",
                 }}
               >
-                {formatPrice(product.price)}
+                {formatPrice(adjustedPrice)}
               </span>
-              {product.mrp > product.price && (
+              {adjustedMrp > adjustedPrice && (
                 <>
                   <span
                     style={{
@@ -333,7 +342,7 @@ export default function QuickViewModal({ product, onClose }: Props) {
                       textDecoration: "line-through",
                     }}
                   >
-                    {formatPrice(product.mrp)}
+                    {formatPrice(adjustedMrp)}
                   </span>
                   <span
                     style={{

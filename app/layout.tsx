@@ -5,7 +5,6 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/layout/CartDrawer";
 import { Toaster } from "react-hot-toast";
-import WhatsAppButton from "@/components/ui/WhatsAppButton";
 import ExitIntentPopup from "@/components/home/ExitIntentPopup";
 import ServiceWorkerCleaner from "@/components/ui/ServiceWorkerCleaner";
 
@@ -50,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="flex-1">{children}</main>
         <Footer />
         <CartDrawer />
-        <WhatsAppButton />
         <ExitIntentPopup />
         <Toaster
           position="bottom-center"

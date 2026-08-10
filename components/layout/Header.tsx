@@ -86,6 +86,17 @@ export default function Header() {
     if (searchOpen) searchRef.current?.focus();
   }, [searchOpen]);
 
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
   return (
     <>
       <AnnouncementBar />
@@ -349,228 +360,229 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileOpen && (
+      </header>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileOpen && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.45)",
+            backdropFilter: "blur(4px)",
+            zIndex: 90,
+            display: "flex",
+            justifyContent: "flex-start",
+            animation: "fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+          className="lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        >
           <div
             style={{
-              position: "fixed",
-              inset: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.45)",
-              backdropFilter: "blur(4px)",
-              zIndex: 90,
+              width: "85%",
+              maxWidth: "340px",
+              height: "100%",
+              backgroundColor: "#FFFFFF",
               display: "flex",
-              justifyContent: "flex-start",
-              animation: "fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+              flexDirection: "column",
+              boxShadow: "6px 0 30px rgba(102,13,25,0.18)",
+              animation: "slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+              willChange: "transform",
             }}
-            className="lg:hidden"
-            onClick={() => setMobileOpen(false)}
+            onClick={(e) => e.stopPropagation()}
           >
+            {/* Drawer Top Header */}
             <div
               style={{
-                width: "85%",
-                maxWidth: "340px",
-                height: "100%",
-                backgroundColor: "#FFFFFF",
+                padding: "1.25rem 1rem",
+                borderBottom: "1px solid rgba(205,151,3,0.2)",
+                backgroundColor: "#FAF3EB",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold)" strokeWidth="1" strokeDasharray="2 2" />
+                  <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold)" opacity="0.15" />
+                  <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold)" strokeWidth="1.5" />
+                </svg>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.15rem",
+                    color: "var(--color-maroon)",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Mourika
+                </span>
+              </div>
+              <button
+                onClick={() => setMobileOpen(false)}
+                style={{
+                  padding: "0.35rem",
+                  borderRadius: "50%",
+                  backgroundColor: "#FFF8F0",
+                  border: "1px solid rgba(102,13,25,0.1)",
+                  color: "var(--color-maroon)",
+                  cursor: "pointer",
+                }}
+                aria-label="Close navigation menu"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Main Navigation Links List */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                padding: "1rem",
                 display: "flex",
                 flexDirection: "column",
-                boxShadow: "6px 0 30px rgba(102,13,25,0.18)",
-                animation: "slide-in-left 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
-                willChange: "transform",
+                gap: "0.5rem",
               }}
-              onClick={(e) => e.stopPropagation()}
             >
-              {/* Drawer Top Header */}
-              <div
+              {/* Home link */}
+              <Link
+                href="/"
+                onClick={() => setMobileOpen(false)}
                 style={{
-                  padding: "1.25rem 1rem",
-                  borderBottom: "1px solid rgba(205,151,3,0.2)",
-                  backgroundColor: "#FAF3EB",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "0.75rem",
+                  backgroundColor: "#FAF3EB",
+                  border: "1px solid rgba(205,151,3,0.3)",
+                  color: "var(--color-maroon)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "0.9rem",
+                  textDecoration: "none",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold)" strokeWidth="1" strokeDasharray="2 2" />
-                    <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold)" opacity="0.15" />
-                    <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold)" strokeWidth="1.5" />
-                  </svg>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-display)",
-                      fontSize: "1.15rem",
-                      color: "var(--color-maroon)",
-                      fontWeight: 700,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Mourika
-                  </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                  <span style={{ fontSize: "1rem" }}>🏠</span>
+                  <span>Home</span>
                 </div>
-                <button
+                <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
+              </Link>
+
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-muted)", margin: "0.75rem 0 0.25rem 0.5rem", fontWeight: 700 }}>
+                Categories
+              </p>
+
+              {categories.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/collections/${item.slug}`}
                   onClick={() => setMobileOpen(false)}
                   style={{
-                    padding: "0.35rem",
-                    borderRadius: "50%",
-                    backgroundColor: "#FFF8F0",
-                    border: "1px solid rgba(102,13,25,0.1)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "0.75rem 1rem",
+                    borderRadius: "0.75rem",
+                    border: "1px solid rgba(205,151,3,0.25)",
+                    backgroundColor: "#FAF3EB",
                     color: "var(--color-maroon)",
-                    cursor: "pointer",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    fontSize: "0.88rem",
+                    textDecoration: "none",
+                    boxShadow: "0 2px 8px rgba(102,13,25,0.03)",
+                    transition: "all 0.15s ease",
                   }}
-                  aria-label="Close navigation menu"
                 >
-                  <X size={20} />
-                </button>
-              </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                    <span style={{ fontSize: "1rem" }}>{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
+                </Link>
+              ))}
 
-              {/* Main Navigation Links List */}
-              <div
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-muted)", margin: "0.75rem 0 0.25rem 0.5rem", fontWeight: 700 }}>
+                Customer Care
+              </p>
+
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileOpen(false)}
                 style={{
-                  flex: 1,
-                  overflowY: "auto",
-                  padding: "1rem",
                   display: "flex",
-                  flexDirection: "column",
-                  gap: "0.5rem",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "0.75rem",
+                  border: "1px solid rgba(205,151,3,0.3)",
+                  backgroundColor: "#FAF3EB",
+                  color: "var(--color-maroon)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "0.88rem",
+                  textDecoration: "none",
                 }}
               >
-                {/* Home link */}
-                <Link
-                  href="/"
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0.75rem 1rem",
-                    borderRadius: "0.75rem",
-                    backgroundColor: "#FAF3EB",
-                    border: "1px solid rgba(205,151,3,0.3)",
-                    color: "var(--color-maroon)",
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: "0.9rem",
-                    textDecoration: "none",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                    <span style={{ fontSize: "1rem" }}>🏠</span>
-                    <span>Home</span>
-                  </div>
-                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
-                </Link>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                  <Heart size={18} style={{ color: "var(--color-maroon)" }} />
+                  <span>My Wishlist</span>
+                </div>
+                <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
+              </Link>
 
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-muted)", margin: "0.75rem 0 0.25rem 0.5rem", fontWeight: 700 }}>
-                  Categories
-                </p>
-
-                {categories.map((item) => (
-                  <Link
-                    key={item.slug}
-                    href={`/collections/${item.slug}`}
-                    onClick={() => setMobileOpen(false)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "0.75rem 1rem",
-                      borderRadius: "0.75rem",
-                      border: "1px solid rgba(205,151,3,0.25)",
-                      backgroundColor: "#FAF3EB",
-                      color: "var(--color-maroon)",
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 700,
-                      fontSize: "0.88rem",
-                      textDecoration: "none",
-                      boxShadow: "0 2px 8px rgba(102,13,25,0.03)",
-                      transition: "all 0.15s ease",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                      <span style={{ fontSize: "1rem" }}>{item.icon}</span>
-                      <span>{item.label}</span>
-                    </div>
-                    <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
-                  </Link>
-                ))}
-
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--color-muted)", margin: "0.75rem 0 0.25rem 0.5rem", fontWeight: 700 }}>
-                  Customer Care
-                </p>
-
-                <Link
-                  href="/wishlist"
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0.75rem 1rem",
-                    borderRadius: "0.75rem",
-                    border: "1px solid rgba(205,151,3,0.3)",
-                    backgroundColor: "#FAF3EB",
-                    color: "var(--color-maroon)",
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: "0.88rem",
-                    textDecoration: "none",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                    <Heart size={18} style={{ color: "var(--color-maroon)" }} />
-                    <span>My Wishlist</span>
-                  </div>
-                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
-                </Link>
-
-                <Link
-                  href="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    padding: "0.75rem 1rem",
-                    borderRadius: "0.75rem",
-                    border: "1px solid rgba(205,151,3,0.35)",
-                    backgroundColor: "#FEF9EC",
-                    color: "var(--color-maroon)",
-                    fontFamily: "var(--font-body)",
-                    fontWeight: 700,
-                    fontSize: "0.88rem",
-                    textDecoration: "none",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                    <Headphones size={18} style={{ color: "var(--color-gold-dark)" }} />
-                    <span>Customer Support</span>
-                  </div>
-                  <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
-                </Link>
-              </div>
-
-              {/* Drawer Bottom Footer */}
-              <div
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
                 style={{
-                  padding: "1rem",
-                  borderTop: "1px solid rgba(102,13,25,0.08)",
-                  backgroundColor: "#FFF8F0",
-                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "0.75rem 1rem",
+                  borderRadius: "0.75rem",
+                  border: "1px solid rgba(205,151,3,0.35)",
+                  backgroundColor: "#FEF9EC",
+                  color: "var(--color-maroon)",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "0.88rem",
+                  textDecoration: "none",
                 }}
               >
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--color-muted)", margin: 0 }}>
-                  🌸 Handcrafted Devotional Treasures
-                </p>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-gold-dark)", margin: "0.25rem 0 0 0", fontWeight: 700 }}>
-                  Free Express Shipping Across India
-                </p>
-              </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
+                  <Headphones size={18} style={{ color: "var(--color-gold-dark)" }} />
+                  <span>Customer Support</span>
+                </div>
+                <span style={{ fontSize: "0.8rem", color: "var(--color-gold-dark)", fontWeight: 700 }}>→</span>
+              </Link>
+            </div>
+
+            {/* Drawer Bottom Footer */}
+            <div
+              style={{
+                padding: "1rem",
+                borderTop: "1px solid rgba(102,13,25,0.08)",
+                backgroundColor: "#FFF8F0",
+                textAlign: "center",
+              }}
+            >
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--color-muted)", margin: 0 }}>
+                🌸 Handcrafted Devotional Treasures
+              </p>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "0.7rem", color: "var(--color-gold-dark)", margin: "0.25rem 0 0 0", fontWeight: 700 }}>
+                Free Express Shipping Across India
+              </p>
             </div>
           </div>
-        )}
-      </header>
+        </div>
+      )}
 
       {/* Search Modal */}
       {searchOpen && (

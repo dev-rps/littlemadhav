@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, ShoppingBag, Zap, RefreshCcw, ShieldCheck, Truck, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCartStore } from "@/lib/store";
-import { formatPrice, getDiscountPercent } from "@/lib/utils";
+import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 import PincodeChecker from "@/components/shipping/PincodeChecker";
@@ -93,7 +93,12 @@ export default function ProductDetailPage() {
   }
   if (!product) return notFound();
 
-  const discount = getDiscountPercent(product.mrp, product.price);
+  const sizeKey = Object.keys(selectedVariants).find(k => k.toLowerCase() === 'size');
+  const sizeValue = sizeKey ? selectedVariants[sizeKey] : undefined;
+  const sizeAdjustment = getSizeAdjustment(sizeValue);
+  const adjustedPrice = product.price + sizeAdjustment;
+  const adjustedMrp = product.mrp + sizeAdjustment;
+  const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
 
   // Group variants by name
   const variantGroups = product.variants.reduce<Record<string, { value: string; stock: number; priceAdj: number }[]>>(
@@ -115,8 +120,8 @@ export default function ProductDetailPage() {
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
-      mrp: product.mrp,
+      price: adjustedPrice,
+      mrp: adjustedMrp,
       quantity,
       variant: variantSuffix || undefined,
       imageUrl: product.images[0]?.url ?? "",
@@ -386,9 +391,9 @@ export default function ProductDetailPage() {
                   lineHeight: 1,
                 }}
               >
-                {formatPrice(product.price)}
+                {formatPrice(adjustedPrice)}
               </span>
-              {product.mrp > product.price && (
+              {adjustedMrp > adjustedPrice && (
                 <>
                   <span
                     style={{
@@ -398,7 +403,7 @@ export default function ProductDetailPage() {
                       textDecoration: "line-through",
                     }}
                   >
-                    {formatPrice(product.mrp)}
+                    {formatPrice(adjustedMrp)}
                   </span>
                   <span
                     style={{

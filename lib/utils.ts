@@ -30,3 +30,14 @@ export function generateOrderNumber(): string {
 }
 
 export const FREE_SHIPPING_THRESHOLD = 499;
+
+export function getSizeAdjustment(sizeVal: string | undefined): number {
+  if (!sizeVal) return 0;
+  const match = sizeVal.match(/\d+/);
+  if (match) {
+    const sizeNum = parseInt(match[0], 10);
+    return (sizeNum - 1) * 100;
+  }
+  return 0;
+}
+
