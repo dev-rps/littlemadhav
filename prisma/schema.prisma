@@ -80,9 +80,11 @@ model Order {
   subtotal      Float
   shippingFee   Float       @default(0)
   total         Float
-  paymentMethod String      // "cod" | "mock_online"
+  paymentMethod String      // "cod" | "razorpay"
   paymentStatus String      @default("pending") // "pending" | "paid" | "failed"
   status        String      @default("placed")  // "placed" | "confirmed" | "shipped" | "delivered" | "cancelled"
+  razorpayOrderId   String? @unique
+  razorpayPaymentId String? @unique
   notes         String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

@@ -23,8 +23,18 @@ interface FormData {
   city: string;
   state: string;
   pincode: string;
-  paymentMethod: "cod" | "mock_online";
+  paymentMethod: "cod" | "razorpay";
 }
+
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -32,7 +42,6 @@ export default function CheckoutPage() {
   const total = useCartTotal();
   const shippingFee = useShippingFee();
   const [submitting, setSubmitting] = useState(false);
-  const [paymentStep, setPaymentStep] = useState(false);
   const [form, setForm] = useState<FormData>({
     customerName: "",
     customerEmail: "",
@@ -57,15 +66,110 @@ export default function CheckoutPage() {
     return Object.keys(e).length === 0;
   };
 
-  const handleMockPayment = async () => {
+  const handleRazorpayPayment = async () => {
     setSubmitting(true);
-    toast.loading("Processing payment...", { id: "payment" });
-    await new Promise((r) => setTimeout(r, 2000));
-    toast.success("Payment successful! 🎉", { id: "payment" });
-    await placeOrder("mock_online");
+    const loadingToast = toast.loading("Initializing payment...");
+    try {
+      // Create Razorpay Order securely via server API
+      const res = await fetch("/api/payment/razorpay-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((i) => ({
+            productId: i.productId,
+            name: i.name,
+            price: i.price,
+            quantity: i.quantity,
+            variant: i.variant,
+          })),
+        }),
+      });
+
+      const orderData = await res.json();
+      if (!orderData.success) {
+        toast.error(orderData.error || "Failed to initialize payment", { id: loadingToast });
+        setSubmitting(false);
+        return;
+      }
+
+      // Load SDK
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        toast.error("Failed to load payment gateway. Please check your internet connection.", { id: loadingToast });
+        setSubmitting(false);
+        return;
+      }
+
+      toast.dismiss(loadingToast);
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Little Madhav",
+        description: "Handcrafted Treasures with Love",
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          toast.loading("Verifying payment...", { id: "razorpay-verify" });
+          try {
+            const verifyRes = await fetch("/api/orders", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                ...form,
+                paymentMethod: "razorpay",
+                notes: specialInstructions,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+                items: items.map((i) => ({
+                  productId: i.productId,
+                  name: i.name,
+                  price: i.price,
+                  quantity: i.quantity,
+                  variant: i.variant,
+                  imageUrl: i.imageUrl,
+                })),
+              }),
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.success) {
+              toast.success("Payment successful! 🎉", { id: "razorpay-verify" });
+              clearCart();
+              router.push(`/order-confirmation?order=${verifyData.order.orderNumber}`);
+            } else {
+              toast.error(verifyData.error || "Payment verification failed", { id: "razorpay-verify" });
+              setSubmitting(false);
+            }
+          } catch {
+            toast.error("Verification failed. Please contact support.", { id: "razorpay-verify" });
+            setSubmitting(false);
+          }
+        },
+        prefill: {
+          name: form.customerName,
+          email: form.customerEmail,
+          contact: form.customerPhone,
+        },
+        theme: {
+          color: "#8B1E3F",
+        },
+        modal: {
+          ondismiss: function () {
+            setSubmitting(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch {
+      toast.error("Failed to connect to payment gateway", { id: loadingToast });
+      setSubmitting(false);
+    }
   };
 
-  const placeOrder = async (method: "cod" | "mock_online") => {
+  const placeOrder = async (method: "cod") => {
     try {
       const res = await fetch("/api/orders", {
         method: "POST",
@@ -103,8 +207,8 @@ export default function CheckoutPage() {
     if (!validate()) return;
     if (items.length === 0) { toast.error("Your cart is empty!"); return; }
 
-    if (form.paymentMethod === "mock_online") {
-      setPaymentStep(true);
+    if (form.paymentMethod === "razorpay") {
+      await handleRazorpayPayment();
     } else {
       setSubmitting(true);
       await placeOrder("cod");
@@ -129,37 +233,6 @@ export default function CheckoutPage() {
         <p style={{ fontFamily: "var(--font-body)", color: "#888", fontSize: "0.875rem", marginBottom: "2rem" }}>
           🔒 Secure checkout — your details are safe with us
         </p>
-
-        {/* Mock Payment Modal */}
-        {paymentStep && (
-          <div style={{ position: "fixed", inset: 0, backgroundColor: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-            <div style={{ backgroundColor: "#FFFBF5", borderRadius: "1rem", padding: "2rem", maxWidth: 400, width: "100%", textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.2)" }}>
-              <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>💳</div>
-              <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", color: "#8B1E3F", fontSize: "1.25rem", marginBottom: "0.5rem" }}>Mock Payment Gateway</h2>
-              <p style={{ fontFamily: "var(--font-body)", color: "#555", fontSize: "0.875rem", marginBottom: "1.25rem" }}>
-                Amount: <strong style={{ color: "#8B1E3F" }}>{formatPrice(total + shippingFee)}</strong>
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                {["UPI / PhonePe / GPay", "Credit / Debit Card", "Net Banking"].map((method) => (
-                  <button
-                    key={method}
-                    onClick={handleMockPayment}
-                    disabled={submitting}
-                    style={{ padding: "0.75rem", border: "1.5px solid #F0E0C0", borderRadius: "0.5rem", backgroundColor: "#FFF8F0", fontFamily: "var(--font-body)", fontWeight: 600, fontSize: "0.875rem", color: "#1a1a1a", cursor: submitting ? "not-allowed" : "pointer" }}
-                  >
-                    {method}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setPaymentStep(false)}
-                style={{ marginTop: "1rem", backgroundColor: "transparent", border: "none", color: "#aaa", fontFamily: "var(--font-body)", fontSize: "0.8rem", cursor: "pointer" }}
-              >
-                ← Back
-              </button>
-            </div>
-          </div>
-        )}
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", alignItems: "start" }} className="grid-cols-1 lg:grid-cols-[1fr_400px]">
           {/* Form */}
@@ -226,7 +299,7 @@ export default function CheckoutPage() {
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {[
                   { value: "cod" as const, label: "Cash on Delivery (COD)", desc: "Pay when your order arrives", icon: "💵" },
-                  { value: "mock_online" as const, label: "Pay Online (UPI / Card / Net Banking)", desc: "Test mode — no real money", icon: "💳" },
+                  { value: "razorpay" as const, label: "Pay Online (UPI / Card / Net Banking)", desc: "Secure checkout via Razorpay", icon: "💳" },
                 ].map((opt) => (
                   <label
                     key={opt.value}

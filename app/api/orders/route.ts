@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateOrderNumber } from "@/lib/utils";
 import { z } from "zod";
+import crypto from "crypto";
 
 const orderSchema = z.object({
   customerName: z.string().min(2),
@@ -11,7 +12,7 @@ const orderSchema = z.object({
   city: z.string().min(2),
   state: z.string().min(2),
   pincode: z.string().length(6),
-  paymentMethod: z.enum(["cod", "mock_online"]),
+  paymentMethod: z.enum(["cod", "razorpay"]),
   notes: z.string().optional(),
   items: z.array(
     z.object({
@@ -24,14 +25,74 @@ const orderSchema = z.object({
     })
   ).min(1),
   specialInstructions: z.string().optional(),
+  razorpayPaymentId: z.string().optional(),
+  razorpayOrderId: z.string().optional(),
+  razorpaySignature: z.string().optional(),
+}).refine((data) => {
+  if (data.paymentMethod === "razorpay") {
+    return !!data.razorpayPaymentId && !!data.razorpayOrderId && !!data.razorpaySignature;
+  }
+  return true;
+}, {
+  message: "Razorpay payment details are required for online payment",
+  path: ["razorpaySignature"],
 });
+
+async function calculateProductPrice(productId: string, variantStr?: string) {
+  const product = await prisma.product.findUnique({
+    where: { id: productId },
+    include: { variants: true },
+  });
+  if (!product) return 0;
+
+  let price = product.price;
+  if (variantStr && product.variants.length > 0) {
+    const parts = variantStr.split(",").map((p) => p.trim());
+    for (const part of parts) {
+      const colonIndex = part.indexOf(":");
+      if (colonIndex !== -1) {
+        const name = part.substring(0, colonIndex).trim();
+        const value = part.substring(colonIndex + 1).trim();
+        const matchingVariant = product.variants.find(
+          (v) => v.name.toLowerCase() === name.toLowerCase() && v.value.toLowerCase() === value.toLowerCase()
+        );
+        if (matchingVariant) {
+          price += matchingVariant.priceAdj;
+        }
+      }
+    }
+  }
+  return price;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const data = orderSchema.parse(body);
 
-    const subtotal = data.items.reduce((s, i) => s + i.price * i.quantity, 0);
+    // Verify Razorpay signature if online payment
+    if (data.paymentMethod === "razorpay") {
+      const sign = data.razorpayOrderId + "|" + data.razorpayPaymentId;
+      const expectedSign = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
+        .update(sign)
+        .digest("hex");
+
+      if (expectedSign !== data.razorpaySignature) {
+        return NextResponse.json({ error: "Invalid payment signature. Verification failed." }, { status: 400 });
+      }
+    }
+
+    // Securely recalculate totals on server
+    let subtotal = 0;
+    for (const item of data.items) {
+      const price = await calculateProductPrice(item.productId, item.variant);
+      if (price === 0) {
+        return NextResponse.json({ error: `Product not found or invalid: ${item.name}` }, { status: 400 });
+      }
+      subtotal += price * item.quantity;
+    }
+
     const shippingFee = subtotal >= 499 ? 0 : 49;
     const total = subtotal + shippingFee;
 
@@ -52,6 +113,8 @@ export async function POST(request: NextRequest) {
         subtotal,
         shippingFee,
         total,
+        razorpayOrderId: data.razorpayOrderId,
+        razorpayPaymentId: data.razorpayPaymentId,
         items: {
           create: data.items.map((item) => ({
             productId: item.productId,
