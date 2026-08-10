@@ -17,8 +17,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { useUserStore } from "@/lib/userStore";
 
 function LoginContent() {
@@ -148,7 +146,7 @@ function LoginContent() {
       }
 
       setUser(data.user);
-      toast.success(mode === "signup" ? "Account created successfully! Welcome to Little Madhav 🌸" : "Welcome back! Signed in successfully ✨");
+      toast.success(mode === "signup" ? "Account created successfully! Welcome to Mourika 🌸" : "Welcome back! Signed in successfully ✨");
 
       router.push(redirect);
     } catch (err: any) {
@@ -175,7 +173,7 @@ function LoginContent() {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                email: email || "devotee@littlemadhav.com",
+                email: email || "devotee@mourika.com",
                 name: name || "Devotee User",
                 googleId: `google_${Date.now()}`,
               }),
@@ -204,7 +202,7 @@ function LoginContent() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: email || "devotee@littlemadhav.com",
+          email: email || "devotee@mourika.com",
           name: name || "Devotee User",
           googleId: `google_${Date.now()}`,
         }),
@@ -244,7 +242,7 @@ function LoginContent() {
           <Link href="/" className="inline-flex items-center gap-2 group mb-3">
             <span className="text-3xl">🪔</span>
             <span className="font-serif text-3xl font-bold tracking-tight text-[#8B1E3F]">
-              Little Madhav
+              Mourika
             </span>
           </Link>
           <p className="text-xs uppercase tracking-widest font-semibold text-amber-700">
@@ -289,7 +287,7 @@ function LoginContent() {
           {/* Heading */}
           <div className="mb-6 text-center">
             <h1 className="text-2xl font-serif font-bold text-gray-900">
-              {mode === "login" ? "Welcome Back, Devotee" : "Join the Little Madhav Family"}
+              {mode === "login" ? "Welcome Back, Devotee" : "Join the Mourika Family"}
             </h1>
             <p className="text-xs text-gray-500 mt-1">
               {mode === "login"
@@ -462,16 +460,12 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <>
-      <Header />
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="w-8 h-8 border-4 border-[#8B1E3F] border-t-transparent rounded-full animate-spin" />
-        </div>
-      }>
-        <LoginContent />
-      </Suspense>
-      <Footer />
-    </>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#8B1E3F] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

@@ -214,7 +214,7 @@ function OrderConfirmationContent() {
         </div>
 
         <p style={{ textAlign: "center", fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "#aaa", marginTop: "1.5rem" }}>
-          Questions? Email us at hello@littlemadhav.com or WhatsApp +91 98765 43210
+          Questions? Email us at hello@mourika.com or WhatsApp +91 98765 43210
         </p>
       </div>
     </div>

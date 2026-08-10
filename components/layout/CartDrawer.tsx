@@ -1,14 +1,16 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { X, Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { X, Trash2, Plus, Minus, ShoppingBag, Lock } from "lucide-react";
 import { useCartStore, useCartTotal, useShippingFee, useAmountForFreeShipping, useCartCount } from "@/lib/store";
+import { useUserStore } from "@/lib/userStore";
 import { formatPrice, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import Image from "next/image";
 
 export default function CartDrawer() {
   const { items, isDrawerOpen, closeDrawer, removeItem, updateQuantity, specialInstructions, setSpecialInstructions } =
     useCartStore();
+  const { user } = useUserStore();
   const total = useCartTotal();
   const shippingFee = useShippingFee();
   const amountForFree = useAmountForFreeShipping();
@@ -120,8 +122,113 @@ export default function CartDrawer() {
           </button>
         </div>
 
-        {/* Free Shipping Progress */}
-        {total < FREE_SHIPPING_THRESHOLD && (
+        {!user ? (
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "2rem 1.5rem",
+              textAlign: "center",
+              gap: "1.25rem",
+            }}
+          >
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: "50%",
+                backgroundColor: "#FEF9EC",
+                color: "var(--color-maroon)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "1.5px solid var(--color-gold-light)",
+                boxShadow: "0 4px 16px rgba(205,151,3,0.15)",
+              }}
+            >
+              <Lock size={28} />
+            </div>
+            <div>
+              <h3
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: "1.3rem",
+                  color: "var(--color-maroon)",
+                  fontWeight: 700,
+                  margin: "0 0 0.5rem 0",
+                }}
+              >
+                Please Login First
+              </h3>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.85rem",
+                  color: "var(--color-taupe)",
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}
+              >
+                Please sign in to your Mourika account to access your shopping bag, save your items across devices, and proceed to checkout.
+              </p>
+            </div>
+
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "0.75rem", marginTop: "0.5rem" }}>
+              <Link
+                id="cart-login-btn"
+                href="/login?redirect=/checkout"
+                onClick={closeDrawer}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  backgroundColor: "var(--color-maroon)",
+                  color: "#FFFFFF",
+                  padding: "0.875rem 1.25rem",
+                  borderRadius: "9999px",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "0.88rem",
+                  textDecoration: "none",
+                  boxShadow: "0 4px 14px rgba(102,13,25,0.2)",
+                  transition: "all 0.2s",
+                }}
+              >
+                Sign In to Account →
+              </Link>
+              <Link
+                id="cart-signup-btn"
+                href="/login?redirect=/checkout"
+                onClick={closeDrawer}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  backgroundColor: "#FFFFFF",
+                  color: "var(--color-maroon)",
+                  border: "2px solid var(--color-maroon)",
+                  padding: "0.875rem 1.25rem",
+                  borderRadius: "9999px",
+                  fontFamily: "var(--font-body)",
+                  fontWeight: 700,
+                  fontSize: "0.88rem",
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                }}
+              >
+                Create New Account
+              </Link>
+            </div>
+
+            <p style={{ fontSize: "0.75rem", color: "#888", fontFamily: "var(--font-body)", marginTop: "1rem" }}>
+              🔒 100% Encrypted & Secure Devotee Access
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Free Shipping Progress */}
+            {total < FREE_SHIPPING_THRESHOLD && (
           <div
             style={{
               padding: "0.75rem 1.25rem",
@@ -428,6 +535,8 @@ export default function CartDrawer() {
               🔒 Secure checkout · COD available
             </p>
           </div>
+        )}
+          </>
         )}
       </div>
     </>

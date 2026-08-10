@@ -7,7 +7,7 @@ const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log("🌱 Seeding Little Madhav database...");
+  console.log("🌱 Seeding Mourika database...");
 
   const catRakhi = await prisma.category.upsert({ where: { slug: "rakhi" }, update: {}, create: { name: "Rakhi", slug: "rakhi", description: "Handcrafted Rakhis — traditional, designer & more", imageUrl: "https://images.unsplash.com/photo-1627130942770-e78c9d5b8f4e?w=600&q=80", displayOrder: 1 } });
   const catJhumka = await prisma.category.upsert({ where: { slug: "jhumka" }, update: {}, create: { name: "Jhumka", slug: "jhumka", description: "Handcrafted earrings — oxidised, kundan, pearl & terracotta", imageUrl: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=600&q=80", displayOrder: 2 } });

@@ -120,7 +120,7 @@ export default function CheckoutPage() {
         key: orderData.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Little Madhav",
+        name: "Mourika",
         description: "Handcrafted Devotional Treasures",
         order_id: orderData.id,
         handler: async function (response: any) {
@@ -236,6 +236,64 @@ export default function CheckoutPage() {
       await placeOrder("cod");
     }
   };
+
+  if (!user) {
+    return (
+      <div style={{ minHeight: "75vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "2rem", backgroundColor: "var(--color-cream)" }}>
+        <div style={{ backgroundColor: "#FFFFFF", padding: "2.5rem 2rem", borderRadius: "1.25rem", textAlign: "center", maxWidth: 440, boxShadow: "0 4px 20px rgba(102,13,25,0.06)", border: "1px solid rgba(205,151,3,0.2)" }}>
+          <div style={{ width: 64, height: 64, borderRadius: "50%", backgroundColor: "#FEF9EC", color: "var(--color-maroon)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem auto" }}>
+            <Lock size={30} />
+          </div>
+          <h2 style={{ fontFamily: "var(--font-display)", color: "var(--color-maroon)", fontSize: "1.5rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+            Sign In Required
+          </h2>
+          <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", fontSize: "0.88rem", marginBottom: "1.75rem", lineHeight: 1.6 }}>
+            Please log in to your Mourika account first to place orders, save your delivery address, and view order tracking.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            <Link
+              id="checkout-login-btn"
+              href="/login?redirect=/checkout"
+              style={{
+                display: "block",
+                padding: "0.875rem 1.75rem",
+                backgroundColor: "var(--color-maroon)",
+                color: "#FFFFFF",
+                borderRadius: "9999px",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                textAlign: "center",
+                boxShadow: "0 4px 14px rgba(102,13,25,0.2)"
+              }}
+            >
+              Sign In to Continue →
+            </Link>
+            <Link
+              id="checkout-signup-btn"
+              href="/login?redirect=/checkout"
+              style={{
+                display: "block",
+                padding: "0.875rem 1.75rem",
+                backgroundColor: "#FFFFFF",
+                color: "var(--color-maroon)",
+                border: "2px solid var(--color-maroon)",
+                borderRadius: "9999px",
+                fontFamily: "var(--font-body)",
+                fontWeight: 700,
+                fontSize: "0.9rem",
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              Create New Account
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !submitting) {
     return (

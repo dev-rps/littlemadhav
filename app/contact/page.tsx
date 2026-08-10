@@ -117,7 +117,7 @@ export default function ContactPage() {
                   {
                     icon: <Mail size={20} style={{ color: "#D4A017" }} />,
                     title: "Email Support",
-                    content: "hello@littlemadhav.com",
+                    content: "hello@mourika.com",
                     desc: "Quick replies within 24 hours.",
                   },
                   {

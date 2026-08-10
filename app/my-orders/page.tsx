@@ -22,8 +22,6 @@ import {
   Calendar,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { useUserStore } from "@/lib/userStore";
 import { useCartStore } from "@/lib/store";
 
@@ -152,55 +150,45 @@ export default function MyOrdersPage() {
 
   if (isLoading || loadingOrders) {
     return (
-      <>
-        <Header />
-        <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
-          <div className="w-10 h-10 border-4 border-[#8B1E3F] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-medium text-gray-500">Loading your orders...</p>
-        </div>
-        <Footer />
-      </>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
+        <div className="w-10 h-10 border-4 border-[#8B1E3F] border-t-transparent rounded-full animate-spin" />
+        <p className="text-sm font-medium text-gray-500">Loading your orders...</p>
+      </div>
     );
   }
 
   if (!user) {
     return (
-      <>
-        <Header />
-        <div className="min-h-[65vh] flex items-center justify-center px-4 py-12 bg-[#FFF8F0]">
-          <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl border border-amber-100 text-center">
-            <div className="w-16 h-16 bg-amber-100 text-[#8B1E3F] rounded-full flex items-center justify-center mx-auto mb-4">
-              <UserIcon size={32} />
-            </div>
-            <h2 className="text-2xl font-serif font-bold text-[#8B1E3F] mb-2">Sign In Required</h2>
-            <p className="text-gray-600 text-sm mb-6">
-              Please sign in to view your past orders, delivery details, and saved wishlist.
-            </p>
-            <div className="space-y-3">
-              <Link
-                href="/login?redirect=/my-orders"
-                className="block w-full py-3.5 bg-[#8B1E3F] text-white font-semibold rounded-xl hover:bg-[#6B1630] transition-colors text-sm shadow-md"
-              >
-                Sign In / Register
-              </Link>
-              <Link
-                href="/track-order"
-                className="block w-full py-3 bg-amber-50 text-amber-900 font-semibold rounded-xl hover:bg-amber-100 transition-colors text-sm border border-amber-200"
-              >
-                Track Guest Order with Order #
-              </Link>
-            </div>
+      <div className="min-h-[65vh] flex items-center justify-center px-4 py-12 bg-[#FFF8F0]">
+        <div className="max-w-md w-full bg-white p-8 rounded-3xl shadow-xl border border-amber-100 text-center">
+          <div className="w-16 h-16 bg-amber-100 text-[#8B1E3F] rounded-full flex items-center justify-center mx-auto mb-4">
+            <UserIcon size={32} />
+          </div>
+          <h2 className="text-2xl font-serif font-bold text-[#8B1E3F] mb-2">Sign In Required</h2>
+          <p className="text-gray-600 text-sm mb-6">
+            Please sign in to view your past orders, delivery details, and saved wishlist.
+          </p>
+          <div className="space-y-3">
+            <Link
+              href="/login?redirect=/my-orders"
+              className="block w-full py-3.5 bg-[#8B1E3F] text-white font-semibold rounded-xl hover:bg-[#6B1630] transition-colors text-sm shadow-md"
+            >
+              Sign In / Register
+            </Link>
+            <Link
+              href="/track-order"
+              className="block w-full py-3 bg-amber-50 text-amber-900 font-semibold rounded-xl hover:bg-amber-100 transition-colors text-sm border border-amber-200"
+            >
+              Track Guest Order with Order #
+            </Link>
           </div>
         </div>
-        <Footer />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-gradient-to-b from-[#FFF8F0] via-orange-50/20 to-[#FFF8F0] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gradient-to-b from-[#FFF8F0] via-orange-50/20 to-[#FFF8F0] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           {/* Header Banner */}
           <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-amber-100/80 mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -411,7 +399,5 @@ export default function MyOrdersPage() {
           )}
         </div>
       </main>
-      <Footer />
-    </>
   );
 }

@@ -7,8 +7,6 @@ import { Trash2, ShoppingBag, Heart } from "lucide-react";
 import { useWishlistStore, useCartStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import toast from "react-hot-toast";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { useUserStore } from "@/lib/userStore";
 
 export default function WishlistPage() {
@@ -56,9 +54,7 @@ export default function WishlistPage() {
   };
 
   return (
-    <>
-      <Header />
-      <div style={{ minHeight: "80vh", backgroundColor: "#FFF8F0", paddingBottom: "4rem" }}>
+    <div style={{ minHeight: "80vh", backgroundColor: "#FFF8F0", paddingBottom: "4rem" }}>
         {/* Header Breadcrumb */}
         <div style={{ backgroundColor: "var(--color-cream-alt)", borderBottom: "1px solid rgba(186,172,157,0.3)", padding: "0.75rem 0" }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -231,7 +227,5 @@ export default function WishlistPage() {
           )}
         </div>
       </div>
-      <Footer />
-    </>
   );
 }

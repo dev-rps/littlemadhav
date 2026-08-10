@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "littlemadhav_secret_key_2026_festive_luxury_key"
+  process.env.JWT_SECRET || "mourika_secret_key_2026_festive_luxury_key"
 );
 
 export const AUTH_COOKIE_NAME = "auth_token";
