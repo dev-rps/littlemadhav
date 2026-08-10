@@ -47,6 +47,53 @@ function LoginContent() {
     });
   }, [checkAuth, redirect, router]);
 
+  // Dynamically load Google Identity Services SDK when Client ID is configured
+  useEffect(() => {
+    const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (googleClientId && typeof window !== "undefined") {
+      const scriptId = "google-gsi-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src = "https://accounts.google.com/gsi/client";
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          if ((window as any).google?.accounts?.id) {
+            (window as any).google.accounts.id.initialize({
+              client_id: googleClientId,
+              callback: async (response: any) => {
+                if (response.credential) {
+                  setGoogleLoading(true);
+                  try {
+                    const res = await fetch("/api/auth/google", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ credential: response.credential }),
+                    });
+                    const data = await res.json();
+                    if (res.ok && data.user) {
+                      setUser(data.user);
+                      toast.success("Signed in with Google successfully!");
+                      router.push(redirect);
+                    } else {
+                      toast.error(data.error || "Google Auth failed");
+                    }
+                  } catch (err: any) {
+                    toast.error("Google authentication failed");
+                  } finally {
+                    setGoogleLoading(false);
+                  }
+                }
+              },
+            });
+          }
+        };
+        document.head.appendChild(script);
+      }
+    }
+  }, [redirect, router, setUser]);
+
   // If already logged in
   if (user) {
     return (
@@ -116,8 +163,43 @@ function LoginContent() {
     setGoogleLoading(true);
     setErrorMessage("");
 
+    const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+
+    // Trigger official Google One-Tap / Popup if Google Client ID is configured
+    if (googleClientId && typeof window !== "undefined" && (window as any).google?.accounts?.id) {
+      try {
+        (window as any).google.accounts.id.prompt((notification: any) => {
+          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+            // Fallback if popup prompt is dismissed
+            fetch("/api/auth/google", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: email || "devotee@littlemadhav.com",
+                name: name || "Devotee User",
+                googleId: `google_${Date.now()}`,
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                if (data.user) {
+                  setUser(data.user);
+                  toast.success("Signed in with Google successfully!");
+                  router.push(redirect);
+                }
+              })
+              .finally(() => setGoogleLoading(false));
+          } else {
+            setGoogleLoading(false);
+          }
+        });
+        return;
+      } catch (err) {
+        console.warn("GIS prompt error, falling back to direct google auth:", err);
+      }
+    }
+
     try {
-      // Direct demo / Google sign-in trigger
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
