@@ -25,7 +25,7 @@ export async function getShiprocketToken(): Promise<string | null> {
     const res = await fetch(`${SHIPROCKET_API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email: email, password: password }),
     });
 
     if (!res.ok) {
