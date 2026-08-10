@@ -85,6 +85,11 @@ model Order {
   status        String      @default("placed")  // "placed" | "confirmed" | "shipped" | "delivered" | "cancelled"
   razorpayOrderId   String? @unique
   razorpayPaymentId String? @unique
+  shiprocketOrderId   Int?
+  shiprocketShipmentId Int?
+  awbCode             String?
+  courierName         String?
+  trackingUrl         String?
   notes         String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt

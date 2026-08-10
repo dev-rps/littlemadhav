@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, Headphones } from "lucide-react";
+import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, Headphones, Truck } from "lucide-react";
 import { useCartCount, useCartStore } from "@/lib/store";
 import AnnouncementBar from "./AnnouncementBar";
 
@@ -145,11 +145,31 @@ export default function Header() {
 
             {/* Right Icons */}
             <div className="flex items-center gap-1 sm:gap-1.5 justify-end z-10">
+              {/* Track Order — desktop only */}
+              <Link
+                href="/track-order"
+                style={{ color: "var(--color-maroon)", textDecoration: "none" }}
+                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-orange-50 transition-colors"
+                aria-label="Track your order"
+              >
+                <Truck size={17} />
+                <span
+                  style={{
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 600,
+                    fontSize: "0.82rem",
+                    color: "var(--color-maroon)",
+                  }}
+                >
+                  Track Order
+                </span>
+              </Link>
+
               {/* Support — desktop only */}
               <Link
                 href="/contact"
                 style={{ color: "var(--color-maroon)", textDecoration: "none" }}
-                className="hidden lg:flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-orange-50 transition-colors"
+                className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-orange-50 transition-colors"
                 aria-label="Customer support"
               >
                 <Headphones size={17} />

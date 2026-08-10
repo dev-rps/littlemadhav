@@ -8,6 +8,7 @@ import { useCartStore } from "@/lib/store";
 import { formatPrice, getDiscountPercent } from "@/lib/utils";
 import toast from "react-hot-toast";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
+import PincodeChecker from "@/components/shipping/PincodeChecker";
 
 interface ProductDetail {
   id: string;
@@ -570,6 +571,11 @@ export default function ProductDetailPage() {
                 <Zap size={18} />
                 Buy now
               </button>
+            </div>
+
+            {/* Shiprocket Pincode & Delivery Checker */}
+            <div style={{ marginTop: "0.35rem" }}>
+              <PincodeChecker compact />
             </div>
 
             {/* Trust Badges Strip (Warm beige container with vertical stroke dividers) */}

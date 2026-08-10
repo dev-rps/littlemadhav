@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { generateOrderNumber, FREE_SHIPPING_THRESHOLD } from "@/lib/utils";
 import { z } from "zod";
 import crypto from "crypto";
+import { createShiprocketOrder } from "@/lib/shiprocket";
 
 const orderSchema = z.object({
   customerName: z.string().min(2),
@@ -100,7 +101,7 @@ export async function POST(request: NextRequest) {
     const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 49;
     const total = subtotal + shippingFee;
 
-    const order = await prisma.order.create({
+    let order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
         customerName: data.customerName,
@@ -133,7 +134,47 @@ export async function POST(request: NextRequest) {
       include: { items: true },
     });
 
-    return NextResponse.json({ order, success: true }, { status: 201 });
+    // Automatically sync order to Shiprocket
+    let finalOrder = order;
+    try {
+      const shiprocketResult = await createShiprocketOrder({
+        orderId: order.orderNumber,
+        orderDate: order.createdAt,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone,
+        address: order.address,
+        city: order.city,
+        state: order.state,
+        pincode: order.pincode,
+        paymentMethod: order.paymentMethod,
+        subtotal: order.subtotal,
+        total: order.total,
+        items: order.items.map((it) => ({
+          name: it.name,
+          sku: `PROD-${it.productId.slice(-6)}`,
+          units: it.quantity,
+          selling_price: it.price,
+        })),
+      });
+
+      if (shiprocketResult && shiprocketResult.success) {
+        finalOrder = await prisma.order.update({
+          where: { id: order.id },
+          data: {
+            shiprocketOrderId: shiprocketResult.shiprocketOrderId,
+            shiprocketShipmentId: shiprocketResult.shiprocketShipmentId,
+            awbCode: shiprocketResult.awbCode,
+            courierName: shiprocketResult.courierName,
+          },
+          include: { items: true },
+        });
+      }
+    } catch (srErr) {
+      console.error("Non-blocking Shiprocket sync error:", srErr);
+    }
+
+    return NextResponse.json({ order: finalOrder, success: true }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Validation failed", details: error.issues }, { status: 400 });

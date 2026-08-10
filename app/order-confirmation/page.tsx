@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Package, Phone } from "lucide-react";
 
+import OrderTracker from "@/components/shipping/OrderTracker";
+
 interface Order {
   id: string;
   orderNumber: string;
@@ -136,6 +138,13 @@ function OrderConfirmationContent() {
               <p style={{ fontFamily: "var(--font-body)", color: "#555" }}>Order #{orderNumber} has been placed successfully.</p>
             </div>
           )
+        )}
+
+        {/* Live Shiprocket Tracking Box */}
+        {orderNumber && (
+          <div style={{ marginBottom: "1.5rem" }}>
+            <OrderTracker orderNumber={orderNumber} />
+          </div>
         )}
 
         {/* What's next */}
