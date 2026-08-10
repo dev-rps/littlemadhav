@@ -99,32 +99,47 @@ export default function Header() {
       >
         {/* ── Main Navbar Row (Logo & Icons) ── */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Mourika Home">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold)" strokeWidth="1" strokeDasharray="2 2" />
-                <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold)" opacity="0.15" />
-                <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold)" strokeWidth="1.5" />
-                <path d="M12 3V5M12 19V21" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-              <span
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "1.35rem",
-                  color: "var(--color-maroon)",
-                  letterSpacing: "0.18em",
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  textTransform: "uppercase",
-                }}
+          <div className="flex items-center justify-between h-14 sm:h-16 relative">
+            {/* Left: Mobile Hamburger Toggle (hidden on Desktop) */}
+            <div className="flex items-center lg:hidden z-10">
+              <button
+                id="header-mobile-menu-btn"
+                onClick={() => setMobileOpen(!mobileOpen)}
+                style={{ color: "var(--color-maroon)" }}
+                className="p-2 -ml-2 rounded-lg hover:bg-orange-50 transition-colors"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
               >
-                Mourika
-              </span>
-            </Link>
+                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
+
+            {/* Logo (Centered on mobile, left-aligned on desktop) */}
+            <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
+              <Link href="/" className="flex items-center gap-2 flex-shrink-0" aria-label="Mourika Home">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="var(--color-gold)" strokeWidth="1" strokeDasharray="2 2" />
+                  <path d="M12 6C8.68629 6 6 8.68629 6 12C6 15.3137 8.68629 18 12 18C15.3137 18 18 15.3137 18 12C18 8.68629 15.3137 6 12 6Z" fill="var(--color-gold)" opacity="0.15" />
+                  <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.7909 8 12 8Z" stroke="var(--color-gold)" strokeWidth="1.5" />
+                  <path d="M12 3V5M12 19V21" stroke="var(--color-gold)" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+                <span
+                  style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.35rem",
+                    color: "var(--color-maroon)",
+                    letterSpacing: "0.18em",
+                    fontWeight: 700,
+                    lineHeight: 1,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Mourika
+                </span>
+              </Link>
+            </div>
 
             {/* Right Icons */}
-            <div className="flex items-center gap-1 sm:gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 justify-end z-10">
               {/* Support — desktop only */}
               <Link
                 href="/contact"
@@ -197,17 +212,6 @@ export default function Header() {
                     {cartCount > 99 ? "99+" : cartCount}
                   </span>
                 )}
-              </button>
-
-              {/* Mobile Menu Toggle */}
-              <button
-                id="header-mobile-menu-btn"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                style={{ color: "var(--color-maroon)" }}
-                className="p-2 rounded-lg hover:bg-orange-50 transition-colors lg:hidden"
-                aria-label={mobileOpen ? "Close menu" : "Open menu"}
-              >
-                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
