@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       ];
     }
 
-    if (category) {
+    if (category && category.toLowerCase() !== "all") {
       const catLower = category.toLowerCase();
 
       // Subcategories under Laddu Gopal Dresses
