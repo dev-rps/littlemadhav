@@ -7,15 +7,80 @@ import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 import QuickViewModal from "@/components/product/QuickViewModal";
 
 const categoryLabels: Record<string, string> = {
-  "devotees-collection": "Devotees collection",
+  "devotees-collection": "Devotees Collection",
   "laddu-gopal-dresses": "Laddu Gopal Dresses",
+  "luxe-dresses": "Luxe Dresses",
+  "soft-pastel-dresses": "Soft Pastel Dresses",
+  "summer-collection": "Summer Collection",
+  "woollen-dresses": "Woollen Dresses",
+  "summer-bedding-set": "Summer Bedding Set",
+  "woollen-bedding-set": "Woollen Bedding Set",
   "festive-home-decor": "Festive Home Decor",
+  "torans-bandhanwal": "Torans / Bandhanwal",
+  "decorative-rangoli": "Decorative Rangoli",
+  "shubh-labh": "Shubh Labh",
+  "pooja-thali-cover": "Pooja Thali Cover",
   "festive-products": "Festive Products",
+  janmashtami: "Janmashtami",
+  rakhi: "Rakhi",
+  "karwa-chauth": "Karwa Chauth",
+  navratri: "Navratri",
+  diwali: "Diwali",
   "jewellery-accessories": "Jewellery & Accessories",
+  hairs: "Hairs",
+  earrings: "Earrings",
+  kangan: "Kangan",
+  "necklace-haar": "Necklace / Haar",
+  bansuri: "Bansuri",
+  "kamar-band": "Kamar Band",
+  "attar-ittar": "Attar / Ittar",
+  bathtub: "Bathtub",
   "new-arrivals": "New Arrivals",
   sale: "Sale",
   all: "All Products",
 };
+
+const subcategoryMap: Record<string, { label: string; slug: string }[]> = {
+  "laddu-gopal-dresses": [
+    { label: "Luxe Dresses", slug: "luxe-dresses" },
+    { label: "Soft Pastel Dresses", slug: "soft-pastel-dresses" },
+    { label: "Summer Collection", slug: "summer-collection" },
+    { label: "Woollen Dresses", slug: "woollen-dresses" },
+    { label: "Summer Bedding Set", slug: "summer-bedding-set" },
+    { label: "Woollen Bedding Set", slug: "woollen-bedding-set" },
+  ],
+  "festive-home-decor": [
+    { label: "Torans / Bandhanwal", slug: "torans-bandhanwal" },
+    { label: "Decorative Rangoli", slug: "decorative-rangoli" },
+    { label: "Shubh Labh", slug: "shubh-labh" },
+    { label: "Pooja Thali Cover", slug: "pooja-thali-cover" },
+  ],
+  "festive-products": [
+    { label: "Janmashtami", slug: "janmashtami" },
+    { label: "Rakhi", slug: "rakhi" },
+    { label: "Karwa Chauth", slug: "karwa-chauth" },
+    { label: "Navratri", slug: "navratri" },
+    { label: "Diwali", slug: "diwali" },
+  ],
+  "jewellery-accessories": [
+    { label: "Hairs", slug: "hairs" },
+    { label: "Earrings", slug: "earrings" },
+    { label: "Kangan", slug: "kangan" },
+    { label: "Necklace / Haar", slug: "necklace-haar" },
+    { label: "Bansuri", slug: "bansuri" },
+    { label: "Kamar Band", slug: "kamar-band" },
+    { label: "Attar / Ittar", slug: "attar-ittar" },
+    { label: "Bathtub", slug: "bathtub" },
+  ],
+};
+
+function getParentCategorySlug(slug: string): string {
+  for (const [parent, subcats] of Object.entries(subcategoryMap)) {
+    if (parent === slug) return parent;
+    if (subcats.some((sub) => sub.slug === slug)) return parent;
+  }
+  return slug;
+}
 
 const sortOptions = [
   { value: "latest", label: "Latest" },
@@ -101,6 +166,8 @@ function CollectionPageContent() {
     };
   }, [slug, sort, page, priceRange]);
 
+  const parentSlug = getParentCategorySlug(slug);
+  const activeSubcats = subcategoryMap[parentSlug] || [];
   const title = categoryLabels[slug] ?? slug;
 
   return (
@@ -111,6 +178,14 @@ function CollectionPageContent() {
           <nav style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "var(--color-taupe)", display: "flex", gap: "0.375rem", alignItems: "center" }} aria-label="Breadcrumb">
             <Link href="/" style={{ color: "var(--color-taupe)", textDecoration: "none" }}>Home</Link>
             <span>/</span>
+            {parentSlug !== slug && (
+              <>
+                <Link href={`/collections/${parentSlug}`} style={{ color: "var(--color-taupe)", textDecoration: "none" }}>
+                  {categoryLabels[parentSlug] || parentSlug}
+                </Link>
+                <span>/</span>
+              </>
+            )}
             <span style={{ color: "var(--color-maroon)", fontWeight: 600 }}>{title}</span>
           </nav>
         </div>
@@ -118,7 +193,7 @@ function CollectionPageContent() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", flexWrap: "wrap", gap: "0.75rem" }}>
           <div>
             <h1 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(1.5rem, 4vw, 2.25rem)", color: "var(--color-maroon)", margin: 0, fontWeight: 700 }}>
               {title}
@@ -178,6 +253,71 @@ function CollectionPageContent() {
             </select>
           </div>
         </div>
+
+        {/* Subcategory Filter Chips Bar */}
+        {activeSubcats.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              gap: "0.5rem",
+              overflowX: "auto",
+              paddingBottom: "0.75rem",
+              marginBottom: "1rem",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+            className="no-scrollbar"
+          >
+            <Link
+              href={`/collections/${parentSlug}`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                whiteSpace: "nowrap",
+                padding: "0.4rem 0.85rem",
+                borderRadius: "9999px",
+                border: slug === parentSlug ? "1.5px solid var(--color-maroon)" : "1px solid rgba(205,151,3,0.3)",
+                backgroundColor: slug === parentSlug ? "var(--color-maroon)" : "#FFFFFF",
+                color: slug === parentSlug ? "#FFFFFF" : "var(--color-maroon)",
+                fontFamily: "var(--font-body)",
+                fontWeight: slug === parentSlug ? 700 : 500,
+                fontSize: "0.82rem",
+                textDecoration: "none",
+                transition: "all 0.15s ease",
+                boxShadow: slug === parentSlug ? "0 2px 8px rgba(102,13,25,0.15)" : "none",
+              }}
+            >
+              All {categoryLabels[parentSlug] || "Items"}
+            </Link>
+            {activeSubcats.map((sub) => {
+              const isActive = slug === sub.slug;
+              return (
+                <Link
+                  key={sub.slug}
+                  href={`/collections/${sub.slug}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    whiteSpace: "nowrap",
+                    padding: "0.4rem 0.85rem",
+                    borderRadius: "9999px",
+                    border: isActive ? "1.5px solid var(--color-maroon)" : "1px solid rgba(205,151,3,0.3)",
+                    backgroundColor: isActive ? "var(--color-maroon)" : "#FFFFFF",
+                    color: isActive ? "#FFFFFF" : "var(--color-maroon)",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: isActive ? 700 : 500,
+                    fontSize: "0.82rem",
+                    textDecoration: "none",
+                    transition: "all 0.15s ease",
+                    boxShadow: isActive ? "0 2px 8px rgba(102,13,25,0.15)" : "none",
+                  }}
+                >
+                  {sub.label}
+                </Link>
+              );
+            })}
+          </div>
+        )}
 
         <hr className="divider-gold" style={{ marginBottom: "1.5rem" }} />
 
