@@ -1,8 +1,9 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, Headphones, Truck } from "lucide-react";
+import { ShoppingBag, Heart, Search, Menu, X, ChevronDown, Headphones, Truck, User as UserIcon, Package, LogOut } from "lucide-react";
 import { useCartCount, useCartStore } from "@/lib/store";
+import { useUserStore } from "@/lib/userStore";
 import AnnouncementBar from "./AnnouncementBar";
 
 const categories = [
@@ -69,12 +70,29 @@ const categories = [
 export default function Header() {
   const cartCount = useCartCount();
   const openDrawer = useCartStore((s) => s.openDrawer);
+  const { user, logout, checkAuth } = useUserStore();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -216,6 +234,84 @@ export default function Header() {
               >
                 <Heart size={20} />
               </Link>
+
+              {/* User Account / Profile Dropdown */}
+              <div className="relative" ref={userMenuRef}>
+                {user ? (
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-1.5 p-1.5 rounded-lg hover:bg-orange-50 transition-colors"
+                    aria-label="User Account Menu"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-[#8B1E3F] text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <ChevronDown size={14} className="text-maroon hidden sm:block" />
+                  </button>
+                ) : (
+                  <Link
+                    href="/login"
+                    style={{ color: "var(--color-maroon)", textDecoration: "none" }}
+                    className="p-2 rounded-lg hover:bg-orange-50 transition-colors flex items-center gap-1"
+                    aria-label="Sign in"
+                  >
+                    <UserIcon size={20} />
+                    <span className="hidden xl:inline text-xs font-semibold">Sign In</span>
+                  </Link>
+                )}
+
+                {/* Dropdown Menu */}
+                {userMenuOpen && user && (
+                  <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-amber-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="px-3 py-2.5 border-b border-gray-100">
+                      <p className="text-xs font-bold text-gray-900 truncate">{user.name || "Devotee User"}</p>
+                      <p className="text-[11px] text-gray-500 truncate">{user.email}</p>
+                    </div>
+
+                    <div className="py-1">
+                      <Link
+                        href="/my-orders"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-amber-50 hover:text-[#8B1E3F] rounded-xl transition-colors"
+                      >
+                        <Package size={16} className="text-[#8B1E3F]" />
+                        <span>My Orders</span>
+                      </Link>
+
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-amber-50 hover:text-[#8B1E3F] rounded-xl transition-colors"
+                      >
+                        <Heart size={16} className="text-[#8B1E3F]" />
+                        <span>My Wishlist</span>
+                      </Link>
+
+                      <Link
+                        href="/track-order"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-amber-50 hover:text-[#8B1E3F] rounded-xl transition-colors"
+                      >
+                        <Truck size={16} className="text-[#8B1E3F]" />
+                        <span>Track Order</span>
+                      </Link>
+                    </div>
+
+                    <div className="pt-1 border-t border-gray-100">
+                      <button
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          logout();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-colors text-left"
+                      >
+                        <LogOut size={16} />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Cart */}
               <button

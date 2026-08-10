@@ -17,8 +17,9 @@ const footerLinks = {
     { label: "Sale", href: "/collections/sale" },
   ],
   "Support": [
+    { label: "My Orders 📦", href: "/my-orders" },
+    { label: "My Wishlist ❤️", href: "/wishlist" },
     { label: "Shipping & Delivery", href: "/shipping" },
-    { label: "Returns & Exchanges", href: "/returns" },
     { label: "Track Your Order", href: "/track-order" },
     { label: "FAQs", href: "/faq" },
     { label: "Contact Us", href: "/contact" },

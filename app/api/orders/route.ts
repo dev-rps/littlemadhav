@@ -4,6 +4,7 @@ import { generateOrderNumber, FREE_SHIPPING_THRESHOLD, getSizeAdjustment } from 
 import { z } from "zod";
 import crypto from "crypto";
 import { createShiprocketOrder } from "@/lib/shiprocket";
+import { getSessionUser } from "@/lib/auth";
 
 const orderSchema = z.object({
   customerName: z.string().min(2),
@@ -116,9 +117,12 @@ export async function POST(request: NextRequest) {
     const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 49;
     const total = subtotal + shippingFee;
 
+    const sessionUser = await getSessionUser();
+
     let order = await prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
+        userId: sessionUser?.id || null,
         customerName: data.customerName,
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone,
@@ -165,7 +169,7 @@ export async function POST(request: NextRequest) {
         paymentMethod: order.paymentMethod,
         subtotal: order.subtotal,
         total: order.total,
-        items: order.items.map((it) => ({
+        items: order.items.map((it: { name: string; productId: string; quantity: number; price: number }) => ({
           name: it.name,
           sku: `PROD-${it.productId.slice(-6)}`,
           units: it.quantity,
@@ -203,6 +207,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const orderNumber = searchParams.get("orderNumber");
+    const isMyOrders = searchParams.get("myOrders") === "true";
 
     if (orderNumber) {
       const order = await prisma.order.findUnique({
@@ -211,6 +216,29 @@ export async function GET(request: NextRequest) {
       });
       if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
       return NextResponse.json(order);
+    }
+
+    if (isMyOrders) {
+      const sessionUser = await getSessionUser();
+      if (!sessionUser) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      // Find orders matched either by userId OR by customerEmail for backward compatibility
+      const myOrders = await prisma.order.findMany({
+        where: {
+          OR: [
+            { userId: sessionUser.id },
+            { customerEmail: sessionUser.email },
+          ],
+        },
+        include: {
+          items: true,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      return NextResponse.json({ orders: myOrders });
     }
 
     const orders = await prisma.order.findMany({

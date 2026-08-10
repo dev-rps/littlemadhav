@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useCartStore, useCartTotal, useShippingFee } from "@/lib/store";
+import { useUserStore } from "@/lib/userStore";
 import { formatPrice } from "@/lib/utils";
 import { ShieldCheck, Truck, RefreshCcw, ChevronDown, ChevronUp, Lock, ArrowLeft, CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -40,6 +41,7 @@ const loadRazorpayScript = () => {
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, clearCart, specialInstructions } = useCartStore();
+  const { user } = useUserStore();
   const total = useCartTotal();
   const shippingFee = useShippingFee();
   const finalTotal = total + shippingFee;
@@ -57,6 +59,16 @@ export default function CheckoutPage() {
     paymentMethod: "cod",
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        customerName: prev.customerName || user.name || "",
+        customerEmail: prev.customerEmail || user.email || "",
+      }));
+    }
+  }, [user]);
 
   const validate = () => {
     const e: Partial<FormData> = {};
