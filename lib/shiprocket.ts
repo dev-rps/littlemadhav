@@ -7,11 +7,19 @@ let lastAuthErrorMsg: string | null = null;
 
 function cleanEnvVal(val?: string): string | undefined {
   if (!val) return undefined;
-  let str = val.trim();
+  let str = val.trim().replace(/[\r\n\t]/g, "");
   if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
-    str = str.substring(1, str.length - 1).trim();
+    str = str.substring(1, str.length - 1).trim().replace(/[\r\n\t]/g, "");
   }
-  return str;
+  // Unescape HTML entities if Hostinger hPanel encoded special characters like & -> &amp;
+  str = str
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
+  return str.trim();
 }
 
 /**
