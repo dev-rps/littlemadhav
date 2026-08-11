@@ -8,8 +8,14 @@ function cleanEnvVal(val?: string): string | undefined {
   if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
     str = str.substring(1, str.length - 1).trim().replace(/[\r\n\t]/g, "");
   }
-  // Unescape backslash-escaped characters (e.g. \$ -> $ or \& -> &) caused by Hostinger shell parser
-  str = str.replace(/\\([$&])/g, "$1");
+  // Try decodeURIComponent if Hostinger URL-encoded symbols like % -> %25
+  try {
+    if (str.includes("%")) {
+      str = decodeURIComponent(str);
+    }
+  } catch {}
+  // Unescape backslash-escaped characters (e.g. \$ -> $, \& -> &, \# -> #, \% -> %)
+  str = str.replace(/\\([$&%#])/g, "$1");
   // Unescape HTML entities if Hostinger hPanel encoded special characters like & -> &amp;
   str = str
     .replace(/&amp;/g, "&")
