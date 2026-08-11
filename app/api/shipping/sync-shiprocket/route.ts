@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createShiprocketOrder, getShiprocketToken, getShiprocketAuthStatus, resetShiprocketAuthLockout } from "@/lib/shiprocket";
 
+function cleanEnvVal(val?: string): string | undefined {
+  if (!val) return undefined;
+  let str = val.trim();
+  if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+    str = str.substring(1, str.length - 1).trim();
+  }
+  return str;
+}
+
 /**
  * GET /api/shipping/sync-shiprocket
  * Diagnostics endpoint to verify Shiprocket credentials, outbound IP, & connection status.
@@ -14,10 +23,10 @@ export async function GET(request: NextRequest) {
       resetShiprocketAuthLockout();
     }
 
-    const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
-    const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
-    const pickupLocation = process.env.SHIPROCKET_PICKUP_LOCATION || "warehouse (default)";
-    const channelId = process.env.SHIPROCKET_CHANNEL_ID || "Not configured (Adhoc default)";
+    const email = cleanEnvVal(process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL);
+    const password = cleanEnvVal(process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD);
+    const pickupLocation = cleanEnvVal(process.env.SHIPROCKET_PICKUP_LOCATION) || "warehouse (default)";
+    const channelId = cleanEnvVal(process.env.SHIPROCKET_CHANNEL_ID) || "Not configured (Adhoc default)";
     const maskedEmail = email
       ? email.replace(/^(.{2})(.*)(@.*)$/, (_, p1, p2, p3) => `${p1}${"*".repeat(Math.min(p2.length, 4))}${p3}`)
       : null;

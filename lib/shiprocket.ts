@@ -5,6 +5,15 @@ let tokenExpiresAt: number | null = null;
 let authLockoutUntil: number | null = null;
 let lastAuthErrorMsg: string | null = null;
 
+function cleanEnvVal(val?: string): string | undefined {
+  if (!val) return undefined;
+  let str = val.trim();
+  if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
+    str = str.substring(1, str.length - 1).trim();
+  }
+  return str;
+}
+
 /**
  * Returns current Shiprocket auth status including circuit breaker / lockout gate.
  */
@@ -39,8 +48,10 @@ export function resetShiprocketAuthLockout() {
  * Features circuit-breaker lockout gate to prevent auth ban loops.
  */
 export async function getShiprocketToken(): Promise<string | null> {
-  const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
-  const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
+  const rawEmail = process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL;
+  const rawPassword = process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD;
+  const email = cleanEnvVal(rawEmail);
+  const password = cleanEnvVal(rawPassword);
 
   // Server-side masked email log helper
   const maskedEmail = email
