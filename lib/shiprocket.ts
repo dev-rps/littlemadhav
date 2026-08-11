@@ -44,10 +44,12 @@ export function resetShiprocketAuthLockout() {
 
 /**
  * Obtain JWT token from Shiprocket API.
+ * Sends POST request to https://apiv2.shiprocket.in/v1/external/auth/login
  * Caches token in memory for up to 9 days (Shiprocket tokens are valid for 10 days).
  * Features circuit-breaker lockout gate to prevent auth ban loops.
+ * Pass forceFresh=true to bypass cache and force a brand new HTTP POST login request.
  */
-export async function getShiprocketToken(): Promise<string | null> {
+export async function getShiprocketToken(forceFresh: boolean = false): Promise<string | null> {
   const rawEmail = process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL;
   const rawPassword = process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD;
   const email = cleanEnvVal(rawEmail);
@@ -78,8 +80,9 @@ export async function getShiprocketToken(): Promise<string | null> {
     return null;
   }
 
-  // 3. Use cached token if valid
-  if (cachedToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
+  // 3. Use cached token if valid (unless forceFresh is true)
+  if (!forceFresh && cachedToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
+    console.log("[Shiprocket Auth] Reusing valid cached JWT token.");
     return cachedToken;
   }
 
