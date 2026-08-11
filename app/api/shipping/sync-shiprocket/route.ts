@@ -1,44 +1,97 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createShiprocketOrder, getShiprocketToken } from "@/lib/shiprocket";
+import { createShiprocketOrder, getShiprocketToken, getShiprocketAuthStatus, resetShiprocketAuthLockout } from "@/lib/shiprocket";
 
 /**
  * GET /api/shipping/sync-shiprocket
- * Diagnostics endpoint to verify Shiprocket credentials & connection status.
+ * Diagnostics endpoint to verify Shiprocket credentials, outbound IP, & connection status.
+ * Query params: ?resetLockout=true (to reset backoff timer after IP whitelisting)
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    if (searchParams.get("resetLockout") === "true") {
+      resetShiprocketAuthLockout();
+    }
+
     const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
     const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
     const pickupLocation = process.env.SHIPROCKET_PICKUP_LOCATION || "warehouse (default)";
     const channelId = process.env.SHIPROCKET_CHANNEL_ID || "Not configured (Adhoc default)";
+    const maskedEmail = email
+      ? email.replace(/^(.{2})(.*)(@.*)$/, (_, p1, p2, p3) => `${p1}${"*".repeat(Math.min(p2.length, 4))}${p3}`)
+      : null;
+
+    // Detect server outbound egress IP
+    let outboundIp: string | null = null;
+    try {
+      const ipRes = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        outboundIp = ipData.ip;
+      }
+    } catch {
+      // Fallback
+    }
+
+    const authStatus = getShiprocketAuthStatus();
 
     if (!email || !password) {
       return NextResponse.json({
         success: false,
         authenticated: false,
-        error: "Missing Shiprocket credentials in environment variables (SHIPROCKET_API_EMAIL / SHIPROCKET_API_PASSWORD or SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD)",
+        error: "Missing Shiprocket credentials in environment variables (SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD)",
         envConfig: {
           emailConfigured: !!email,
+          emailMasked: maskedEmail,
           passwordConfigured: !!password,
+          passwordLength: password ? password.length : 0,
           pickupLocation,
           channelId,
         },
+        authGuardStatus: authStatus,
+        serverOutboundIp: outboundIp,
       }, { status: 400 });
+    }
+
+    if (authStatus.isPaused) {
+      return NextResponse.json({
+        success: false,
+        authenticated: false,
+        error: authStatus.isPausedByEnv
+          ? "Shiprocket authentication is manually paused via SHIPROCKET_AUTH_PAUSED=true in environment."
+          : `Shiprocket circuit breaker active (locked out for ${Math.ceil(authStatus.lockoutRemainingSeconds / 60)} more minutes to protect account from rate-limiting).`,
+        envConfig: {
+          emailMasked: maskedEmail,
+          passwordConfigured: !!password,
+          passwordLength: password ? password.length : 0,
+          pickupLocation,
+          channelId,
+        },
+        authGuardStatus: authStatus,
+        serverOutboundIp: outboundIp,
+        tip: "Whitelist your server outbound IP in Shiprocket Panel (Settings > API > Configure), then add ?resetLockout=true to this URL to attempt login.",
+      }, { status: 429 });
     }
 
     const token = await getShiprocketToken();
 
     if (!token) {
+      const updatedStatus = getShiprocketAuthStatus();
       return NextResponse.json({
         success: false,
         authenticated: false,
-        error: "Failed to authenticate with Shiprocket API. Check email/password credentials.",
+        error: updatedStatus.lastAuthErrorMsg || "Failed to authenticate with Shiprocket API. Check email/password or server IP whitelist.",
         envConfig: {
-          email,
+          emailMasked: maskedEmail,
+          passwordConfigured: !!password,
+          passwordLength: password ? password.length : 0,
           pickupLocation,
           channelId,
         },
+        authGuardStatus: updatedStatus,
+        serverOutboundIp: outboundIp,
+        whitelistingInstructions: "Hostinger outbound IP must be whitelisted in Shiprocket Panel > Settings > API > Configure.",
       }, { status: 401 });
     }
 
@@ -47,10 +100,13 @@ export async function GET() {
       authenticated: true,
       message: "Shiprocket API connection successful!",
       envConfig: {
-        email,
+        emailMasked: maskedEmail,
+        passwordConfigured: true,
         pickupLocation,
         channelId,
       },
+      authGuardStatus: getShiprocketAuthStatus(),
+      serverOutboundIp: outboundIp,
     });
   } catch (err: any) {
     return NextResponse.json({

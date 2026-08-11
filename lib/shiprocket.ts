@@ -2,26 +2,78 @@ const SHIPROCKET_API_BASE = "https://apiv2.shiprocket.in/v1/external";
 
 let cachedToken: string | null = null;
 let tokenExpiresAt: number | null = null;
+let authLockoutUntil: number | null = null;
+let lastAuthErrorMsg: string | null = null;
+
+/**
+ * Returns current Shiprocket auth status including circuit breaker / lockout gate.
+ */
+export function getShiprocketAuthStatus() {
+  const isPausedEnv = process.env.SHIPROCKET_AUTH_PAUSED === "true";
+  const isLockedOut = authLockoutUntil !== null && Date.now() < authLockoutUntil;
+  const lockoutRemainingSeconds = isLockedOut ? Math.ceil((authLockoutUntil! - Date.now()) / 1000) : 0;
+
+  return {
+    isPaused: isPausedEnv || isLockedOut,
+    isPausedByEnv: isPausedEnv,
+    isLockedOut,
+    lockoutRemainingSeconds,
+    lastAuthErrorMsg,
+    tokenCached: !!cachedToken && !!tokenExpiresAt && Date.now() < tokenExpiresAt,
+  };
+}
+
+/**
+ * Reset lockout state to manually attempt authentication after IP whitelisting.
+ */
+export function resetShiprocketAuthLockout() {
+  authLockoutUntil = null;
+  lastAuthErrorMsg = null;
+  cachedToken = null;
+  tokenExpiresAt = null;
+}
 
 /**
  * Obtain JWT token from Shiprocket API.
  * Caches token in memory for up to 9 days (Shiprocket tokens are valid for 10 days).
+ * Features circuit-breaker lockout gate to prevent auth ban loops.
  */
 export async function getShiprocketToken(): Promise<string | null> {
   const email = (process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL)?.trim();
   const password = (process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD)?.trim();
 
+  // Server-side masked email log helper
+  const maskedEmail = email
+    ? email.replace(/^(.{2})(.*)(@.*)$/, (_, p1, p2, p3) => `${p1}${"*".repeat(Math.min(p2.length, 4))}${p3}`)
+    : undefined;
+
+  console.log(`[Shiprocket Auth Check] Email configured: ${!!email} (${maskedEmail || "MISSING"}), Password configured: ${!!password} (length: ${password?.length || 0})`);
+
   if (!email || !password) {
-    console.warn("Shiprocket credentials (SHIPROCKET_API_EMAIL / SHIPROCKET_API_PASSWORD or SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD) missing in .env");
+    console.warn("[Shiprocket Auth] Credentials missing in environment variables (SHIPROCKET_EMAIL / SHIPROCKET_PASSWORD)");
     return null;
   }
 
-  // Use cached token if valid
+  // 1. Check manual pause switch (SHIPROCKET_AUTH_PAUSED=true)
+  if (process.env.SHIPROCKET_AUTH_PAUSED === "true") {
+    console.warn("[Shiprocket Guard] Auth requests explicitly paused via SHIPROCKET_AUTH_PAUSED=true in environment.");
+    return null;
+  }
+
+  // 2. Lockout Gate / Circuit Breaker backoff
+  if (authLockoutUntil && Date.now() < authLockoutUntil) {
+    const remainingMins = Math.ceil((authLockoutUntil - Date.now()) / (60 * 1000));
+    console.warn(`[Shiprocket Guard] Auth calls temporarily locked out to prevent IP rate-limiting. Backoff active for another ${remainingMins} minutes. Error: ${lastAuthErrorMsg}`);
+    return null;
+  }
+
+  // 3. Use cached token if valid
   if (cachedToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
     return cachedToken;
   }
 
   try {
+    console.log("[Shiprocket Auth] Initiating login request to Shiprocket API...");
     const res = await fetch(`${SHIPROCKET_API_BASE}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -30,20 +82,34 @@ export async function getShiprocketToken(): Promise<string | null> {
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("Shiprocket Auth Failed:", res.status, errText);
+      lastAuthErrorMsg = `HTTP ${res.status}: ${errText}`;
+      console.error("[Shiprocket Auth Failed]", res.status, errText);
+
+      // Lockout / Rate Limit Circuit Breaker: Pause auth for 1 hour on failures
+      authLockoutUntil = Date.now() + 60 * 60 * 1000;
+      console.warn("[Shiprocket Circuit Breaker] Activated 1-hour backoff to protect Shiprocket account from repeated lockout.");
       return null;
     }
 
     const data = await res.json();
     if (data && data.token) {
       cachedToken = data.token;
+      // Reset lockout counter on clean auth success
+      authLockoutUntil = null;
+      lastAuthErrorMsg = null;
       // Expire cache 1 day before token expiration (9 days)
       tokenExpiresAt = Date.now() + 9 * 24 * 60 * 60 * 1000;
+      console.log("[Shiprocket Auth Success] JWT token received and cached for 9 days.");
       return cachedToken;
     }
+
+    lastAuthErrorMsg = "Response missing JWT token field";
+    authLockoutUntil = Date.now() + 30 * 60 * 1000; // 30 mins
     return null;
-  } catch (err) {
-    console.error("Error fetching Shiprocket auth token:", err);
+  } catch (err: any) {
+    lastAuthErrorMsg = err.message || "Network exception during auth request";
+    console.error("[Shiprocket Auth Network Error]", err);
+    authLockoutUntil = Date.now() + 15 * 60 * 1000; // 15 mins
     return null;
   }
 }
