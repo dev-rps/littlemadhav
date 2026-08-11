@@ -4,11 +4,11 @@ import { createShiprocketOrder, getShiprocketToken, getShiprocketAuthStatus, res
 
 function cleanEnvVal(val?: string): string | undefined {
   if (!val) return undefined;
-  let str = val.trim();
+  let str = val.trim().replace(/[\r\n\t]/g, "");
   if ((str.startsWith('"') && str.endsWith('"')) || (str.startsWith("'") && str.endsWith("'"))) {
-    str = str.substring(1, str.length - 1).trim();
+    str = str.substring(1, str.length - 1).trim().replace(/[\r\n\t]/g, "");
   }
-  return str;
+  return str.trim();
 }
 
 /**
@@ -22,6 +22,9 @@ export async function GET(request: NextRequest) {
     if (searchParams.get("resetLockout") === "true") {
       resetShiprocketAuthLockout();
     }
+
+    const rawEmailKey = process.env.SHIPROCKET_API_EMAIL ? "SHIPROCKET_API_EMAIL" : process.env.SHIPROCKET_EMAIL ? "SHIPROCKET_EMAIL" : "NONE";
+    const rawPassKey = process.env.SHIPROCKET_API_PASSWORD ? "SHIPROCKET_API_PASSWORD" : process.env.SHIPROCKET_PASSWORD ? "SHIPROCKET_PASSWORD" : "NONE";
 
     const email = cleanEnvVal(process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL);
     const password = cleanEnvVal(process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD);
@@ -71,7 +74,9 @@ export async function GET(request: NextRequest) {
           ? "Shiprocket authentication is manually paused via SHIPROCKET_AUTH_PAUSED=true in environment."
           : `Shiprocket circuit breaker active (locked out for ${Math.ceil(authStatus.lockoutRemainingSeconds / 60)} more minutes to protect account from rate-limiting).`,
         envConfig: {
+          emailSource: rawEmailKey,
           emailMasked: maskedEmail,
+          passwordSource: rawPassKey,
           passwordConfigured: !!password,
           passwordLength: password ? password.length : 0,
           pickupLocation,
@@ -93,7 +98,9 @@ export async function GET(request: NextRequest) {
         authenticated: false,
         error: updatedStatus.lastAuthErrorMsg || "Failed to authenticate with Shiprocket API. Check email/password or server IP whitelist.",
         envConfig: {
+          emailSource: rawEmailKey,
           emailMasked: maskedEmail,
+          passwordSource: rawPassKey,
           passwordConfigured: !!password,
           passwordLength: password ? password.length : 0,
           pickupLocation,
