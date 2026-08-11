@@ -116,6 +116,12 @@ export async function GET(request: NextRequest) {
         },
         authGuardStatus: updatedStatus,
         serverOutboundIp: outboundIp,
+        potentialCausesAndFixes: {
+          ipWhitelisting: `Ensure server outbound IP (${outboundIp || "147.93.17.37"}) is whitelisted in Shiprocket Panel > Settings > API > Configure.`,
+          accountLockout: "If error states 'User blocked due to too many failed login attempts', reset password at app.shiprocket.in or create a new API User to instantly clear the lock.",
+          specialCharactersInPassword: "If password contains '$' or '&', shell/hPanel parsers can mangle variables. Use a strong password without '$' or '&' (e.g. MourikaShip2026Secure!).",
+          credentialsMismatch: "Ensure email and password match an active API User listed under Settings > API > Configure in Shiprocket Panel.",
+        },
         whitelistingInstructions: "Hostinger outbound IP must be whitelisted in Shiprocket Panel > Settings > API > Configure.",
       }, { status: 401 });
     }
