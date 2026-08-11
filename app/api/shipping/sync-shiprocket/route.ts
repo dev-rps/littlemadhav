@@ -23,11 +23,11 @@ export async function GET(request: NextRequest) {
       resetShiprocketAuthLockout();
     }
 
-    const rawEmailKey = process.env.SHIPROCKET_API_EMAIL ? "SHIPROCKET_API_EMAIL" : process.env.SHIPROCKET_EMAIL ? "SHIPROCKET_EMAIL" : "NONE";
-    const rawPassKey = process.env.SHIPROCKET_API_PASSWORD ? "SHIPROCKET_API_PASSWORD" : process.env.SHIPROCKET_PASSWORD ? "SHIPROCKET_PASSWORD" : "NONE";
+    const rawEmailKey = process.env.SHIPROCKET_EMAIL ? "SHIPROCKET_EMAIL" : process.env.SHIPROCKET_API_EMAIL ? "SHIPROCKET_API_EMAIL" : "NONE";
+    const rawPassKey = process.env.SHIPROCKET_PASSWORD ? "SHIPROCKET_PASSWORD" : process.env.SHIPROCKET_API_PASSWORD ? "SHIPROCKET_API_PASSWORD" : "NONE";
 
-    const email = cleanEnvVal(process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL);
-    const password = cleanEnvVal(process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD);
+    const email = cleanEnvVal(process.env.SHIPROCKET_EMAIL || process.env.SHIPROCKET_API_EMAIL);
+    const password = cleanEnvVal(process.env.SHIPROCKET_PASSWORD || process.env.SHIPROCKET_API_PASSWORD);
     const pickupLocation = cleanEnvVal(process.env.SHIPROCKET_PICKUP_LOCATION) || "warehouse (default)";
     const channelId = cleanEnvVal(process.env.SHIPROCKET_CHANNEL_ID) || "Not configured (Adhoc default)";
     const maskedEmail = email

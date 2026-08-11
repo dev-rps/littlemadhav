@@ -50,8 +50,8 @@ export function resetShiprocketAuthLockout() {
  * Pass forceFresh=true to bypass cache and force a brand new HTTP POST login request.
  */
 export async function getShiprocketToken(forceFresh: boolean = false): Promise<string | null> {
-  const rawEmail = process.env.SHIPROCKET_API_EMAIL || process.env.SHIPROCKET_EMAIL;
-  const rawPassword = process.env.SHIPROCKET_API_PASSWORD || process.env.SHIPROCKET_PASSWORD;
+  const rawEmail = process.env.SHIPROCKET_EMAIL || process.env.SHIPROCKET_API_EMAIL;
+  const rawPassword = process.env.SHIPROCKET_PASSWORD || process.env.SHIPROCKET_API_PASSWORD;
   const email = cleanEnvVal(rawEmail);
   const password = cleanEnvVal(rawPassword);
 
