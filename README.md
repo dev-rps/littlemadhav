@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mourika - Festive Luxury E-Commerce
 
-## Getting Started
+Mourika is a modern, high-performance Next.js e-commerce application built with Next.js App Router, Prisma ORM, Razorpay payment gateway integration, and automated Shiprocket logistics fulfillment.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Shiprocket Logistics & Authentication Architecture
+
+The logistics module (`lib/shiprocket.ts`) provides automated order sync, real-time pincode serviceability, AWB tracking, and resilient API token management.
+
+### Key Architecture Features
+
+1. **9-Day Token Caching**:
+   Shiprocket JWT tokens are valid for 10 days (240 hours). `getShiprocketToken()` caches valid tokens in memory for 9 days (`777,600,000 ms`), eliminating unnecessary login requests on order placement or pincode checks.
+
+2. **Circuit-Breaker Rate Limit Guard**:
+   If a login call fails or encounters an IP restriction/rate limit (HTTP 401/403/400/429), an automated 1-hour backoff window (`authLockoutUntil`) is activated in server memory to fail fast locally and prevent API ban loops.
+
+3. **Manual Auth Pause Switch**:
+   Support for `SHIPROCKET_AUTH_PAUSED=true` in environment variables to immediately block all outgoing HTTP auth traffic to Shiprocket during maintenance or IP whitelisting.
+
+4. **Environment Variable & Special Character Sanitizer**:
+   `cleanEnvVal()` automatically strips wrapping quotes, newlines, carriage returns, trailing spaces, unescapes backslash-escaped characters (`\$` -> `$`, `\&` -> `&`), and unescapes HTML entities (`&amp;` -> `&`) commonly introduced by hosting control panels like Hostinger hPanel.
+
+---
+
+## Environment Variables
+
+Configure the following variables in `.env` or in Hostinger hPanel Environment Variables:
+
+```env
+# Shiprocket Logistics Integration
+SHIPROCKET_EMAIL="your_shiprocket_api_email@domain.com"
+SHIPROCKET_PASSWORD="your_shiprocket_api_password"
+SHIPROCKET_PICKUP_LOCATION="warehouse"
+SHIPROCKET_PICKUP_PINCODE="110030"
+SHIPROCKET_CHANNEL_ID="11797508"
+
+# Optional Auth Pause Switch (Set to true to pause outbound auth requests)
+SHIPROCKET_AUTH_PAUSED="false"
+
+# Database & Payment Credentials
+DATABASE_URL="postgresql://user:password@host:5432/dbname"
+NEXT_PUBLIC_RAZORPAY_KEY_ID="rzp_live_..."
+RAZORPAY_KEY_SECRET="your_razorpay_secret"
+JWT_SECRET="your_secure_jwt_secret"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Diagnostic & Outbound IP Endpoints
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Hostinger Outbound Egress IP Detector
+- **Endpoint**: `GET /api/shipping/outbound-ip`
+- **Description**: Returns the server's exact outbound public IP address to whitelist in **Shiprocket Panel > Settings > API > Configure**.
 
-## Learn More
+### 2. Isolated Auth Diagnostic Endpoint
+- **Endpoint**: `GET /api/shipping/sync-shiprocket?resetLockout=true&forceFresh=true`
+- **Description**: Resets local circuit breaker backoff timers and forces a brand new HTTP `POST` login request to `https://apiv2.shiprocket.in/v1/external/auth/login` to test credentials and token issuance in isolation.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development & Build Commands
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+# Run local development server
+npm run dev
 
-## Deploy on Vercel
+# Generate Prisma Client & Run Next.js Production Build
+npm run build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start Production Server
+npm start
+```
