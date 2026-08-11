@@ -83,7 +83,8 @@ export async function GET(request: NextRequest) {
       }, { status: 429 });
     }
 
-    const token = await getShiprocketToken();
+    const isForceFresh = searchParams.get("resetLockout") === "true" || searchParams.get("forceFresh") === "true";
+    const token = await getShiprocketToken(isForceFresh);
 
     if (!token) {
       const updatedStatus = getShiprocketAuthStatus();
