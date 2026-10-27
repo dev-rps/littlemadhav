@@ -26,7 +26,7 @@
     "framer-motion": "^12.42.2",
     "jose": "^6.2.8",
     "lucide-react": "^1.24.0",
-    "next": "16.4.1",
+    "next": "^16.4.3",
     "pg": "^8.22.0",
     "prisma": "^7.8.0",
     "razorpay": "^2.9.8",
@@ -45,7 +45,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "^16.4.3",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
     "typescript": "^5"
@@ -56,5 +56,13 @@
     "prisma@7.8.0": true,
     "sharp@0.34.5": true,
     "unrs-resolver@1.12.2": true
+  },
+  "overrides": {
+    "brace-expansion": "$brace-expansion",
+    "fast-uri": "^3.1.9",
+    "source-map-js": "^1.2.2",
+    "js-yaml": "^4.3.2",
+    "follow-redirects": "^1.16.2",
+    "axios": "^1.21.0"
   }
 }
