@@ -8,9 +8,21 @@ import AnnouncementBar from "./AnnouncementBar";
 
 const categories = [
   {
-    label: "Devotees Collection",
-    slug: "devotees-collection",
-    icon: "🌸",
+    label: "Bandarwar & Toran",
+    slug: "bandarwar-toran",
+    icon: "🏮",
+    children: [],
+  },
+  {
+    label: "Table Runner",
+    slug: "table-runner",
+    icon: "✨",
+    children: [],
+  },
+  {
+    label: "Karva Chauth Thaali",
+    slug: "karva-chauth-thaali",
+    icon: "🌙",
     children: [],
   },
   {
@@ -31,22 +43,11 @@ const categories = [
     slug: "festive-home-decor",
     icon: "🪔",
     children: [
-      { label: "Torans / Bandhanwal", slug: "torans-bandhanwal" },
+      { label: "Bandarwar & Toran", slug: "bandarwar-toran" },
+      { label: "Table Runner", slug: "table-runner" },
       { label: "Decorative Rangoli", slug: "decorative-rangoli" },
       { label: "Shubh Labh", slug: "shubh-labh" },
       { label: "Pooja Thali Cover", slug: "pooja-thali-cover" },
-    ],
-  },
-  {
-    label: "Festive Products",
-    slug: "festive-products",
-    icon: "🪅",
-    children: [
-      { label: "Janmashtami", slug: "janmashtami" },
-      { label: "Rakhi", slug: "rakhi" },
-      { label: "Karwa Chauth", slug: "karwa-chauth" },
-      { label: "Navratri", slug: "navratri" },
-      { label: "Diwali", slug: "diwali" },
     ],
   },
   {
@@ -64,7 +65,12 @@ const categories = [
       { label: "Bathtub", slug: "bathtub" },
     ],
   },
-  { label: "Upcoming Festival", slug: "upcoming", icon: "🎉", children: [] },
+  {
+    label: "Devotees Collection",
+    slug: "devotees-collection",
+    icon: "🌸",
+    children: [],
+  },
 ];
 
 export default function Header() {
@@ -748,7 +754,7 @@ export default function Header() {
               />
             </div>
             <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-              {["Laddu Gopal Dress", "Shubh Labh", "Diwali Diyas", "Rakhi"].map((tag) => (
+              {["Bandarwar", "Toran", "Table Runner", "Karva Chauth Thali", "Door Hanging"].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => {

@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import { Gift, Sparkles, Tag, Heart, ShieldCheck } from "lucide-react";
 
 const announcements = [
-  "🎁 Free shipping above ₹499 — Pan India delivery!",
-  "🌸 Beautiful Handcrafted Deity Dresses & Shringar — Order now!",
-  "✨ Flat 15% off on your first order — Use code MOURIKA15",
-  "💛 Handcrafted with love by Indian artisans 🇮🇳",
-  "🛡️ COD Available | Easy Returns | Secure Payments",
+  { Icon: Gift, text: "Free shipping above ₹499 — Pan India express delivery!" },
+  { Icon: Sparkles, text: "Handcrafted Bandarwar, Table Runners & Karwa Chauth Sets — Order now!" },
+  { Icon: Tag, text: "Flat 15% off on your first order — Use code MOURIKA15" },
+  { Icon: Heart, text: "100% Handcrafted with devotion by Indian heritage artisans" },
+  { Icon: ShieldCheck, text: "COD Available | Easy 7-Day Returns | Secure Payments" },
 ];
 
 export default function AnnouncementBar() {
@@ -24,6 +25,8 @@ export default function AnnouncementBar() {
     return () => clearInterval(interval);
   }, []);
 
+  const CurrentIcon = announcements[current].Icon;
+
   return (
     <div
       style={{ backgroundColor: "var(--color-maroon)", color: "var(--color-white)" }}
@@ -34,9 +37,15 @@ export default function AnnouncementBar() {
           transition: "opacity 0.3s ease",
           opacity: fade ? 1 : 0,
           fontFamily: "var(--font-body)",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "0.45rem",
+          margin: 0,
         }}
       >
-        {announcements[current]}
+        <CurrentIcon size={14} style={{ color: "var(--color-gold)", flexShrink: 0 }} />
+        <span>{announcements[current].text}</span>
       </p>
     </div>
   );

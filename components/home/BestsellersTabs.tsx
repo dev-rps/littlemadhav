@@ -9,10 +9,9 @@ interface Props {
 
 const TABS = [
   { label: "All Items", slug: "all" },
-  { label: "Laddu Gopal Dresses", slug: "laddu-gopal-dresses" },
-  { label: "Festive Home Decor", slug: "festive-home-decor" },
-  { label: "Festive Products", slug: "festive-products" },
-  { label: "Jewellery & Accessories", slug: "jewellery-accessories" },
+  { label: "Bandarwar & Toran", slug: "bandarwar-toran" },
+  { label: "Table Runner", slug: "table-runner" },
+  { label: "Karva Chauth Thaali", slug: "karva-chauth-thaali" },
 ];
 
 export default function BestsellersTabs({ initialProducts }: Props) {
@@ -22,17 +21,14 @@ export default function BestsellersTabs({ initialProducts }: Props) {
   const filteredProducts = activeSlug === "all"
     ? initialProducts
     : initialProducts.filter((p) => {
-        const catName = p.category?.name.toLowerCase() || "";
+        const catName = (p.category?.name || "").toLowerCase();
         const slug = p.slug.toLowerCase();
 
-        let targetTerm = activeSlug;
-        if (activeSlug === "laddu-gopal-dresses") targetTerm = "laddu gopal";
-        else if (activeSlug === "festive-home-decor") targetTerm = "decor";
-        else if (activeSlug === "festive-products") targetTerm = "festive";
-        else if (activeSlug === "jewellery-accessories") targetTerm = "jewellery";
-        else if (activeSlug === "devotees-collection") targetTerm = "devotees";
+        if (activeSlug === "bandarwar-toran") return catName.includes("bandarwar") || slug.includes("bandarwar") || slug.includes("toran");
+        if (activeSlug === "table-runner") return catName.includes("runner") || slug.includes("runner");
+        if (activeSlug === "karva-chauth-thaali") return catName.includes("karva") || slug.includes("karva") || slug.includes("thali");
 
-        return catName.includes(targetTerm) || slug.includes(targetTerm);
+        return true;
       });
 
   return (

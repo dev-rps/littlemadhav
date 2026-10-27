@@ -290,7 +290,7 @@ export default function ContactPage() {
                   type="text"
                   value={form.subject}
                   onChange={(e) => setForm((f) => ({ ...f, subject: e.target.value }))}
-                  placeholder="What is this about? (e.g. Bulk Rakhi, Gift Hamper query)"
+                  placeholder="What is this about? (e.g. Bulk Bandarwar, Festive Decor query)"
                   style={{
                     width: "100%",
                     padding: "0.75rem 1rem",

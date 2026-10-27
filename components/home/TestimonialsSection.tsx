@@ -1,10 +1,10 @@
 "use client";
 const testimonials = [
-  { name: "Priya Sharma", city: "Delhi", rating: 5, text: "Absolutely gorgeous! The packaging was so beautiful. The Rakhi quality exceeded my expectations. Will definitely order again!", emoji: "🌸" },
-  { name: "Meera Patel", city: "Mumbai", rating: 5, text: "Ordered the Jhumka combo — stunning pieces! Arrived 2 days early and the quality is amazing for the price.", emoji: "💛" },
-  { name: "Ananya Gupta", city: "Bangalore", rating: 4, text: "Beautiful designs, fast delivery. The oxidised jhumkas are even better in person. Slightly small but very pretty.", emoji: "✨" },
-  { name: "Sunita Verma", city: "Jaipur", rating: 5, text: "Gift hamper was perfect for Rakhi! My bhabhi loved the lumba and I loved the jhumkas that came with it ❤️", emoji: "🎁" },
-  { name: "Kavitha R", city: "Chennai", rating: 5, text: "Terracotta earrings are so unique and lightweight! Got so many compliments. Will buy more for gifting.", emoji: "🌺" },
+  { name: "Priya Sharma", city: "Delhi", rating: 5, text: "The Bandarwar toran is breathtaking! The intricate gota patti and brass bell work make our entrance look so divine for Diwali. Packaging was 10/10.", emoji: "🏮" },
+  { name: "Meera Patel", city: "Mumbai", rating: 5, text: "Ordered the velvet Table Runner and Karwa Chauth thali set. Pristine finishing, vibrant colors, and arrived 2 days earlier than promised!", emoji: "✨" },
+  { name: "Ananya Gupta", city: "Bangalore", rating: 5, text: "The multi-angle preview images on the website matched the delivered product 100%. Authentic handcrafted Indian artistry. Our guests were mesmerized!", emoji: "🌸" },
+  { name: "Sunita Verma", city: "Jaipur", rating: 5, text: "The Karva Chauth thali set with matching chalni and lota was so regal! My family and friends showered compliments on the quality and velvet embroidery ❤️", emoji: "🌙" },
+  { name: "Kavitha R", city: "Chennai", rating: 5, text: "Ordered 3 door torans for our housewarming and upcoming festivities. Everyone asked where we got them from. Superb artisanal craftsmanship!", emoji: "🪔" },
 ];
 
 function StarRow({ count }: { count: number }) {
@@ -71,8 +71,25 @@ export default function TestimonialsSection() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.875rem" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", backgroundColor: "rgba(205,151,3,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.25rem" }}>
-                    {t.emoji}
+                  <div
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: "50%",
+                      background: "linear-gradient(135deg, #CD9703 0%, #660D19 100%)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#FFFFFF",
+                      fontFamily: "var(--font-display)",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
+                      border: "1.5px solid rgba(255,255,255,0.25)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {t.name.charAt(0)}
                   </div>
                   <div>
                     <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, color: "#FFF8F0", fontSize: "0.875rem", margin: 0 }}>

@@ -1,6 +1,14 @@
 "use client";
 import Link from "next/link";
-import { Share2, Globe, Play } from "lucide-react";
+import { Share2, Globe, Play, Users, Truck, Banknote, RotateCcw, ShieldCheck, Sparkles } from "lucide-react";
+
+const footerTrust = [
+  { icon: Users, text: "10,000+ Happy Customers" },
+  { icon: Truck, text: "Pan-India Delivery" },
+  { icon: Banknote, text: "COD Available" },
+  { icon: RotateCcw, text: "Easy Returns" },
+  { icon: ShieldCheck, text: "Secure Payments" },
+];
 
 const footerLinks = {
   "About Us": [
@@ -10,15 +18,15 @@ const footerLinks = {
     { label: "Sustainability", href: "/about#sustainability" },
   ],
   "Shop": [
-    { label: "Rakhi Collection", href: "/collections/rakhi" },
-    { label: "Jhumka Collection", href: "/collections/jhumka" },
-    { label: "Combos & Hampers", href: "/collections/combos" },
-    { label: "New Arrivals", href: "/collections/new-arrivals" },
-    { label: "Sale", href: "/collections/sale" },
+    { label: "Bandarwar & Toran", href: "/collections/bandarwar-toran" },
+    { label: "Table Runner", href: "/collections/table-runner" },
+    { label: "Karva Chauth Thaali", href: "/collections/karva-chauth-thaali" },
+    { label: "All Collections", href: "/collections/all" },
+    { label: "Festive Sale", href: "/collections/sale" },
   ],
   "Support": [
-    { label: "My Orders 📦", href: "/my-orders" },
-    { label: "My Wishlist ❤️", href: "/wishlist" },
+    { label: "My Orders", href: "/my-orders" },
+    { label: "My Wishlist", href: "/wishlist" },
     { label: "Shipping & Delivery", href: "/shipping" },
     { label: "Track Your Order", href: "/track-order" },
     { label: "FAQs", href: "/faq" },
@@ -43,27 +51,34 @@ export default function Footer() {
       {/* Trust Strip */}
       <div style={{ backgroundColor: "var(--color-maroon)", padding: "0.75rem 0" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1rem 2rem" }}>
-            {[
-              "🤝 10,000+ Happy Customers",
-              "🚚 Pan-India Delivery",
-              "💵 COD Available",
-              "🔄 Easy Returns",
-              "🔒 Secure Payments",
-            ].map((item) => (
-              <span
-                key={item}
-                style={{
-                  fontSize: "0.78rem",
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 500,
-                  whiteSpace: "nowrap",
-                  color: "rgba(255,255,255,0.9)",
-                }}
-              >
-                {item}
-              </span>
-            ))}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "1.25rem 2.5rem" }}>
+            {footerTrust.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.text}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.45rem",
+                  }}
+                >
+                  <Icon size={16} style={{ color: "var(--color-gold)", strokeWidth: 2 }} />
+                  <span
+                    style={{
+                      fontSize: "0.8rem",
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 600,
+                      whiteSpace: "nowrap",
+                      color: "rgba(255,255,255,0.92)",
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    {item.text}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -217,7 +232,7 @@ export default function Footer() {
               Get festive offers in your inbox 🎁
             </p>
             <p style={{ fontSize: "0.8rem", color: "#aaa", fontFamily: "var(--font-body)", marginTop: "0.25rem" }}>
-              Subscribe for exclusive discounts, Rakhi reminders & new arrivals.
+              Subscribe for exclusive discounts, festive festival reminders & new arrivals.
             </p>
           </div>
           <form

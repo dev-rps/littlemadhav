@@ -8,577 +8,480 @@ const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
+
+// 17 Bandarwar & Toran products (each has 3 photos: 1 main + 2 preview angles)
+const bandarwarProducts = [
+  {
+    name: "Traditional Marigold & Gota Patti Bandarwar",
+    price: 349,
+    mrp: 499,
+    description: "Handcrafted traditional marigold flower bandarwar with shimmering gota patti embellishments. Brings auspicious warmth and welcoming festive elegance to your main entrance.",
+    material: "Cotton Thread, Artificial Marigold, Gota Patti, Bells",
+    occasion: "Diwali, Navratri, Griha Pravesh, Weddings",
+  },
+  {
+    name: "Festive Velvet & Gold Zari Door Toran",
+    price: 449,
+    mrp: 649,
+    description: "Luxurious royal velvet door toran adorned with intricate gold zari thread embroidery and hanging pearl tassels. Crafted by master artisans for a grand entryway.",
+    material: "Royal Velvet, Gold Zari, Pearl Beads, Tassels",
+    occasion: "Diwali, New Year, Weddings, Temple Decor",
+  },
+  {
+    name: "Auspicious Mango Leaf Kundan Bandarwar",
+    price: 399,
+    mrp: 599,
+    description: "Sacred mango leaf motif toran embellished with sparkling Kundan stones and golden ghungroo bells. Symbolizes abundance, purity, and festive joy.",
+    material: "Fabric, Kundan Stones, Metal Ghungroo, Golden Beads",
+    occasion: "Pooja, Griha Pravesh, Diwali, Festivals",
+  },
+  {
+    name: "Royal Rajasthani Elephant Motif Toran",
+    price: 499,
+    mrp: 749,
+    description: "Vibrant Rajasthani hand-stitched elephant motif toran featuring colorful patchwork, mirror work, and auspicious brass bells. A majestic statement piece for your home.",
+    material: "Cotton Fabric, Mirror Work, Brass Bells, Tassels",
+    occasion: "Housewarming, Festive Celebrations, Mandir Entry",
+  },
+  {
+    name: "Handcrafted Silk Pom-Pom & Pearl Bandarwar",
+    price: 299,
+    mrp: 449,
+    description: "Delightful handcrafted door hanging featuring multicolor soft silk pom-poms interspersed with luminous pearl beads and golden ring accents.",
+    material: "Silk Yarn, Pearl Beads, Golden Rings",
+    occasion: "Daily Entrance Decor, Janmashtami, Diwali, Festive Gifting",
+  },
+  {
+    name: "Shubh Labh Floral Door Hanging Toran",
+    price: 379,
+    mrp: 549,
+    description: "Traditional Shubh Labh auspicious entrance bandarwar featuring delicate floral designs, auspicious symbols, and golden hanging bells to bless your dwelling.",
+    material: "Embroidered Fabric, Brass Bells, Golden Beads",
+    occasion: "Diwali, Laxmi Puja, New Year, Griha Pravesh",
+  },
+  {
+    name: "Mirror Work Brass Ghungroo Festive Bandarwar",
+    price: 449,
+    mrp: 699,
+    description: "Authentic Gujarati mirror-work toran with resounding musical brass ghungroos that chime gently in the doorway. Reflects positive energy into the home.",
+    material: "Kutch Embroidered Fabric, Real Mirrors, Brass Ghungroo",
+    occasion: "Navratri, Diwali, Cultural Celebrations, Home Decor",
+  },
+  {
+    name: "Auspicious Om & Swastik Zari Bandarwar",
+    price: 399,
+    mrp: 599,
+    description: "Sacred Om and Swastik symbols hand-embroidered with heavy metallic gold zari on a rich crimson backdrop, flanked by handcrafted golden drops.",
+    material: "Raw Silk, Heavy Zari, Metallic Drops",
+    occasion: "Pooja Room Entry, Griha Pravesh, Diwali, Daily Puja",
+  },
+  {
+    name: "Multicolour Banarasi Silk Entrance Toran",
+    price: 549,
+    mrp: 799,
+    description: "Exquisite Banarasi silk weave doorway toran with brocade floral vine motifs and handcrafted silk thread tassels. Adds quintessential Indian grandeur.",
+    material: "Banarasi Silk Brocade, Gold Laces, Thread Tassels",
+    occasion: "Weddings, Diwali, Anniversaries, Temple Entrance",
+  },
+  {
+    name: "Luxury Golden Beads & Pearl Door Bandarwar",
+    price: 599,
+    mrp: 899,
+    description: "Contemporary luxury doorway hanging crafted with hand-strung golden beads, lustrous faux pearls, and floral metallic medallions. Fits modern and traditional interiors alike.",
+    material: "Glass Pearls, Gold Plated Beads, Metallic Medallions",
+    occasion: "Modern Living, Festive Season, Housewarming Gift",
+  },
+  {
+    name: "Traditional Meenakari Work Peacock Toran",
+    price: 649,
+    mrp: 999,
+    description: "Magnificent peacock design doorway toran featuring enameled Meenakari hand-painted metal charms, vibrant feathers styling, and pearl hangings.",
+    material: "Meenakari Metal Charms, Velvet, Pearl Drops",
+    occasion: "Janmashtami, Diwali, Royal Wedding Decor",
+  },
+  {
+    name: "Vibrant Jaipuri Block Print Door Hanging",
+    price: 329,
+    mrp: 499,
+    description: "Artisanal hand block-printed cotton toran made with organic vegetable dyes in heritage Jaipuri floral prints, finished with fine golden border lace.",
+    material: "100% Pure Cotton, Natural Dyes, Gota Lace",
+    occasion: "Eco-Friendly Living, Daily Entrance, Festive Decor",
+  },
+  {
+    name: "Bridal Rose & Lotus Motif Velvet Bandarwar",
+    price: 499,
+    mrp: 749,
+    description: "Romantic Indian bridal entrance toran with handcrafted 3D velvet roses and sacred pink lotus appliques, bordered by delicate pearl string valances.",
+    material: "Micro Velvet, 3D Flower Appliques, Faux Pearls",
+    occasion: "Bridal Room, Weddings, Engagement, Karva Chauth",
+  },
+  {
+    name: "Divine Chanderi Silk Tassel Toran",
+    price: 429,
+    mrp: 649,
+    description: "Subtle and sophisticated Chanderi silk toran featuring golden zari border piping and cascade of dual-tone pastel silk tassels.",
+    material: "Chanderi Silk, Golden Zari Piping, Silken Tassels",
+    occasion: "Festive Occasions, Living Room, Puja Altar Entry",
+  },
+  {
+    name: "Hand Embroidered Aari Work Festive Bandarwar",
+    price: 599,
+    mrp: 899,
+    description: "Masterful Kashmiri Aari needlework door toran with floral creeper embroidery in rich festive hues. Finished with artisan bead dangles.",
+    material: "Handloom Wool-Cotton Blend, Aari Embroidery, Beads",
+    occasion: "Winter Festivities, Diwali, Grand Entryways",
+  },
+  {
+    name: "Heritage Banarasi Brocade Door Hanging",
+    price: 699,
+    mrp: 1099,
+    description: "Pure heirloom-quality brocade toran woven in sacred Varanasi looms with intricate kalash and flower motifs. An auspicious heirloom for your family entryway.",
+    material: "Banarasi Katan Brocade, Gold Thread, Metal Bells",
+    occasion: "Griha Pravesh, Diwali, New Home Blessing, Weddings",
+  },
+  {
+    name: "Laxmi Feet Shubh Labh Auspicious Bandarwar",
+    price: 379,
+    mrp: 549,
+    description: "Sacred Goddess Laxmi Charan Paduka and Shubh Labh motifs handcrafted with sparkling gemstones and velvet backing. Invites prosperity and fortune into your abode.",
+    material: "Velvet, Acrylic Stones, Metal Coins, Bells",
+    occasion: "Diwali Dhanteras, Laxmi Puja, New Venture, Griha Pravesh",
+  },
+];
+
+// 6 Table Runner products (each has 2 photos: 1 main + 1 preview angle)
+const tableRunnerProducts = [
+  {
+    name: "Royal Velvet & Gold Zari Border Festive Table Runner",
+    price: 399,
+    mrp: 599,
+    description: "Rich maroon velvet table runner with exquisite gold zari border and tassel ends. Elevates your festive dining table and center coffee table with royal flair.",
+    material: "Royal Velvet, Gold Zari Lace, Thread Tassels",
+    occasion: "Diwali Dinners, Festive Feasts, Wedding Receptions",
+  },
+  {
+    name: "Handcrafted Silk Brocade Dining Table Runner",
+    price: 499,
+    mrp: 749,
+    description: "Lustrous raw silk brocade runner featuring intricate floral paisley weaving and padded lining for smooth drape and table surface protection.",
+    material: "Silk Brocade, Cotton Lining, Zari Piping",
+    occasion: "Formal Dinners, Festive Gathering, Everyday Luxury",
+  },
+  {
+    name: "Traditional Rajasthani Embroidered Table Runner",
+    price: 349,
+    mrp: 499,
+    description: "Colorful hand-embroidered ethnic runner with traditional Rajasthani geometric motifs and mirror-work highlights. Gives an earthy artisanal touch to any table.",
+    material: "Cotton Slub, Embroidery Thread, Acrylic Mirrors",
+    occasion: "Ethnic Brunches, Diwali Decor, Gifting",
+  },
+  {
+    name: "Luxury Banarasi Floral Festive Table Runner",
+    price: 549,
+    mrp: 849,
+    description: "Opulent Banarasi woven table runner with shimmering golden floral vines and corner latkan tassels. A stunning centerpiece for festival feasts.",
+    material: "Banarasi Jacquard Woven Fabric, Silk Latkans",
+    occasion: "Diwali, Family Gatherings, Festive Centerpiece",
+  },
+  {
+    name: "Boho Tassel & Mirror Work Designer Table Runner",
+    price: 299,
+    mrp: 449,
+    description: "Chic contemporary runner featuring boho geometric thread embroidery, mini mirrors, and playful fringe tassels on both ends.",
+    material: "Heavy Woven Cotton Canvas, Fringe Tassels",
+    occasion: "Festive Parties, Living Room Tables, Buffet Spread",
+  },
+  {
+    name: "Auspicious Diwali Special Jacquard Table Runner",
+    price: 449,
+    mrp: 699,
+    description: "Special edition festive jacquard runner woven with sacred motifs and deep festive colors, resistant to light spills and easy to maintain.",
+    material: "Poly-Jacquard Blend, Spill-Resistant Finish",
+    occasion: "Diwali, Bhai Dooj, Festive Dining",
+  },
+];
+
+// 6 Karva Chauth Thaali products (each has 1 photo)
+const karvaProducts = [
+  {
+    name: "Shringaar Velvet Embroidered Karva Chauth Thali Set",
+    price: 699,
+    mrp: 999,
+    description: "Exquisite Karva Chauth puja thali set covered in auspicious crimson velvet, adorned with golden gotta lace, stone embroidery, and matching accessories.",
+    material: "Stainless Steel Thali, Velvet Fabric, Kundan Stones, Laces",
+    occasion: "Karva Chauth Puja, Festive Gifting, Bridal Shringaar",
+  },
+  {
+    name: "Bridal Royal Red & Gold Karva Chauth Puja Thali",
+    price: 899,
+    mrp: 1299,
+    description: "Premium handcrafted bridal thali set with heavy gota patti work, floral embellishments, and sacred red-gold accents for an unforgettable Karva Chauth ritual.",
+    material: "Metal Thali, Brocade Silk, Pearl Hangings, Gota Patti",
+    occasion: "First Karva Chauth, Bridal Puja, Gifting to Bahu/Beti",
+  },
+  {
+    name: "Traditional Kundan & Pearl Decorated Karva Thali Set",
+    price: 1199,
+    mrp: 1699,
+    description: "Artisan-crafted designer thali adorned with glistening Kundan stones, delicate flower motifs, and lustrous pearl border work. Comes with matching diya and chalni cover.",
+    material: "Stainless Steel, Handset Kundan Stones, Glass Pearls",
+    occasion: "Karva Chauth, Ahoi Ashtami, Diwali Puja",
+  },
+  {
+    name: "Handcrafted Meenakari Brass Karva Chauth Thali",
+    price: 799,
+    mrp: 1199,
+    description: "Traditional pure brass thali with hand-enameled Meenakari peacock artwork and engraved edges. Durable, sacred, and timeless for year-after-year use.",
+    material: "Pure Brass, Enamel Meenakari Work",
+    occasion: "Karva Chauth, Daily Puja, Festive Aarti",
+  },
+  {
+    name: "Festive Gota Patti Decorated Thali with Chalni & Lota",
+    price: 1099,
+    mrp: 1599,
+    description: "Complete Karva Chauth set including decorated puja thali, channi (chalni/sieve), lota (water pot), and diya, all coordinated with royal gota patti craft.",
+    material: "Steel Base, Gota Patti Lace, Mirror Accents",
+    occasion: "Complete Karva Chauth Ritual, Premium Gifting",
+  },
+  {
+    name: "Premium Designer Velvet Karva Chauth Complete Hamper",
+    price: 1499,
+    mrp: 2199,
+    description: "Luxury Karva Chauth set featuring royal velvet handcrafted thali, embellished sieve, decorative lota, velvet potli pouch, and decorative pooja diya.",
+    material: "Premium Velvet, Heavy Zari, Brass & Steel Utensils",
+    occasion: "Gift for Wife, Premium Bridal Gift Set, Festive Ritual",
+  },
+];
+
+const reviewTexts = [
+  { reviewerName: "Priya Sharma", rating: 5, comment: "Absolutely gorgeous! The craftsmanship and multiple preview photos matched the real product 100%. Perfect for our main door." },
+  { reviewerName: "Meera Patel", rating: 5, comment: "Beautiful design, arrived securely packed in pristine condition. Highly recommended!" },
+  { reviewerName: "Ananya Gupta", rating: 4, comment: "Lovely design, vibrant colors, looks so auspicious and royal on our entrance." },
+  { reviewerName: "Sunita Verma", rating: 5, comment: "Everyone in the family and guests showered compliments on this festive piece. Great quality!" },
+  { reviewerName: "Kavitha R", rating: 5, comment: "Authentic handcrafted quality. It feels so premium and durable. Worth every rupee." },
+  { reviewerName: "Nidhi Agarwal", rating: 4, comment: "Really beautiful embroidery and finishing. Added such a divine festive look." },
+  { reviewerName: "Rekha Joshi", rating: 5, comment: "Ordered for my daughter's housewarming and Diwali. She was overjoyed!" },
+  { reviewerName: "Pallavi Singh", rating: 5, comment: "Fast dispatch, superb packaging, and looks even better in real life than photos." },
+  { reviewerName: "Deepa Nair", rating: 4, comment: "Very elegant, neat stitching and high quality bells and tassels. Very pleased." },
+  { reviewerName: "Ritu Khanna", rating: 5, comment: "Mourika never disappoints. Will definitely order more for upcoming festivities." },
+];
+
 async function main() {
-  console.log("🌱 Cleaning Mourika database...");
+  console.log("Seeding Mourika database with 29 real products (17 Bandarwar, 6 Table Runner, 6 Karva Chauth)...");
+
   await prisma.review.deleteMany();
   await prisma.productVariant.deleteMany();
   await prisma.productImage.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.wishlistItem.deleteMany();
   await prisma.product.deleteMany();
   await prisma.category.deleteMany();
+  console.log("Old data cleared");
 
-  console.log("🌱 Seeding Mourika categories with authentic folder photos...");
-
-  // 1. Devotees collection
-  const catDevotees = await prisma.category.create({
+  const catBandarwar = await prisma.category.create({
     data: {
-      name: "Devotees collection",
-      slug: "devotees-collection",
-      description: "Beautiful devotional combo collections for modern devotees.",
-      imageUrl: "/products/devotees/img1.jpg",
+      name: "Bandarwar and Toran",
+      slug: "bandarwar-toran",
+      description: "Handcrafted door hangings, torans, and bandarwars to welcome prosperity and positive energy into your home.",
+      imageUrl: "/products/bandarwar-toran/p1-1.jpg",
       displayOrder: 1,
     },
   });
 
-  // 2. Laddu Gopal Dresses
-  const catDresses = await prisma.category.create({
+  const catTableRunner = await prisma.category.create({
     data: {
-      name: "Laddu Gopal Dresses",
-      slug: "laddu-gopal-dresses",
-      description: "Handcrafted dresses for Bal Gopal — luxe silks, soft pastels, cottons & woollens.",
-      imageUrl: "/products/dresses/img1.jpg",
+      name: "Table Runner",
+      slug: "table-runner",
+      description: "Elegant festive table runners and center decor to elevate dining and living spaces.",
+      imageUrl: "/products/table-runner/p1-1.jpg",
       displayOrder: 2,
     },
   });
 
-  // 3. Festive Home Decor
-  const catDecor = await prisma.category.create({
+  const catKarvaChauth = await prisma.category.create({
     data: {
-      name: "Festive Home Decor",
-      slug: "festive-home-decor",
-      description: "Traditional hangings, rangolis, torans & decorative covers.",
-      imageUrl: "/products/decor/img1.jpg",
+      name: "Karva Chauth Thaali",
+      slug: "karva-chauth-thaali",
+      description: "Beautiful handcrafted Karva Chauth thali sets, chalni, and auspicious puja essentials.",
+      imageUrl: "/products/karva-chauth-thaali/p1-1.jpeg",
       displayOrder: 3,
     },
   });
+  console.log("Categories created");
 
-  // 4. Festive Products
-  const catProducts = await prisma.category.create({
-    data: {
-      name: "Festive Products",
-      slug: "festive-products",
-      description: "Occasion-specific items for Janmashtami, Rakhi, Karwa Chauth, Navratri & Diwali.",
-      imageUrl: "/products/festive/img1.jpg",
-      displayOrder: 4,
-    },
-  });
+  // 1. Seed 17 Bandarwar products (each with 3 photos: 1 main + 2 preview angles)
+  for (let i = 0; i < bandarwarProducts.length; i++) {
+    const item = bandarwarProducts[i];
+    const productNum = i + 1;
+    const slug = slugify(item.name) + "-" + productNum;
 
-  // 5. Jewellery & Accessories
-  const catJewellery = await prisma.category.create({
-    data: {
-      name: "Jewellery & Accessories",
-      slug: "jewellery-accessories",
-      description: "Premium hair, earrings, kangan, bansuri & shringar accessories for deity worship.",
-      imageUrl: "/products/jewellery/img1.jpg",
-      displayOrder: 5,
-    },
-  });
-
-  console.log("🌱 Seeding Mourika products...");
-
-  const productsData = [
-    // ── Devotees collection ──────────────────────────────────────
-    {
-      name: "Complete Devotional Puja Combo Box",
-      slug: "complete-devotional-puja-combo",
-      description: "An all-in-one divine combo featuring a brass puja thali, copper aarti lamp, premium incense sticks, natural roli-chawal, and a detailed step-by-step puja guide.",
-      price: 699,
-      mrp: 999,
-      stock: 45,
-      categoryId: catDevotees.id,
-      isFeatured: true,
-      isSale: true,
-      material: "Brass, Copper, Natural resins",
-      occasion: "Daily Puja, Gifting",
-      careInstructions: "Clean brass utensils with pitambari powder. Keep incense dry.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "combo,devotee,puja,gifting",
-      folder: "devotees",
-      variants: [],
-    },
-    {
-      name: "Deluxe Devotee Aarti & Bhakti Gift Set",
-      slug: "deluxe-devotee-aarti-bhakti-gift-set",
-      description: "Deluxe spiritual gift hamper containing carved brass bell, kamal diya, natural attar oil, and velvet thali cover.",
-      price: 899,
-      mrp: 1299,
-      stock: 35,
-      categoryId: catDevotees.id,
-      isFeatured: true,
-      material: "Brass, Velvet, Pure oils",
-      occasion: "Spiritual Gifting, Housewarming",
-      careInstructions: "Wipe brass with dry cloth.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "combo,devotee,gift,aarti",
-      folder: "devotees",
-      variants: [],
-    },
-    {
-      name: "Shringar & Puja Divine Combo Hamper",
-      slug: "shringar-puja-divine-combo-hamper",
-      description: "Curated combo featuring deity dress, kangan, mukut, and bansuri accessories with puja samagri.",
-      price: 549,
-      mrp: 799,
-      stock: 50,
-      categoryId: catDevotees.id,
-      isSale: true,
-      material: "Silk, Alloy, Brass",
-      occasion: "Festive Puja & Shringar",
-      careInstructions: "Store in cool dry place.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "combo,shringar,hamper",
-      folder: "devotees",
-      variants: [],
-    },
-    {
-      name: "Supreme Devotional Ritual Box",
-      slug: "supreme-devotional-ritual-box",
-      description: "Complete ritual box featuring premium incense, kapoor thali, sandalwood paste, and brass snan patra.",
-      price: 749,
-      mrp: 1099,
-      stock: 30,
-      categoryId: catDevotees.id,
-      material: "Brass, Pure Sandalwood",
-      occasion: "Special Festivals, Rituals",
-      careInstructions: "Keep liquids separate from brass.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "combo,ritual,puja",
-      folder: "devotees",
-      variants: [],
-    },
-
-    // ── Laddu Gopal Dresses ──────────────────────────────────────
-    {
-      name: "Luxe Embroidered Silk Dress",
-      slug: "luxe-embroidered-silk-dress",
-      description: "Intricately designed heavy silk dress for Laddu Gopal, detailed with high-grade golden zari embroidery, micro beads, and mirror-work. Perfect for festivals like Janmashtami.",
-      price: 349,
-      mrp: 499,
-      stock: 60,
-      categoryId: catDresses.id,
-      isFeatured: true,
-      isSale: true,
-      material: "Banarasi Silk, Zari thread",
-      occasion: "Festive, Daily Shringar",
-      careInstructions: "Dry clean only. Do not iron directly on zari.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "dresses,luxe,silk,laddu-gopal",
-      folder: "dresses",
-      variants: [
-        { name: "Color", value: "Red Kundan", stock: 30, priceAdj: 0 },
-        { name: "Color", value: "White Kundan", stock: 30, priceAdj: 0 },
-      ],
-    },
-    {
-      name: "Soft Pastel Floral Dress",
-      slug: "soft-pastel-floral-dress",
-      description: "Comfortable and soothing soft pastel shaded dress for Laddu Gopal. Light fabrics printed with delicate floral block prints.",
-      price: 249,
-      mrp: 349,
-      stock: 80,
-      categoryId: catDresses.id,
-      isNewArrival: true,
-      material: "Premium Cotton Mulmul",
-      occasion: "Summer, Daily wear",
-      careInstructions: "Gentle hand wash with cold water.",
-      shippingInfo: "Ships in 24-48 hours.",
-      tags: "dresses,pastel,summer,cotton",
-      folder: "dresses",
-      variants: [
-        { name: "Color", value: "Peach Pearl", stock: 40, priceAdj: 0 },
-        { name: "Color", value: "Mint Green", stock: 40, priceAdj: 0 },
-      ],
-    },
-    {
-      name: "Summer Collection Block Print Dress",
-      slug: "summer-collection-block-print-dress",
-      description: "Pure cotton breathable block print dress from our summer collection. Specially cut to keep the deity cool during hot summer days.",
-      price: 199,
-      mrp: 299,
-      stock: 120,
-      categoryId: catDresses.id,
-      material: "100% Organic Cotton",
-      occasion: "Summer Daily Wear",
-      careInstructions: "Wash with mild detergent. Hang dry.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "dresses,summer,cotton,block-print",
-      folder: "dresses",
-      variants: [],
-    },
-    {
-      name: "Woollen Winter Dress & Cap Set",
-      slug: "woollen-winter-dress-cap-set",
-      description: "Keep Laddu Gopal cozy in winters with this hand-knitted soft wool dress and matching cap. Made from baby-soft wool to avoid skin irritation.",
-      price: 299,
-      mrp: 399,
-      stock: 50,
-      categoryId: catDresses.id,
-      isSale: true,
-      material: "Premium Soft Wool",
-      occasion: "Winter Season",
-      careInstructions: "Hand wash in warm water using woolen wash detergent.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "dresses,winter,woollen,set",
-      folder: "dresses",
-      variants: [],
-    },
-    {
-      name: "Radha Rani Divine Silk Dress Set",
-      slug: "radha-rani-divine-silk-dress-set",
-      description: "Handcrafted royal silk poshaak set for Radha Rani & Laddu Gopal, detailed with gold lace border.",
-      price: 499,
-      mrp: 749,
-      stock: 45,
-      categoryId: catDresses.id,
-      isFeatured: true,
-      material: "Silk, Zari lace",
-      occasion: "Special Festivals, Janmashtami",
-      careInstructions: "Dry clean only.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "dresses,radharani,poshaak,silk",
-      folder: "radharani",
-      variants: [],
-    },
-
-    // ── Festive Home Decor ───────────────────────────────────────
-    {
-      name: "Torans / Bandhanwal Hanging",
-      slug: "torans-bandhanwal-hanging",
-      description: "Beautiful festive main entrance door hanging (Toran) decorated with synthetic mango leaves, marigold flowers, and small brass bells to invite auspiciousness.",
-      price: 249,
-      mrp: 399,
-      stock: 100,
-      categoryId: catDecor.id,
-      isFeatured: true,
-      material: "Beads, Polyester marigold, Brass bells",
-      occasion: "Diwali, Griha Pravesh, Festivals",
-      careInstructions: "Gently wipe with dry cloth. Do not wash.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "decor,toran,hanging,door",
-      folder: "bandhanwal",
-      variants: [],
-    },
-    {
-      name: "Decorative Rangoli Acrylic Set",
-      slug: "decorative-rangoli-acrylic-set",
-      description: "A gorgeous multi-piece reusable acrylic rangoli set. Place them in various layouts around diyas on your floor to create beautiful patterns instantly.",
-      price: 349,
-      mrp: 549,
-      stock: 80,
-      categoryId: catDecor.id,
-      isSale: true,
-      material: "Acrylic sheet, Stones, Pearl beads",
-      occasion: "Festivals, Diwali, Puja rooms",
-      careInstructions: "Store flat in box. Clean with dry cloth only.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "decor,rangoli,reusable,floor",
-      folder: "decor",
-      variants: [],
-    },
-    {
-      name: "Shubh Labh Door Hanging Accent",
-      slug: "shubh-labh-door-hanging-accent",
-      description: "Ornate wall and door hanging tablets displaying Shubh and Labh symbols. Adorned with gold lace border, beads, and hanging jhumki accents.",
-      price: 199,
-      mrp: 299,
-      stock: 150,
-      categoryId: catDecor.id,
-      material: "Wood base, Silk fabric, Gold thread",
-      occasion: "Entrance Door Decor",
-      careInstructions: "Dust gently. Avoid contact with moisture.",
-      shippingInfo: "Ships in 24-48 hours.",
-      tags: "decor,shubh-labh,accent,hanging",
-      folder: "decor",
-      variants: [],
-    },
-    {
-      name: "Embroidered Pooja Thali Cover",
-      slug: "embroidered-pooja-thali-cover",
-      description: "Rich red satin circular cover designed to drape beautifully over your Pooja Thali. Finished with intricate golden zari leaf designs and golden tassel borders.",
-      price: 149,
-      mrp: 249,
-      stock: 130,
-      categoryId: catDecor.id,
-      isNewArrival: true,
-      material: "Satin, Silk, Zari thread",
-      occasion: "Puja rituals, Aarti, Gifting",
-      careInstructions: "Hand wash gently in cold water.",
-      tags: "decor,thali-cover,silk,embroidery",
-      folder: "decor",
-      variants: [],
-    },
-
-    // ── Festive Products ─────────────────────────────────────────
-    {
-      name: "Janmashtami Bal Gopal Swing (Jhula)",
-      slug: "janmashtami-bal-gopal-jhula",
-      description: "An elegantly hand-carved golden-finish wooden swing designed for deity seating and rocking ceremonies during Janmashtami celebrations.",
-      price: 799,
-      mrp: 1299,
-      stock: 25,
-      categoryId: catProducts.id,
-      isFeatured: true,
-      material: "Teakwood, Non-toxic metal plating",
-      occasion: "Janmashtami, Deity swing",
-      careInstructions: "Wipe with dry flannel cloth. Keep away from fire.",
-      shippingInfo: "Ships in heavy box with padding.",
-      tags: "festive,jhula,swing,janmashtami",
-      folder: "festive",
-      variants: [],
-    },
-    {
-      name: "Designer Pearl Rakhi Set",
-      slug: "designer-pearl-rakhi-set",
-      description: "Exquisite pair of handcrafted rakhis made of natural freshwater pearl lines and golden spacers. A symbol of pure brotherly love.",
-      price: 189,
-      mrp: 299,
-      stock: 200,
-      categoryId: catProducts.id,
-      isSale: true,
-      material: "Freshwater Pearls, Cotton thread",
-      occasion: "Raksha Bandhan",
-      careInstructions: "Keep dry. Wipe pearls with dry tissue.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "festive,rakhi,pearl,designer",
-      folder: "festive",
-      variants: [],
-    },
-    {
-      name: "Karwa Chauth Pooja Thali Set",
-      slug: "karwa-chauth-pooja-thali-set",
-      description: "An elegant red velvet wrapped Karwa Chauth set. Includes one steel thali, one chalni (sieve), and a decorated copper Lota (pot) for the moon ritual.",
-      price: 599,
-      mrp: 899,
-      stock: 40,
-      categoryId: catProducts.id,
-      isNewArrival: true,
-      material: "Stainless steel, Copper, Velvet wrapping",
-      occasion: "Karwa Chauth Vrat",
-      careInstructions: "Wash internals with water. Avoid soaking the outer velvet decoration.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "festive,karwa-chauth,thali-set",
-      folder: "festive",
-      variants: [],
-    },
-    {
-      name: "Navratri Hand-painted Dandiya Sticks",
-      slug: "navratri-hand-painted-dandiya-sticks",
-      description: "Vibrant matching pair of solid wood dandiya sticks, handpainted in ethnic colors and wrapped with zari cords, finished with hanging ghungroo bells.",
-      price: 129,
-      mrp: 199,
-      stock: 120,
-      categoryId: catProducts.id,
-      material: "Teakwood, Cotton thread, Metal bells",
-      occasion: "Navratri Garba",
-      careInstructions: "Store in dry place. Clean with damp cloth.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "festive,navratri,dandiya,garba",
-      folder: "festive",
-      variants: [],
-    },
-    {
-      name: "Diwali Clay Terracotta Diyas (Pack of 6)",
-      slug: "diwali-clay-terracotta-diyas-6pack",
-      description: "Earthen clay diyas handcrafted by local potters. Beautifully painted in gold, red, and yellow, perfect for light decoration on Diwali.",
-      price: 149,
-      mrp: 249,
-      stock: 180,
-      categoryId: catProducts.id,
-      isSale: true,
-      material: "Natural Terracotta Clay",
-      occasion: "Diwali Festival of Lights",
-      careInstructions: "Slightly wet clay diyas before oil fill.",
-      shippingInfo: "Ships in shock-absorbent eco-packaging.",
-      tags: "festive,diyas,diwali,clay",
-      folder: "upcoming",
-      variants: [],
-    },
-
-    // ── Jewellery & Accessories ──────────────────────────────────
-    {
-      name: "Premium Curly Deity Hair Wig",
-      slug: "premium-curly-deity-hair-wig",
-      description: "Soft synthetic dark curls wig for Bal Gopal deity hair shringar. Comes with a tiny elastic grip backing.",
-      price: 89,
-      mrp: 149,
-      stock: 100,
-      categoryId: catJewellery.id,
-      material: "Synthetic high-grade fibers",
-      occasion: "Daily deity shringar",
-      careInstructions: "Brush gently with a baby comb if messy.",
-      shippingInfo: "Ships in 24 hours.",
-      tags: "jewellery,hair,wig,accessory",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Miniature Gold Kundan Jhumka",
-      slug: "miniature-gold-kundan-jhumka",
-      description: "Exquisite tiny drop jhumka earrings featuring kundan gemstones and white seed pearls, perfectly sized for deities.",
-      price: 119,
-      mrp: 199,
-      stock: 85,
-      categoryId: catJewellery.id,
-      isFeatured: true,
-      material: "Gold-tone alloy, Kundan, Seed pearls",
-      occasion: "Festive Shringar",
-      careInstructions: "Keep in airtight pouches when not in use.",
-      tags: "jewellery,earrings,jhumka,accessory",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Stone Studded Deity Kangan Pair",
-      slug: "stone-studded-deity-kangan-pair",
-      description: "A pair of gold-toned openable kangan (bangles) decorated with colorful red and green stones, ideal for Bal Gopal sizes 1-6.",
-      price: 99,
-      mrp: 149,
-      stock: 90,
-      categoryId: catJewellery.id,
-      material: "Brass, Colored rhinestones",
-      occasion: "Shringar Accessory",
-      careInstructions: "Do not wet. Clean with cotton.",
-      tags: "jewellery,kangan,bangles,accessory",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Deity Pearl & Ruby Haar / Necklace Set",
-      slug: "deity-pearl-ruby-haar-necklace",
-      description: "A double-layered necklace featuring imitation rubies and tiny pearls. Comes with a matching gold cord for neck adjustment.",
-      price: 169,
-      mrp: 299,
-      stock: 75,
-      categoryId: catJewellery.id,
-      isSale: true,
-      material: "Faux rubies, Glass pearls, Zari cord",
-      occasion: "Festive Shringar",
-      careInstructions: "Store in zip pouches. Avoid water.",
-      tags: "jewellery,necklace,haar,ruby",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Deity Golden Stone-set Bansuri (Flute)",
-      slug: "deity-golden-stone-set-bansuri",
-      description: "Decorative metallic flute accessory for Bal Gopal, studded with tiny emerald rhinestones and finished with a hanging bead ghungroo.",
-      price: 59,
-      mrp: 99,
-      stock: 140,
-      categoryId: catJewellery.id,
-      material: "Metal, Emerald rhinestones",
-      occasion: "Bal Gopal Accessory",
-      careInstructions: "Dust with dry cotton cloth.",
-      tags: "jewellery,flute,bansuri,accessory",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Stone Adjustable Deity Kamar Band",
-      slug: "stone-adjustable-deity-kamar-band",
-      description: "Exquisite stone waistband (Kamar Band) designed to give a royal look to the deity. Featuring a flexible chain with hanging beads.",
-      price: 99,
-      mrp: 149,
-      stock: 80,
-      categoryId: catJewellery.id,
-      material: "Alloy, Crystals",
-      occasion: "Royal Shringar",
-      careInstructions: "Keep in a dry, dark storage box.",
-      tags: "jewellery,kamarband,waistband,accessory",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Fragrant Natural Attar / Ittar Set",
-      slug: "fragrant-natural-attar-ittar-set",
-      description: "A premium combo of 3 non-alcoholic oil-based natural fragrances (Gulaab, Chandan, Khas). Highly concentrated, long-lasting.",
-      price: 199,
-      mrp: 299,
-      stock: 95,
-      categoryId: catJewellery.id,
-      isNewArrival: true,
-      material: "Natural essential oils, Alcohol-free",
-      occasion: "Fragrance worship, Deity bath, Daily refresh",
-      careInstructions: "Keep bottle caps tightly closed when not in use.",
-      shippingInfo: "Ships in glass bottles inside cardboard sleeves.",
-      tags: "accessory,attar,ittar,fragrance",
-      folder: "jewellery",
-      variants: [],
-    },
-    {
-      name: "Brass Deity Snan Bathtub",
-      slug: "brass-deity-snan-bathtub",
-      description: "Solid brass bathtub (Snan Patra) designed with traditional floral border engravings, perfect for the daily bathing ritual of Bal Gopal.",
-      price: 249,
-      mrp: 399,
-      stock: 60,
-      categoryId: catJewellery.id,
-      isFeatured: true,
-      material: "100% Pure Brass",
-      occasion: "Deity Snan / Bathing ritual",
-      careInstructions: "Clean with lemon or pitambari to retain shine.",
-      shippingInfo: "Ships within 24 hours.",
-      tags: "accessory,brass,bathtub,snan",
-      folder: "jewellery",
-      variants: [],
-    },
-  ];
-
-  // ── Reviews ──────────────────────────────────────────────────
-  const reviews = [
-    { reviewerName: "Karan Johar", rating: 5, comment: "Exceptional quality for the deity dress! Fits my Laddu Gopal perfectly. The velvet and embroidery are highly royal. Very impressed by Mourika!", isVerified: true },
-    { reviewerName: "Rani Mukherjee", rating: 5, comment: "I ordered the Toran and Shubh Labh door decorations. They look so elegant and welcoming at my entrance. Fast delivery!", isVerified: true },
-    { reviewerName: "Sanjay Dutt", rating: 5, comment: "Perfect brass snan patra and natural attars. The sandalwood attar has an amazing divine scent. Highly recommended!", isVerified: true },
-    { reviewerName: "Madhuri Dixit", rating: 4, comment: "The design is very cute, especially the tiny bansuri flute. Beautifully crafted with fine beads. Thanks Mourika team!", isVerified: true },
-    { reviewerName: "Kajol Devgan", rating: 5, comment: "Stunning kundu jhumkas. Small but very detailed shringar jewellery. Will buy more sets for festive gifting.", isVerified: true },
-  ];
-
-  for (let idx = 0; idx < productsData.length; idx++) {
-    const p = productsData[idx];
-    const { folder, variants, ...productData } = p;
-
-    // Build 4 distinct images from the product's exact folder
-    const images = [
-      { url: `/products/${folder}/img1.jpg`, alt: `${productData.name} Angle 1`, isPrimary: true },
-      { url: `/products/${folder}/img2.jpg`, alt: `${productData.name} Angle 2`, isPrimary: false },
-      { url: `/products/${folder}/img3.jpg`, alt: `${productData.name} Angle 3`, isPrimary: false },
-      { url: `/products/${folder}/img4.jpg`, alt: `${productData.name} Angle 4`, isPrimary: false },
-    ];
-
-    const baseVariants = variants.filter((v: any) => v.name !== "Size");
-    const sizeVariants = [
-      { name: "Size", value: "1", stock: 15, priceAdj: 0 },
-      { name: "Size", value: "2", stock: 15, priceAdj: 0 },
-      { name: "Size", value: "3", stock: 15, priceAdj: 0 },
-      { name: "Size", value: "4", stock: 15, priceAdj: 0 },
-      { name: "Size", value: "5", stock: 15, priceAdj: 0 },
-    ];
-
-    const product = await prisma.product.create({
+    await prisma.product.create({
       data: {
-        ...productData,
+        name: item.name,
+        slug,
+        description: item.description,
+        price: item.price,
+        mrp: item.mrp,
+        stock: 20 + ((i * 7) % 25),
+        categoryId: catBandarwar.id,
+        isFeatured: i < 6,
+        isNewArrival: i >= 4 && i < 10,
+        isSale: i % 4 === 0,
+        material: item.material,
+        occasion: item.occasion,
+        careInstructions: "Gently wipe with dry cloth or soft brush. Keep away from moisture and water.",
+        shippingInfo: "Ships within 2-3 business days. Free shipping across India on orders above Rs.499.",
+        tags: "bandarwar,toran,door-hanging,festive,entrance,auspicious",
         images: {
-          create: images.map((img, orderIdx) => ({ ...img, order: orderIdx })),
+          create: [
+            {
+              url: `/products/bandarwar-toran/p${productNum}-1.jpg`,
+              alt: `${item.name} - Front View`,
+              isPrimary: true,
+              order: 0,
+            },
+            {
+              url: `/products/bandarwar-toran/p${productNum}-2.jpg`,
+              alt: `${item.name} - Angle View`,
+              isPrimary: false,
+              order: 1,
+            },
+            {
+              url: `/products/bandarwar-toran/p${productNum}-3.jpg`,
+              alt: `${item.name} - Close-up Detail`,
+              isPrimary: false,
+              order: 2,
+            },
+          ],
         },
         variants: {
-          create: [...baseVariants, ...sizeVariants],
+          create: [
+            { name: "Length", value: "3.0 Feet (Standard)", stock: 15, priceAdj: 0 },
+            { name: "Length", value: "3.5 Feet (Medium)", stock: 12, priceAdj: 50 },
+            { name: "Length", value: "4.0 Feet (Grand Door)", stock: 8, priceAdj: 100 },
+          ],
         },
       },
     });
-
-    // Add review
-    if (idx < reviews.length) {
-      const r = reviews[idx];
-      await prisma.review.create({
-        data: { ...r, productId: product.id },
-      });
-    }
-
-    console.log(`  ✅ [${folder.toUpperCase()}] ${productData.name}`);
+    console.log(`  ... Bandarwar product ${productNum}/17 seeded with 3 images`);
   }
+  console.log("17 Bandarwar products seeded with 51 total images");
 
-  console.log("\n🎉 Mourika Database 100% synchronized & seeded successfully!");
+  // 2. Seed 6 Table Runner products (each with 2 photos: 1 main + 1 angle preview)
+  for (let i = 0; i < tableRunnerProducts.length; i++) {
+    const item = tableRunnerProducts[i];
+    const productNum = i + 1;
+    const slug = slugify(item.name) + "-" + productNum;
+
+    await prisma.product.create({
+      data: {
+        name: item.name,
+        slug,
+        description: item.description,
+        price: item.price,
+        mrp: item.mrp,
+        stock: 18 + ((i * 5) % 15),
+        categoryId: catTableRunner.id,
+        isFeatured: i < 3,
+        isNewArrival: i >= 2,
+        isSale: i % 2 === 0,
+        material: item.material,
+        occasion: item.occasion,
+        careInstructions: "Dry clean or spot clean with mild detergent. Do not bleach or tumble dry.",
+        shippingInfo: "Ships within 2-3 business days. Free shipping across India on orders above Rs.499.",
+        tags: "table-runner,home-decor,dining,festive,centerpiece",
+        images: {
+          create: [
+            {
+              url: `/products/table-runner/p${productNum}-1.jpg`,
+              alt: `${item.name} - Flat Display View`,
+              isPrimary: true,
+              order: 0,
+            },
+            {
+              url: `/products/table-runner/p${productNum}-2.jpg`,
+              alt: `${item.name} - Texture & Angle View`,
+              isPrimary: false,
+              order: 1,
+            },
+          ],
+        },
+        variants: {
+          create: [
+            { name: "Size", value: "4 Seater (12x60 inch)", stock: 12, priceAdj: 0 },
+            { name: "Size", value: "6 Seater (12x72 inch)", stock: 10, priceAdj: 80 },
+            { name: "Size", value: "8 Seater (12x90 inch)", stock: 8, priceAdj: 150 },
+          ],
+        },
+      },
+    });
+    console.log(`  ... Table Runner product ${productNum}/6 seeded with 2 images`);
+  }
+  console.log("6 Table Runner products seeded with 12 total images");
+
+  // 3. Seed 6 Karva Chauth Thaali products (each with 1 photo)
+  for (let i = 0; i < karvaProducts.length; i++) {
+    const item = karvaProducts[i];
+    const productNum = i + 1;
+    const slug = slugify(item.name) + "-" + productNum;
+
+    await prisma.product.create({
+      data: {
+        name: item.name,
+        slug,
+        description: item.description,
+        price: item.price,
+        mrp: item.mrp,
+        stock: 15 + ((i * 3) % 10),
+        categoryId: catKarvaChauth.id,
+        isFeatured: i < 3,
+        isNewArrival: i === 0,
+        isSale: false,
+        material: item.material,
+        occasion: item.occasion,
+        careInstructions: "Wipe with soft cotton cloth. Do not soak velvet or decorative elements in water.",
+        shippingInfo: "Ships within 1-2 business days with protective bubble packaging for secure transit.",
+        tags: "karva-chauth,thali-set,puja,festive,chalni,lota,bridal",
+        images: {
+          create: [
+            {
+              url: `/products/karva-chauth-thaali/p${productNum}-1.jpeg`,
+              alt: `${item.name} - Complete Set`,
+              isPrimary: true,
+              order: 0,
+            },
+          ],
+        },
+        variants: {
+          create: [
+            { name: "Set Option", value: "Standard Thali Set", stock: 10, priceAdj: 0 },
+            { name: "Set Option", value: "Complete Puja Set with Lota & Chalni", stock: 8, priceAdj: 250 },
+          ],
+        },
+      },
+    });
+    console.log(`  ... Karva Chauth product ${productNum}/6 seeded with 1 image`);
+  }
+  console.log("6 Karva Chauth products seeded with 6 total images");
+
+  // Reviews
+  const featured = await prisma.product.findMany({ where: { isFeatured: true }, take: 12 });
+  for (let i = 0; i < featured.length; i++) {
+    const r = reviewTexts[i % reviewTexts.length];
+    await prisma.review.create({
+      data: { ...r, productId: featured[i].id, isVerified: true },
+    });
+  }
+  console.log("Reviews added");
+
+  const total = await prisma.product.count();
+  const cats = await prisma.category.count();
+  const totalImgs = await prisma.productImage.count();
+  console.log(`Seeding complete: ${total} products across ${cats} categories with ${totalImgs} real photos!`);
 }
 
 main()

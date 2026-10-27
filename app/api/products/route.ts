@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
         // Direct category slug OR loose matching
         where.OR = [
           { category: { slug: category } },
-          { category: { name: { contains: category.replace("-", " ") } } },
+          { category: { name: { contains: category.replace(/-/g, " ") } } },
           { tags: { contains: category } }
         ];
       }
@@ -270,7 +270,10 @@ function getParentCategorySlug(category: string): string | null {
     catLower === "laddu-gopal-dresses" ||
     catLower === "festive-home-decor" ||
     catLower === "festive-products" ||
-    catLower === "jewellery-accessories"
+    catLower === "jewellery-accessories" ||
+    catLower === "bandarwar-toran" ||
+    catLower === "table-runner" ||
+    catLower === "karva-chauth-thaali"
   ) {
     return catLower;
   }

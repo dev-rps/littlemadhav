@@ -183,7 +183,7 @@ export default function AboutPage() {
               {
                 icon: <Heart size={28} style={{ color: "#8B1E3F" }} />,
                 title: "Made with Love",
-                desc: "Every Rakhi is tied with blessings, and every earring is crafted to celebrate your festive sparkle.",
+                desc: "Every creation is infused with devotion and blessings, handcrafted to celebrate your sacred festive home.",
               },
               {
                 icon: <Users size={28} style={{ color: "#2D6A4F" }} />,
@@ -326,7 +326,7 @@ export default function AboutPage() {
         <div style={{ position: "relative", zIndex: 10 }}>
           <h2 style={{ fontFamily: "var(--font-display, 'Yeseva One', serif)", fontSize: "2.25rem", color: "#D4A017", margin: "0 0 1rem" }}>Bring Home the Festive Sparkle</h2>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "#FFF8F0cc", maxWidth: 500, margin: "0 auto 2rem", lineHeight: 1.6 }}>
-            Explore our collection of handcrafted Rakhis, Kundan earrings, and festive gift boxes.
+            Explore our collection of handcrafted Bandarwar torans, royal table runners, and sacred festive thali sets.
           </p>
           <Link
             href="/collections/all"

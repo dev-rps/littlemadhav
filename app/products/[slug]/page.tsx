@@ -135,12 +135,8 @@ export default function ProductDetailPage() {
     window.location.href = "/checkout";
   };
 
-  // Build 4 thumbnail slots (padded with nulls for missing angle images)
-  const MAX_THUMBS = 4;
-  const thumbImages = [
-    ...product.images.slice(0, MAX_THUMBS),
-    ...Array(Math.max(0, MAX_THUMBS - product.images.length)).fill(null),
-  ];
+  // Show thumbnails only if more than 1 image is provided
+  const thumbImages = product.images.length > 1 ? product.images.slice(0, 5) : [];
 
   return (
     <div style={{ backgroundColor: "#FBF3E9", minHeight: "100vh" }}>
@@ -167,76 +163,56 @@ export default function ProductDetailPage() {
           style={{ display: "grid", gap: "2.5rem", alignItems: "start" }}
           className="grid-cols-1 lg:grid-cols-2 lg:gap-14"
         >
-          {/* ── LEFT COLUMN: Gallery with 4 Vertical Left Thumbnails + Square Main Box ── */}
+          {/* ── LEFT COLUMN: Gallery with Thumbnails + Main Box ── */}
           <div className="lg:sticky lg:top-24">
             <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-              {/* 4 Vertical Left Thumbnails */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.65rem",
-                  flexShrink: 0,
-                }}
-              >
-                {thumbImages.map((img, i) => {
-                  const isActive = i === activeImage;
-                  const isNull = img === null;
-                  const hasThumbError = thumbErrors[i];
+              {/* Vertical Left Thumbnails (only if multiple images) */}
+              {thumbImages.length > 1 && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.65rem",
+                    flexShrink: 0,
+                  }}
+                >
+                  {thumbImages.map((img, i) => {
+                    const isActive = i === activeImage;
+                    const hasThumbError = thumbErrors[i];
 
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        if (!isNull && !hasThumbError) {
-                          setActiveImage(i);
-                          setImgError(false);
-                        }
-                      }}
-                      style={{
-                        width: 64,
-                        height: 64,
-                        borderRadius: "12px",
-                        overflow: "hidden",
-                        flexShrink: 0,
-                        border: isActive && !isNull
-                          ? "2px solid #660D19"
-                          : "1.5px solid rgba(186,172,157,0.35)",
-                        cursor: isNull ? "default" : "pointer",
-                        backgroundColor: "#F4E8DB",
-                        padding: 0,
-                        position: "relative",
-                        transition: "all 0.2s ease",
-                        opacity: isNull ? 0.45 : 1,
-                        boxShadow: isActive ? "0 4px 12px rgba(102,13,25,0.12)" : "none",
-                      }}
-                      aria-label={img ? `View product angle ${i + 1}` : "No image"}
-                      onMouseOver={(e) => {
-                        if (!isNull && !isActive) (e.currentTarget as HTMLElement).style.borderColor = "#CD9703";
-                      }}
-                      onMouseOut={(e) => {
-                        if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "rgba(186,172,157,0.35)";
-                      }}
-                    >
-                      {isNull || hasThumbError ? (
-                        /* Elegant angle placeholder icon box */
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            background: "linear-gradient(145deg, #F4E8DB, #EED8C4)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                            <rect x="3" y="3" width="18" height="18" rx="3" stroke="#CD9703" strokeWidth="1.5" strokeDasharray="2 2" />
-                            <circle cx="12" cy="11" r="3" stroke="#CD9703" strokeWidth="1.5" />
-                            <path d="M3 18l4-4 3 3 4-5 7 6" stroke="#CD9703" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </div>
-                      ) : (
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          if (!hasThumbError) {
+                            setActiveImage(i);
+                            setImgError(false);
+                          }
+                        }}
+                        style={{
+                          width: 64,
+                          height: 64,
+                          borderRadius: "12px",
+                          overflow: "hidden",
+                          flexShrink: 0,
+                          border: isActive
+                            ? "2px solid #660D19"
+                            : "1.5px solid rgba(186,172,157,0.35)",
+                          cursor: "pointer",
+                          backgroundColor: "#F4E8DB",
+                          padding: 0,
+                          position: "relative",
+                          transition: "all 0.2s ease",
+                          boxShadow: isActive ? "0 4px 12px rgba(102,13,25,0.12)" : "none",
+                        }}
+                        aria-label={`View product image ${i + 1}`}
+                        onMouseOver={(e) => {
+                          if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "#CD9703";
+                        }}
+                        onMouseOut={(e) => {
+                          if (!isActive) (e.currentTarget as HTMLElement).style.borderColor = "rgba(186,172,157,0.35)";
+                        }}
+                      >
                         <Image
                           src={img.url}
                           alt={img.alt ?? `Angle ${i + 1}`}
@@ -245,14 +221,14 @@ export default function ProductDetailPage() {
                           style={{ objectFit: "cover" }}
                           onError={() => setThumbErrors((prev) => ({ ...prev, [i]: true }))}
                         />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* Square Main Image Box */}
-              <div style={{ flex: 1, maxWidth: "460px", position: "relative" }}>
+              <div style={{ flex: 1, maxWidth: thumbImages.length > 1 ? "460px" : "100%", position: "relative" }}>
                 <div
                   style={{
                     position: "relative",

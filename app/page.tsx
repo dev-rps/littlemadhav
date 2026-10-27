@@ -6,6 +6,7 @@ import BestsellersSection from "@/components/home/BestsellersSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import FestiveSpecials from "@/components/home/FestiveSpecials";
 import Link from "next/link";
+import Image from "next/image";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -28,28 +29,28 @@ function ProductsSkeleton() {
 function FestivalBanner() {
   const festivalCards = [
     {
-      icon: "🎀",
-      title: "Raksha Bandhan Ready",
-      desc: "Ships before the festival — guaranteed",
-      cta: "Shop Rakhi",
-      href: "/collections/rakhi",
+      thumbnail: "/products/bandarwar-toran/p1-1.jpg",
+      title: "Bandarwar & Toran",
+      desc: "Handcrafted door hangings to bless your home",
+      cta: "Shop Now",
+      href: "/collections/bandarwar-toran",
       gradient: "linear-gradient(135deg, #660D19 0%, #8B1E3F 100%)",
     },
     {
-      icon: "🪔",
-      title: "Diwali Gifting",
-      desc: "Festive home decor loved by everyone",
-      cta: "Shop Decor",
-      href: "/collections/festive-home-decor",
-      gradient: "linear-gradient(135deg, #CD9703 0%, #D5AD36 100%)",
+      thumbnail: "/products/table-runner/p1-1.jpg",
+      title: "Table Runners",
+      desc: "Elegant festive runners for every occasion",
+      cta: "Shop Now",
+      href: "/collections/table-runner",
+      gradient: "linear-gradient(135deg, #CD9703 0%, #B8860B 100%)",
     },
     {
-      icon: "💎",
-      title: "Jewellery & Accessories",
-      desc: "Elegant deity shringar for every occasion",
-      cta: "Shop Jewellery",
-      href: "/collections/jewellery-accessories",
-      gradient: "linear-gradient(135deg, #357C49 0%, #4A9D5E 100%)",
+      thumbnail: "/products/karva-chauth-thaali/p1-1.jpeg",
+      title: "Karva Chauth Thaali",
+      desc: "Beautiful puja thali sets for the auspicious vrat",
+      cta: "Shop Now",
+      href: "/collections/karva-chauth-thaali",
+      gradient: "linear-gradient(135deg, #2E6B47 0%, #3D8B5D 100%)",
     },
   ];
 
@@ -60,7 +61,7 @@ function FestivalBanner() {
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(1, 1fr)",
-            gap: "1rem",
+            gap: "1.25rem",
           }}
           className="sm:grid-cols-3"
         >
@@ -70,21 +71,42 @@ function FestivalBanner() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "1rem",
+                gap: "1.1rem",
                 padding: "1.5rem",
                 background: item.gradient,
-                borderRadius: "18px",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-                minHeight: "120px",
+                borderRadius: "20px",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 8px 24px rgba(102,13,25,0.12)",
+                minHeight: "125px",
               }}
+              className="hover:-translate-y-1 hover:shadow-xl"
             >
-              <span style={{ fontSize: "2.5rem", flexShrink: 0, filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" }}>{item.icon}</span>
+              <div
+                style={{
+                  width: "68px",
+                  height: "68px",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  position: "relative",
+                  flexShrink: 0,
+                  border: "2.5px solid rgba(255, 255, 255, 0.85)",
+                  boxShadow: "0 4px 14px rgba(0,0,0,0.22)",
+                  backgroundColor: "#FFFFFF",
+                }}
+              >
+                <Image
+                  src={item.thumbnail}
+                  alt={item.title}
+                  fill
+                  sizes="68px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <div style={{ flex: 1 }}>
-                <p style={{ fontFamily: "var(--font-display)", color: "#FFFFFF", fontSize: "1.05rem", margin: "0 0 0.25rem", fontWeight: 700 }}>
+                <p style={{ fontFamily: "var(--font-display)", color: "#FFFFFF", fontSize: "1.08rem", margin: "0 0 0.25rem", fontWeight: 700, letterSpacing: "0.02em" }}>
                   {item.title}
                 </p>
-                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "rgba(255,255,255,0.8)", margin: "0 0 0.6rem" }}>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "rgba(255,255,255,0.85)", margin: "0 0 0.65rem", lineHeight: 1.4 }}>
                   {item.desc}
                 </p>
                 <Link
@@ -95,13 +117,15 @@ function FestivalBanner() {
                     fontSize: "0.78rem",
                     color: "#FFFFFF",
                     textDecoration: "none",
-                    backgroundColor: "rgba(255,255,255,0.2)",
-                    padding: "0.35rem 0.85rem",
+                    backgroundColor: "rgba(255,255,255,0.22)",
+                    padding: "0.4rem 0.95rem",
                     borderRadius: "9999px",
-                    border: "1px solid rgba(255,255,255,0.3)",
+                    border: "1px solid rgba(255,255,255,0.4)",
                     display: "inline-block",
                     transition: "all 0.2s",
+                    letterSpacing: "0.03em",
                   }}
+                  className="hover:bg-white hover:text-maroon transition-colors"
                 >
                   {item.cta} →
                 </Link>
@@ -151,25 +175,49 @@ export default function HomePage() {
               Follow Our Journey on Instagram 📸
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.5rem" }} className="sm:grid-cols-6">
-            {[...Array(6)].map((_, i) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }} className="sm:grid-cols-6">
+            {[
+              { src: "/products/bandarwar-toran/p1-1.jpg", alt: "Bandarwar Toran Decor" },
+              { src: "/products/table-runner/p1-1.jpg", alt: "Festive Table Runner" },
+              { src: "/products/karva-chauth-thaali/p1-1.jpeg", alt: "Karva Chauth Thali Set" },
+              { src: "/products/bandarwar-toran/p2-1.jpg", alt: "Artisan Door Hanging" },
+              { src: "/products/table-runner/p2-1.jpg", alt: "Silk Brocade Runner" },
+              { src: "/products/karva-chauth-thaali/p2-1.jpeg", alt: "Bridal Puja Thali" },
+            ].map((img, i) => (
               <div
                 key={i}
                 style={{
                   aspectRatio: "1",
-                  background: i % 2 === 0
-                    ? "linear-gradient(145deg, #FBD5CD, #F4E8DB)"
-                    : "linear-gradient(145deg, #FBF3E9, #F4E8DB)",
                   borderRadius: "14px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "2rem",
+                  overflow: "hidden",
+                  position: "relative",
+                  boxShadow: "0 4px 12px rgba(102,13,25,0.08)",
                   cursor: "pointer",
-                  transition: "all 0.25s ease",
                 }}
+                className="group hover:scale-105 transition-transform duration-300"
               >
-                {["🎀", "💎", "🪔", "🎁", "✨", "🌸"][i]}
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  sizes="(max-width: 768px) 33vw, 16vw"
+                  style={{ objectFit: "cover" }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "rgba(102,13,25,0.35)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    opacity: 0,
+                    transition: "opacity 0.25s ease",
+                  }}
+                  className="group-hover:opacity-100"
+                >
+                  <span style={{ fontSize: "1.25rem", color: "#FFFFFF" }}>📸</span>
+                </div>
               </div>
             ))}
           </div>

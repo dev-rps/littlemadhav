@@ -2,333 +2,407 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Star, ShieldCheck, Sparkles, Moon, Flame } from "lucide-react";
 import FestivalCountdown from "@/components/ui/FestivalCountdown";
 
 const slides = [
   {
     id: 1,
-    title: "This Festive Season,\nSend Divine Love",
-    subtitle: "Exquisitely handcrafted rakhis with pure thread, kundan & premium beads",
-    cta: "Shop Rakhi Collection",
-    ctaHref: "/collections/rakhi",
-    ctaSecondary: "View Combos",
-    ctaSecondaryHref: "/collections/festive-products",
-    badge: "Special Teej & Rakhi Collection",
-    festivalDate: new Date("2026-08-28"),
-    festivalName: "Raksha Bandhan",
+    title: "Welcome Lakshmi Home with\nHandcrafted Bandarwar",
+    subtitle: "Over 17+ artisan-crafted entrance Torans & door hangings with gota patti and auspicious bells to bless your entryway.",
+    cta: "Shop Bandarwar & Toran",
+    ctaHref: "/collections/bandarwar-toran",
+    ctaSecondary: "Explore All Decor",
+    ctaSecondaryHref: "/collections/all",
+    badge: "Bestselling Entrance Decor",
+    badgeIcon: Sparkles,
+    festivalDate: new Date("2026-11-08"),
+    festivalName: "Diwali Mahotsav",
+    spotlight: {
+      title: "Traditional Marigold & Gota Patti Bandarwar",
+      category: "Door Hanging",
+      price: 349,
+      mrp: 499,
+      rating: 4.9,
+      reviews: 58,
+      image: "/products/bandarwar-toran/p1-1.jpg",
+      href: "/collections/bandarwar-toran",
+      tag: "Top Rated #1",
+    },
   },
   {
     id: 2,
-    title: "Dress Your Deity\nwith Divine Love",
-    subtitle: "Luxe fabrics, pastel hues & woollen warmth — handcrafted for Laddu Gopal",
-    cta: "Shop Laddu Gopal Dresses",
-    ctaHref: "/collections/laddu-gopal-dresses",
-    ctaSecondary: "View Woollen Sets",
-    ctaSecondaryHref: "/collections/woollen-dresses",
-    badge: "Premium Handcrafted Quality",
-    festivalDate: new Date("2026-09-02"),
-    festivalName: "Janmashtami",
+    title: "Sacred Karwa Chauth\nHandcrafted Puja Thalis",
+    subtitle: "Exquisite velvet, kundan & meenakari thali sets crafted for the auspicious ritual. Each set curated for timeless blessings.",
+    cta: "Shop Karwa Chauth Thalis",
+    ctaHref: "/collections/karva-chauth-thaali",
+    ctaSecondary: "Explore Festive Edits",
+    ctaSecondaryHref: "/collections/all",
+    badge: "Karwa Chauth Vrat Special",
+    badgeIcon: Moon,
+    festivalDate: new Date("2026-11-01"),
+    festivalName: "Karwa Chauth",
+    spotlight: {
+      title: "Shringaar Velvet Embroidered Thali Set",
+      category: "Puja Thali Set",
+      price: 699,
+      mrp: 999,
+      rating: 5.0,
+      reviews: 42,
+      image: "/products/karva-chauth-thaali/p1-1.jpeg",
+      href: "/collections/karva-chauth-thaali",
+      tag: "Vrat Essential",
+    },
   },
   {
     id: 3,
-    title: "Festival Hampers\nCurated with Care",
-    subtitle: "Heritage gift boxes starting at ₹499 — perfect for your loved ones",
-    cta: "Shop Gift Hampers",
-    ctaHref: "/collections/festive-products",
-    ctaSecondary: "View Home Decor",
-    ctaSecondaryHref: "/collections/festive-home-decor",
-    badge: "🎁 Free Premium Gift Wrapping",
+    title: "Royal Festive Dining\nLuxury Table Runners",
+    subtitle: "Opulent velvet, silk brocade & hand-embroidered table runners tailored to turn festive dining into a grand royal feast.",
+    cta: "Shop Table Runners",
+    ctaHref: "/collections/table-runner",
+    ctaSecondary: "View Collections",
+    ctaSecondaryHref: "/collections/all",
+    badge: "Festive Living Elegance",
+    badgeIcon: Flame,
     festivalDate: new Date("2026-11-08"),
-    festivalName: "Diwali",
+    festivalName: "Diwali Deepawali",
+    spotlight: {
+      title: "Royal Velvet & Gold Zari Table Runner",
+      category: "Festive Centerpiece",
+      price: 399,
+      mrp: 599,
+      rating: 4.8,
+      reviews: 35,
+      image: "/products/table-runner/p1-1.jpg",
+      href: "/collections/table-runner",
+      tag: "Trending Decor",
+    },
   },
 ];
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
 
-  const goTo = useCallback(
-    (idx: number) => {
-      setCurrent(idx);
-    },
-    []
-  );
+  const goTo = useCallback((idx: number) => {
+    setCurrent(idx);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5500);
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
+
+  const slide = slides[current];
+  const BadgeIcon = slide.badgeIcon;
 
   return (
     <section
       style={{
         position: "relative",
         overflow: "hidden",
-        background: "linear-gradient(135deg, #FBF3E9 0%, #F4E8DB 40%, #FBF3E9 100%)",
-        minHeight: "72vh",
+        backgroundColor: "#FDF7F0",
+        minHeight: "75vh",
         display: "flex",
         alignItems: "center",
       }}
     >
-      {/* Hero background image — fills right half on desktop */}
+      {/* Divine Atmospheric Background Image */}
       <div
         style={{
           position: "absolute",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          width: "55%",
+          inset: 0,
           zIndex: 1,
         }}
-        className="hidden md:block"
       >
         <Image
-          src="/hero-banner.png"
-          alt="Festive devotional accessories"
+          src="/hero-festive-bg.jpg"
+          alt="Festive Sanctuary"
           fill
-          sizes="55vw"
+          priority
+          sizes="100vw"
           style={{
             objectFit: "cover",
-            objectPosition: "center",
+            objectPosition: "center 38%",
           }}
-          priority
         />
-        {/* Gradient fade from left to merge with text area */}
+        {/* Warm creamy gradient overlay: softly fades on the left for maximum readability while showing glowing sanctuary on the right */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(90deg, #FBF3E9 0%, rgba(251,243,233,0.65) 35%, transparent 75%)",
+            background: "linear-gradient(90deg, rgba(253,247,240,0.96) 0%, rgba(253,247,240,0.92) 42%, rgba(253,247,240,0.65) 72%, rgba(253,247,240,0.3) 100%)",
           }}
+          className="hidden md:block"
         />
-      </div>
-
-      {/* Mobile background image */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          opacity: 0.12,
-        }}
-        className="md:hidden"
-      >
-        <Image
-          src="/hero-banner.png"
-          alt=""
-          fill
-          sizes="100vw"
-          style={{ objectFit: "cover" }}
-          priority
-        />
-      </div>
-
-      {/* Mandala bg */}
-      <div
-        className="bg-mandala"
-        style={{
-          position: "absolute",
-          inset: 0,
-          opacity: 0.04,
-          zIndex: 2,
-        }}
-      />
-
-      {/* Gold decorative background elements */}
-      <div
-        style={{
-          position: "absolute",
-          top: "-10%",
-          right: "-5%",
-          width: "40vw",
-          height: "40vw",
-          borderRadius: "50%",
-          border: "1.5px solid rgba(205,151,3,0.12)",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "-15%",
-          left: "-8%",
-          width: "35vw",
-          height: "35vw",
-          borderRadius: "50%",
-          border: "1.5px solid rgba(205,151,3,0.08)",
-          pointerEvents: "none",
-          zIndex: 2,
-        }}
-      />
-
-      {/* ── Carousel Sliding Track ── */}
-      <div style={{ position: "relative", zIndex: 5, width: "100%", overflow: "hidden" }}>
         <div
           style={{
-            display: "flex",
-            width: `${slides.length * 100}%`,
-            transform: `translateX(-${(current * 100) / slides.length}%)`,
-            transition: "transform 0.65s cubic-bezier(0.25, 1, 0.5, 1)",
+            position: "absolute",
+            inset: 0,
+            background: "rgba(253,247,240,0.92)",
           }}
+          className="md:hidden"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full py-10 sm:py-14 relative z-10">
+        <div
+          style={{
+            display: "grid",
+            gap: "2.5rem",
+            alignItems: "center",
+          }}
+          className="grid-cols-1 lg:grid-cols-12"
         >
-          {slides.map((slide) => (
-            <div
-              key={slide.id}
+          {/* Left Column: Headline, Description & CTAs (7 cols) */}
+          <div className="lg:col-span-7">
+            {/* Seasonal Badge with Luxury Icon */}
+            <div style={{ marginBottom: "1rem" }}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.45rem",
+                  backgroundColor: "rgba(102,13,25,0.08)",
+                  border: "1px solid rgba(102,13,25,0.18)",
+                  borderRadius: "9999px",
+                  padding: "0.35rem 0.95rem",
+                  boxShadow: "0 2px 8px rgba(102,13,25,0.04)",
+                }}
+              >
+                <BadgeIcon size={14} style={{ color: "var(--color-gold)" }} />
+                <span
+                  style={{
+                    fontSize: "0.74rem",
+                    color: "var(--color-maroon)",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 700,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {slide.badge}
+                </span>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h1
               style={{
-                width: `${100 / slides.length}%`,
-                flexShrink: 0,
+                fontFamily: "var(--font-display)",
+                fontSize: "clamp(2rem, 4.2vw, 3.25rem)",
+                color: "var(--color-maroon)",
+                lineHeight: 1.18,
+                marginBottom: "1.1rem",
+                whiteSpace: "pre-line",
+                fontWeight: 700,
               }}
             >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full py-12 md:py-16">
+              {slide.title}
+            </h1>
+
+            {/* Subtitle */}
+            <p
+              style={{
+                fontFamily: "var(--font-body)",
+                fontSize: "clamp(0.92rem, 1.8vw, 1.05rem)",
+                color: "var(--color-muted)",
+                marginBottom: "1.75rem",
+                maxWidth: 520,
+                lineHeight: 1.6,
+              }}
+            >
+              {slide.subtitle}
+            </p>
+
+            {/* CTAs */}
+            <div style={{ display: "flex", gap: "0.85rem", flexWrap: "wrap", marginBottom: "1.75rem" }}>
+              <Link
+                href={slide.ctaHref}
+                id={`hero-cta-${slide.id}`}
+                className="btn-primary"
+                style={{
+                  boxShadow: "0 6px 20px rgba(102,13,25,0.22)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                {slide.cta} →
+              </Link>
+              <Link
+                href={slide.ctaSecondaryHref}
+                className="btn-secondary"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.85)",
+                  borderColor: "rgba(186,172,157,0.5)",
+                }}
+              >
+                {slide.ctaSecondary}
+              </Link>
+            </div>
+
+            {/* Trust Badges */}
+            <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap", alignItems: "center" }}>
+              {[
+                "100% Handcrafted by Artisans",
+                "COD Available",
+                "Free Shipping Above ₹499",
+              ].map((trust) => (
+                <span
+                  key={trust}
+                  style={{
+                    fontSize: "0.78rem",
+                    color: "var(--color-body)",
+                    fontFamily: "var(--font-body)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.35rem",
+                    fontWeight: 600,
+                  }}
+                >
+                  <ShieldCheck size={15} style={{ color: "var(--color-green)" }} />
+                  {trust}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Live Product Spotlight Card + Real Festive Countdown (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-end gap-5">
+            {/* Spotlight Card */}
+            <Link
+              href={slide.spotlight.href}
+              style={{
+                textDecoration: "none",
+                display: "block",
+                width: "100%",
+                maxWidth: "380px",
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  backdropFilter: "blur(12px)",
+                  borderRadius: "22px",
+                  padding: "1rem",
+                  boxShadow: "0 14px 40px rgba(102,13,25,0.14)",
+                  border: "1.5px solid rgba(205,151,3,0.35)",
+                  transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                  position: "relative",
+                  overflow: "hidden",
+                }}
+                className="hover:-translate-y-1 hover:shadow-2xl"
+              >
+                {/* Floating Tag */}
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr",
-                    gap: "2rem",
-                    alignItems: "center",
+                    position: "absolute",
+                    top: "1.6rem",
+                    left: "1.6rem",
+                    zIndex: 10,
+                    backgroundColor: "var(--color-maroon)",
+                    color: "#FFFFFF",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 800,
+                    fontSize: "0.7rem",
+                    letterSpacing: "0.05em",
+                    padding: "0.25rem 0.65rem",
+                    borderRadius: "9999px",
+                    boxShadow: "0 2px 8px rgba(102,13,25,0.3)",
+                    textTransform: "uppercase",
                   }}
-                  className="md:grid-cols-2"
                 >
-                  {/* Left Text Block — Fixed min-height to prevent jumping */}
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      minHeight: "360px",
-                    }}
-                  >
-                    {/* Badge */}
-                    <div style={{ minHeight: "32px", marginBottom: "1rem" }}>
-                      <div
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: "0.5rem",
-                          backgroundColor: "rgba(102,13,25,0.08)",
-                          border: "1px solid rgba(102,13,25,0.15)",
-                          borderRadius: "9999px",
-                          padding: "0.35rem 0.85rem",
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontSize: "0.72rem",
-                            color: "var(--color-maroon)",
-                            fontFamily: "var(--font-body)",
-                            fontWeight: 700,
-                            letterSpacing: "0.06em",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          {slide.badge}
-                        </span>
-                      </div>
-                    </div>
+                  {slide.spotlight.tag}
+                </div>
 
-                    {/* Title — Fixed line-height and height allocation */}
-                    <h1
-                      style={{
-                        fontFamily: "var(--font-display)",
-                        fontSize: "clamp(2rem, 4vw, 3.15rem)",
-                        color: "var(--color-maroon)",
-                        lineHeight: 1.18,
-                        marginBottom: "1rem",
-                        whiteSpace: "pre-line",
-                        fontWeight: 700,
-                        minHeight: "7rem",
-                        display: "flex",
-                        alignItems: "flex-end",
-                      }}
-                    >
-                      {slide.title}
-                    </h1>
+                {/* Product Image */}
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "230px",
+                    borderRadius: "16px",
+                    overflow: "hidden",
+                    backgroundColor: "#FBF3E9",
+                    marginBottom: "0.85rem",
+                  }}
+                >
+                  <Image
+                    src={slide.spotlight.image}
+                    alt={slide.spotlight.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 380px"
+                    style={{ objectFit: "cover" }}
+                    priority
+                  />
+                </div>
 
-                    {/* Subtitle */}
-                    <p
-                      style={{
-                        fontFamily: "var(--font-body)",
-                        fontSize: "clamp(0.9rem, 1.8vw, 1rem)",
-                        color: "var(--color-muted)",
-                        marginBottom: "1.75rem",
-                        maxWidth: 460,
-                        lineHeight: 1.6,
-                        minHeight: "3.2rem",
-                      }}
-                    >
-                      {slide.subtitle}
-                    </p>
-
-                    {/* CTAs */}
-                    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-                      <Link
-                        href={slide.ctaHref}
-                        id={`hero-cta-${slide.id}`}
-                        className="btn-primary ripple"
-                      >
-                        {slide.cta} →
-                      </Link>
-                      <Link
-                        href={slide.ctaSecondaryHref}
-                        className="btn-secondary"
-                      >
-                        {slide.ctaSecondary}
-                      </Link>
-                    </div>
-
-                    {/* Trust Badges */}
-                    <div style={{ display: "flex", gap: "1.25rem", flexWrap: "wrap" }}>
-                      {["COD Available", "Easy Exchange", "Handcrafted Quality"].map((trust) => (
-                        <span
-                          key={trust}
-                          style={{
-                            fontSize: "0.75rem",
-                            color: "var(--color-muted)",
-                            fontFamily: "var(--font-body)",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.3rem",
-                            fontWeight: 600,
-                          }}
-                        >
-                          <span style={{ color: "var(--color-green)" }}>✓</span> {trust}
-                        </span>
-                      ))}
+                {/* Product Info */}
+                <div style={{ padding: "0 0.35rem 0.35rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.3rem" }}>
+                    <span style={{ fontSize: "0.72rem", color: "var(--color-gold-dark)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                      {slide.spotlight.category}
+                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.25rem", color: "#B8860B", fontSize: "0.75rem", fontWeight: 700 }}>
+                      <Star size={13} fill="#CD9703" stroke="none" />
+                      <span>{slide.spotlight.rating} ({slide.spotlight.reviews})</span>
                     </div>
                   </div>
 
-                  {/* Right: Countdown — Locked vertical position on desktop */}
-                  <div
+                  <h3
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      minHeight: "360px",
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.02rem",
+                      color: "var(--color-maroon)",
+                      fontWeight: 700,
+                      margin: "0 0 0.5rem",
+                      lineHeight: 1.3,
                     }}
-                    className="hidden md:flex"
                   >
-                    <FestivalCountdown targetDate={slide.festivalDate} name={slide.festivalName} />
+                    {slide.spotlight.title}
+                  </h3>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: "0.45rem" }}>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: "1.2rem", fontWeight: 800, color: "var(--color-maroon)" }}>
+                        ₹{slide.spotlight.price}
+                      </span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: "0.85rem", color: "#999", textDecoration: "line-through" }}>
+                        ₹{slide.spotlight.mrp}
+                      </span>
+                      <span style={{ fontFamily: "var(--font-body)", fontSize: "0.72rem", color: "var(--color-green)", fontWeight: 700 }}>
+                        {Math.round(((slide.spotlight.mrp - slide.spotlight.price) / slide.spotlight.mrp) * 100)}% OFF
+                      </span>
+                    </div>
+
+                    <span style={{ fontFamily: "var(--font-body)", fontSize: "0.78rem", color: "var(--color-maroon)", fontWeight: 700 }}>
+                      Quick View →
+                    </span>
                   </div>
                 </div>
               </div>
+            </Link>
+
+            {/* Countdown to Next Active Festival */}
+            <div style={{ width: "100%", maxWidth: "380px" }}>
+              <FestivalCountdown targetDate={slide.festivalDate} name={slide.festivalName} />
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
-      {/* Dot Indicators */}
+      {/* Carousel Dot Indicators */}
       <div
         style={{
           position: "absolute",
-          bottom: "1.25rem",
+          bottom: "1rem",
           left: "50%",
           transform: "translateX(-50%)",
           display: "flex",
-          gap: "0.45rem",
-          zIndex: 10,
+          gap: "0.5rem",
+          zIndex: 20,
         }}
       >
         {slides.map((_, i) => (
@@ -337,11 +411,11 @@ export default function HeroCarousel() {
             onClick={() => goTo(i)}
             aria-label={`Go to slide ${i + 1}`}
             style={{
-              width: i === current ? 26 : 8,
-              height: 8,
+              width: i === current ? 28 : 9,
+              height: 9,
               borderRadius: "9999px",
               backgroundColor:
-                i === current ? "var(--color-maroon)" : "rgba(102,13,25,0.22)",
+                i === current ? "var(--color-maroon)" : "rgba(102,13,25,0.25)",
               border: "none",
               cursor: "pointer",
               transition: "all 0.35s ease",

@@ -7,6 +7,11 @@ import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 import QuickViewModal from "@/components/product/QuickViewModal";
 
 const categoryLabels: Record<string, string> = {
+  // ── Real available categories ──
+  "bandarwar-toran": "Bandarwar & Toran",
+  "table-runner": "Table Runner",
+  "karva-chauth-thaali": "Karva Chauth Thaali",
+  // ── Coming soon categories ──
   "devotees-collection": "Devotees Collection",
   "laddu-gopal-dresses": "Laddu Gopal Dresses",
   "luxe-dresses": "Luxe Dresses",
@@ -35,10 +40,14 @@ const categoryLabels: Record<string, string> = {
   "kamar-band": "Kamar Band",
   "attar-ittar": "Attar / Ittar",
   bathtub: "Bathtub",
+  "radha-rani-dresses": "Radha Rani Dresses",
   "new-arrivals": "New Arrivals",
   sale: "Sale",
   all: "All Products",
 };
+
+// Categories that have real products available
+const availableCategories = new Set(["bandarwar-toran", "table-runner", "karva-chauth-thaali", "all", "new-arrivals", "sale"]);
 
 const subcategoryMap: Record<string, { label: string; slug: string }[]> = {
   "laddu-gopal-dresses": [
@@ -425,11 +434,29 @@ function CollectionPageContent() {
                 ))}
               </div>
             ) : products.length === 0 ? (
-              <div style={{ textAlign: "center", padding: "4rem 0" }}>
-                <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", fontSize: "1rem" }}>No products found for this filter.</p>
-                <Link href="/collections/all" style={{ color: "var(--color-maroon)", fontFamily: "var(--font-body)", fontWeight: 600, marginTop: "0.75rem", display: "inline-block", textDecoration: "none" }}>
-                  View all products →
-                </Link>
+              <div style={{ textAlign: "center", padding: "4rem 1rem" }}>
+                {!availableCategories.has(slug) ? (
+                  // Coming Soon banner for unavailable categories
+                  <div style={{ maxWidth: "480px", margin: "0 auto" }}>
+                    <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🌸</div>
+                    <h2 style={{ fontFamily: "var(--font-display)", color: "var(--color-maroon)", fontSize: "1.75rem", margin: "0 0 0.75rem", fontWeight: 700 }}>
+                      Coming Soon
+                    </h2>
+                    <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", fontSize: "0.95rem", margin: "0 0 1.5rem", lineHeight: 1.6 }}>
+                      We&apos;re curating beautiful products for the <strong>{title}</strong> collection. Stay tuned — they&apos;ll be available very soon!
+                    </p>
+                    <Link href="/collections/all" style={{ display: "inline-block", backgroundColor: "var(--color-maroon)", color: "#fff", fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", padding: "0.7rem 1.75rem", borderRadius: "9999px", textDecoration: "none", letterSpacing: "0.04em", textTransform: "uppercase", transition: "all 0.2s" }}>
+                      Browse Available Products →
+                    </Link>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ fontFamily: "var(--font-body)", color: "var(--color-muted)", fontSize: "1rem" }}>No products found for this filter.</p>
+                    <Link href="/collections/all" style={{ color: "var(--color-maroon)", fontFamily: "var(--font-body)", fontWeight: 600, marginTop: "0.75rem", display: "inline-block", textDecoration: "none" }}>
+                      View all products →
+                    </Link>
+                  </>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
