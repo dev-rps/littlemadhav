@@ -26,7 +26,7 @@
     "framer-motion": "^12.42.2",
     "jose": "^6.2.8",
     "lucide-react": "^1.24.0",
-    "next": "16.2.10",
+    "next": "16.4.1",
     "pg": "^8.22.0",
     "prisma": "^7.8.0",
     "razorpay": "^2.9.8",
@@ -35,7 +35,7 @@
     "react-hook-form": "^7.81.0",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.7.0",
-    "zod": "^4.4.3",
+    "zod": "^4.6.6",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
