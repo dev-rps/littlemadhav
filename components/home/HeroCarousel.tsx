@@ -21,8 +21,8 @@ const slides = [
     spotlight: {
       title: "Traditional Marigold & Gota Patti Bandarwar",
       category: "Door Hanging",
-      price: 349,
-      mrp: 499,
+      price: 2499,
+      mrp: 3499,
       rating: 4.9,
       reviews: 58,
       image: "/products/bandarwar-toran/p1-1.jpg",
@@ -45,8 +45,8 @@ const slides = [
     spotlight: {
       title: "Shringaar Velvet Embroidered Thali Set",
       category: "Puja Thali Set",
-      price: 699,
-      mrp: 999,
+      price: 800,
+      mrp: 1199,
       rating: 5.0,
       reviews: 42,
       image: "/products/karva-chauth-thaali/p1-1.jpeg",
@@ -69,8 +69,8 @@ const slides = [
     spotlight: {
       title: "Royal Velvet & Gold Zari Table Runner",
       category: "Festive Centerpiece",
-      price: 399,
-      mrp: 599,
+      price: 1299,
+      mrp: 1899,
       rating: 4.8,
       reviews: 35,
       image: "/products/table-runner/p1-1.jpg",

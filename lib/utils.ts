@@ -33,10 +33,11 @@ export const FREE_SHIPPING_THRESHOLD = 499;
 
 export function getSizeAdjustment(sizeVal: string | undefined): number {
   if (!sizeVal) return 0;
-  const match = sizeVal.match(/\d+/);
+  // Only match legacy deity dress sizes formatted strictly as "Size 1", "Size 2", etc.
+  const match = sizeVal.trim().match(/^size\s*(\d+)$/i);
   if (match) {
-    const sizeNum = parseInt(match[0], 10);
-    return (sizeNum - 1) * 100;
+    const sizeNum = parseInt(match[1], 10);
+    return Math.max(0, (sizeNum - 1) * 100);
   }
   return 0;
 }

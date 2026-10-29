@@ -7,6 +7,7 @@ import { ProductCardData } from "./ProductCard";
 import { useCartStore } from "@/lib/store";
 import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils";
 import toast from "react-hot-toast";
+import WhatsAppShareButton from "./WhatsAppShareButton";
 
 interface Props {
   product: ProductCardData | null;
@@ -23,16 +24,16 @@ export default function QuickViewModal({ product, onClose }: Props) {
   if (!product) return null;
 
   const effectiveVariant = selectedVariant ?? product.variants[0]?.value;
+  const matchingVarObj = product.variants.find(v => v.value === effectiveVariant);
   const isSizeVariant = product.variants.some(v => v.value === effectiveVariant && v.name.toLowerCase() === 'size');
   const sizeAdjustment = isSizeVariant ? getSizeAdjustment(effectiveVariant) : 0;
-  const adjustedPrice = product.price + sizeAdjustment;
-  const adjustedMrp = product.mrp + sizeAdjustment;
+  const adjustedPrice = product.price + (matchingVarObj?.priceAdj ?? 0) + sizeAdjustment;
+  const adjustedMrp = product.mrp + (matchingVarObj?.priceAdj ?? 0) + sizeAdjustment;
   const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
 
   // Format variant string as "Name: Value"
-  const matchingVarObj = product.variants.find(v => v.value === effectiveVariant);
   const formattedVariant = matchingVarObj ? `${matchingVarObj.name}: ${effectiveVariant}` : effectiveVariant;
 
   // Build up to 4 thumbnails; pad with nulls if fewer images
@@ -423,6 +424,20 @@ export default function QuickViewModal({ product, onClose }: Props) {
               >
                 View Details
               </Link>
+            </div>
+
+            {/* WhatsApp Share */}
+            <div style={{ marginTop: "0.25rem" }}>
+              <WhatsAppShareButton
+                product={{
+                  name: product.name,
+                  price: adjustedPrice,
+                  mrp: adjustedMrp,
+                  slug: product.slug,
+                  category: product.category?.name,
+                }}
+                variant="compact"
+              />
             </div>
 
             {/* Trust strip */}

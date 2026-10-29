@@ -9,6 +9,7 @@ import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils"
 import toast from "react-hot-toast";
 import ProductCard, { ProductCardData } from "@/components/product/ProductCard";
 import PincodeChecker from "@/components/shipping/PincodeChecker";
+import WhatsAppShareButton from "@/components/product/WhatsAppShareButton";
 
 interface ProductDetail {
   id: string;
@@ -93,11 +94,15 @@ export default function ProductDetailPage() {
   }
   if (!product) return notFound();
 
+  const activeVariantObjs = Object.entries(selectedVariants).map(([name, val]) =>
+    product.variants.find((v) => v.name.toLowerCase() === name.toLowerCase() && v.value === val)
+  ).filter(Boolean);
+  const variantAdj = activeVariantObjs.reduce((sum, v) => sum + (v?.priceAdj ?? 0), 0);
   const sizeKey = Object.keys(selectedVariants).find(k => k.toLowerCase() === 'size');
   const sizeValue = sizeKey ? selectedVariants[sizeKey] : undefined;
   const sizeAdjustment = getSizeAdjustment(sizeValue);
-  const adjustedPrice = product.price + sizeAdjustment;
-  const adjustedMrp = product.mrp + sizeAdjustment;
+  const adjustedPrice = product.price + variantAdj + sizeAdjustment;
+  const adjustedMrp = product.mrp + variantAdj + sizeAdjustment;
   const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
 
   // Group variants by name
@@ -441,6 +446,25 @@ export default function ProductDetailPage() {
               </div>
             ))}
 
+            {product.category?.slug === "bandarwar-toran" && (
+              <div
+                style={{
+                  backgroundColor: "#FFF8F0",
+                  border: "1px dashed #CD9703",
+                  borderRadius: "8px",
+                  padding: "0.55rem 0.85rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <span style={{ fontSize: "1rem" }}>📏</span>
+                <span style={{ fontFamily: "var(--font-body)", fontSize: "0.8rem", color: "#660D19", fontWeight: 600 }}>
+                  Standard Door Size: 42 Inches (3.5 Feet). Custom / other sizes are not available.
+                </span>
+              </div>
+            )}
+
             {/* Quantity Stepper + In stock badge */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem" }}>
               <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.92rem", color: "#000000", margin: 0 }}>
@@ -552,6 +576,20 @@ export default function ProductDetailPage() {
                 <Zap size={18} />
                 Buy now
               </button>
+            </div>
+
+            {/* Professional WhatsApp Share Feature */}
+            <div style={{ marginTop: "0.15rem" }}>
+              <WhatsAppShareButton
+                product={{
+                  name: product.name,
+                  price: adjustedPrice,
+                  mrp: adjustedMrp,
+                  slug: product.slug,
+                  category: product.category?.name,
+                }}
+                variant="full"
+              />
             </div>
 
             {/* Shiprocket Pincode & Delivery Checker */}

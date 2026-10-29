@@ -6,6 +6,7 @@ import { Heart, ShoppingBag, Star, Eye } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice, getDiscountPercent, getSizeAdjustment } from "@/lib/utils";
 import toast from "react-hot-toast";
+import WhatsAppShareButton from "./WhatsAppShareButton";
 
 export interface ProductCardData {
   id: string;
@@ -77,17 +78,17 @@ export default function ProductCard({ product, onQuickView }: Props) {
   const secondImage = product.images[1]?.url ?? primaryImage;
   const showSecondImage = hasHover && hovered && secondImage !== primaryImage && !secondError;
   const currentSrc = showSecondImage ? secondImage : primaryImage;
+  const matchingVarObj = product.variants.find(v => v.value === selectedVariant);
   const isSizeVariant = product.variants.some(v => v.value === selectedVariant && v.name.toLowerCase() === 'size');
   const sizeAdjustment = isSizeVariant ? getSizeAdjustment(selectedVariant) : 0;
-  const adjustedPrice = product.price + sizeAdjustment;
-  const adjustedMrp = product.mrp + sizeAdjustment;
+  const adjustedPrice = product.price + (matchingVarObj?.priceAdj ?? 0) + sizeAdjustment;
+  const adjustedMrp = product.mrp + (matchingVarObj?.priceAdj ?? 0) + sizeAdjustment;
   const discount = getDiscountPercent(adjustedMrp, adjustedPrice);
   const rating = product.averageRating ?? 4.5;
   const reviewCount = product.reviewCount ?? 12;
   const savings = adjustedMrp - adjustedPrice;
 
   // Format variant string as "Name: Value"
-  const matchingVarObj = product.variants.find(v => v.value === selectedVariant);
   const formattedVariant = matchingVarObj ? `${matchingVarObj.name}: ${selectedVariant}` : selectedVariant;
 
   // Get unique variant names for grouping
@@ -205,6 +206,27 @@ export default function ProductCard({ product, onQuickView }: Props) {
           stroke={isWishlisted ? "var(--color-maroon)" : "var(--color-taupe)"}
         />
       </button>
+
+      {/* WhatsApp Quick Share Button */}
+      <div
+        style={{
+          position: "absolute",
+          top: "0.5rem",
+          right: "2.85rem",
+          zIndex: 2,
+        }}
+      >
+        <WhatsAppShareButton
+          product={{
+            name: product.name,
+            price: adjustedPrice,
+            mrp: adjustedMrp,
+            slug: product.slug,
+            category: product.category?.name,
+          }}
+          variant="icon"
+        />
+      </div>
 
       {/* Image */}
       <Link href={`/products/${product.slug}`} style={{ display: "block", textDecoration: "none" }}>

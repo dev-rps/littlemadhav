@@ -92,8 +92,8 @@ function getParentCategorySlug(slug: string): string {
 }
 
 const sortOptions = [
-  { value: "latest", label: "Latest" },
   { value: "popular", label: "Most Popular" },
+  { value: "latest", label: "Latest" },
   { value: "price_asc", label: "Price: Low to High" },
   { value: "price_desc", label: "Price: High to Low" },
 ];
@@ -123,9 +123,9 @@ function CollectionPageContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<ProductCardData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState("latest");
+  const [sort, setSort] = useState("popular");
   const [showFilters, setShowFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 2000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [quickViewProduct, setQuickViewProduct] = useState<ProductCardData | null>(null);
@@ -148,7 +148,7 @@ function CollectionPageContent() {
         else if (slug !== "all") qs.set("category", slug);
         
         if (priceRange[0] > 0) qs.set("minPrice", String(priceRange[0]));
-        if (priceRange[1] < 2000) qs.set("maxPrice", String(priceRange[1]));
+        if (priceRange[1] < 10000) qs.set("maxPrice", String(priceRange[1]));
 
         const res = await fetch(`/api/products?${qs}`);
         const data = await res.json();
@@ -354,26 +354,30 @@ function CollectionPageContent() {
               <div style={{ marginBottom: "1.25rem" }}>
                 <p style={{ fontFamily: "var(--font-body)", fontWeight: 700, fontSize: "0.85rem", color: "var(--color-body)", marginBottom: "0.5rem" }}>Price Range</p>
                 <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                  {[[0, 299], [299, 599], [599, 999], [999, 2000]].map(([min, max]) => (
-                    <button
-                      key={`${min}-${max}`}
-                      onClick={() => setPriceRange([min, max])}
-                      style={{
-                        padding: "0.3rem 0.75rem",
-                        border: priceRange[0] === min && priceRange[1] === max ? "1.5px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
-                        borderRadius: "9999px",
-                        backgroundColor: priceRange[0] === min && priceRange[1] === max ? "var(--color-blush)" : "var(--color-white)",
-                        color: priceRange[0] === min && priceRange[1] === max ? "var(--color-maroon)" : "var(--color-muted)",
-                        fontSize: "0.78rem",
-                        fontFamily: "var(--font-body)",
-                        cursor: "pointer",
-                        fontWeight: priceRange[0] === min && priceRange[1] === max ? 700 : 400,
-                        transition: "all 0.15s",
-                      }}
-                    >
-                      ₹{min}–{max === 2000 ? "2000+" : max}
-                    </button>
-                  ))}
+                  {([[0, 999], [1000, 1999], [2000, 3499], [3500, 10000]] as [number, number][]).map(([min, max]) => {
+                    const isSelected = priceRange[0] === min && priceRange[1] === max;
+                    const label = min === 0 ? "Under ₹1,000" : max === 10000 ? "₹3,500+" : `₹${min}–₹${max}`;
+                    return (
+                      <button
+                        key={`${min}-${max}`}
+                        onClick={() => setPriceRange(isSelected ? [0, 10000] : [min, max])}
+                        style={{
+                          padding: "0.3rem 0.75rem",
+                          border: isSelected ? "1.5px solid var(--color-maroon)" : "1px solid var(--color-taupe)",
+                          borderRadius: "9999px",
+                          backgroundColor: isSelected ? "var(--color-blush)" : "var(--color-white)",
+                          color: isSelected ? "var(--color-maroon)" : "var(--color-muted)",
+                          fontSize: "0.78rem",
+                          fontFamily: "var(--font-body)",
+                          cursor: "pointer",
+                          fontWeight: isSelected ? 700 : 400,
+                          transition: "all 0.15s",
+                        }}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

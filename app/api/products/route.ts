@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const newArrivals = searchParams.get("new");
     const page = parseInt(searchParams.get("page") ?? "1");
     const limit = parseInt(searchParams.get("limit") ?? "12");
-    const sort = searchParams.get("sort") ?? "latest";
+    const sort = searchParams.get("sort") ?? "popular";
     const minPrice = searchParams.get("minPrice");
     const maxPrice = searchParams.get("maxPrice");
     const q = searchParams.get("q") || searchParams.get("search");
@@ -118,12 +118,12 @@ export async function GET(request: NextRequest) {
 
     const orderBy =
       sort === "price_asc"
-        ? { price: "asc" as const }
+        ? [{ price: "asc" as const }]
         : sort === "price_desc"
-        ? { price: "desc" as const }
-        : sort === "popular"
-        ? { createdAt: "asc" as const }
-        : { createdAt: "desc" as const };
+        ? [{ price: "desc" as const }]
+        : sort === "latest"
+        ? [{ createdAt: "desc" as const }]
+        : [{ isFeatured: "desc" as const }, { createdAt: "desc" as const }];
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
